@@ -1,17 +1,113 @@
+;;; who-templates --- Templating system with CL-WHO. Supports inheritance.
+
+;; Copyright (C) 2023 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.  
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
+;; Author: Mariano Montone <marianomontone@gmail.com>
+;; Version: 0.1
+;; Requires: cl-who
+
+;;; Commentary:
+
+;; Templating system with CL-WHO. Supports inheritance.
+
+;; Example:
+
+;; Base template example:
+
+;; (deftemplate base-1 ()
+;;   (&args title)
+;;   (:html
+;;    (:head
+;;     (:title (who:str (or title "WHO TEMPLATES")))
+;;     (block styles
+;;       (:link :rel "stylesheet" :href "/bootstrap.css")))
+;;    (:body
+;;     (block body)
+;;     (block scripts))))
+
+;; (render-template-to-string 'base-1)
+;; (render-template-to-string 'base-1 :title "lala")
+
+;; Inheritance/block overwrite. Calls to parent:
+
+;; (deftemplate foo (:parent base-1)
+;;   (block body
+;;     (:h1 (who:str "Foo"))))
+
+;; (render-template-to-string 'foo)
+
+;; (deftemplate bar (:parent base-1)
+;;   (block body
+;;     (:h1 (who:str "Bar")))
+;;   (block styles
+;;     (parent)
+;;     (:link :rel "stylesheet" :href "/bar.css")))
+
+;; (render-template-to-string 'bar)
+
+;; (deftemplate baz (:parent bar)
+;;   (block scripts
+;;     (parent)
+;;     (:script :type "text/javacript"
+;;              (who:str "...javascript code..."))))
+
+;; (render-template-to-string 'baz)
+
+;; Args:
+
+;; (deftemplate hello (:parent base-1)
+;;   (block body
+;;     (:h1 (who:str (targ :hello)))))
+
+;; (render-template-to-string 'hello :hello "Hello!!")
+
+;; (deftemplate hello-2 (:parent base-1)
+;;   (block body
+;;     (&args hello)
+;;     (:h1 (who:str hello))
+;;     (:h2 (who:str hello))))
+
+;; (render-template-to-string 'hello-2 :hello "Hi!!")
+
+;; (deftemplate hello-3 (:parent base-1)
+;;   (block body
+;;     (with-targs (hello)
+;;       (:h1 (who:str hello))
+;;       (:h2 (who:str hello)))))
+
+;; (render-template-to-string 'hello-3 :hello "Hi!!")
+
+;; Include:
+
+;; (deftemplate snippet ()
+;;   (:p (who:str "This stuff has been included")))
+
+;; (deftemplate include (:parent base-1)
+;;   (block body
+;;     (include 'snippet)))
+
+;; (render-template-to-string 'include)
+
+;;; Code:
+
 (require :cl-who)
 
 (defpackage :who-templates
   (:nicknames :whot)
   (:use :cl)
   (:export
-   :deftemplate
-   :block
-   :include
-   :parent
-   :render-template
-   :render-template-to-string
-   :targ
-   :with-targs))
+   #:deftemplate
+   #:block
+   #:include
+   #:parent
+   #:render-template
+   #:render-template-to-string
+   #:targ
+   #:with-targs)
+  (:documentation "Templating system with CL-WHO. Supports inheritance."))
 
 (in-package :whot)
 
@@ -49,7 +145,7 @@
 
 (defun find-template (name)
   (or (gethash name *templates*)
-      (error "Template not defined: ~A" name)))  
+      (error "Template not defined: ~A" name)))
 
 (defmethod initialize-instance :after ((template who-template) &rest initargs)
   (declare (ignore initargs))
@@ -65,14 +161,14 @@
 
 (defun args-list-p (form)
   (and (listp form)
-       (equalp (string (first form)) "&args")))
+       (string= (string-downcase (string (first form))) "&args")))
 
 (defun expand-body (body)
   (if (args-list-p (first body))
       (let ((args (cdr (first body))))
         (list `(let ,(loop for arg in args
-                     collect `(,arg (targ ,(intern (string arg) :keyword))))
-           (who:htm ,@(rest body)))))
+                           collect `(,arg (targ ,(intern (string arg) :keyword))))
+                 (who:htm ,@(rest body)))))
       body))
 
 (defmacro with-targs (args &body body)
@@ -81,22 +177,23 @@
      (who:htm ,@body)))
 
 (defun collect-replace-blocks (form)
-  (let (blocks)
+  (let ((blocks '()))
     (let ((new-form (%collect-replace-blocks
                      form
                      (lambda (block) (push block blocks)))))
       (values new-form blocks))))
 
 (defun %collect-replace-blocks (form collect-block)
-  (if (atom form)
-      form
-      (if (eql (first form) 'block)
-          (progn
-            (funcall collect-block (cdr form))
-            `(render-block ',(second form)))
-          (loop for part in form
-                collect
-                (%collect-replace-blocks part collect-block)))))
+  (cond
+    ((atom form)
+     form)
+    ((eql (first form) 'block)
+     (funcall collect-block (cdr form))
+     `(render-block ',(second form)))
+    (t
+     (loop for part in form
+           collect
+           (%collect-replace-blocks part collect-block)))))
 
 (defun find-block (name template)
   (let ((block (cdr (assoc name (template-blocks template)))))
@@ -109,7 +206,7 @@
   (let ((block (find-block block-name *template*)))
     (when block
       (funcall block))))
-  
+
 (defun parent (&optional (block *block*) (template (template-parent *template*)))
   "Render the parent block"
   (let ((parent-template (find-template template)))
@@ -127,7 +224,7 @@
       (template-renderer template)))
 
 (defun parse-template (body)
-  (collect-replace-blocks body))  
+  (collect-replace-blocks body))
 
 (defmacro deftemplate (name args &body body)
   (multiple-value-bind (new-body blocks)
@@ -159,85 +256,5 @@
       (when (not renderer)
         (error "Don't know how to render template ~A" name))
       (funcall renderer))))
-
-;;--------------------
-;; Example
-;;--------------------
-
-;; Base template example
-
-;; (deftemplate base-1 ()
-;;   (&args title)
-;;   (:html
-;;    (:head
-;;     (:title (who:str (or title "WHO TEMPLATES")))
-;;     (block styles
-;;       (:link :rel "stylesheet" :href "/bootstrap.css")))
-;;    (:body
-;;     (block body)
-;;     (block scripts))))
-
-;; (render-template-to-string 'base-1)
-;; (render-template-to-string 'base-1 :title "lala")
-
-;; ;; Inheritance/block overwrite. Calls to parent
-
-;; (deftemplate foo (:parent base-1)
-;;   (block body
-;;     (:h1 (who:str "Foo"))))
-
-;; (render-template-to-string 'foo)
-
-;; (deftemplate bar (:parent base-1)
-;;   (block body
-;;     (:h1 (who:str "Bar")))
-;;   (block styles
-;;     (parent)
-;;     (:link :rel "stylesheet" :href "/bar.css")))
-
-;; (render-template-to-string 'bar)
-
-
-;; (deftemplate baz (:parent bar)
-;;   (block scripts
-;;     (parent)
-;;     (:script :type "text/javacript"
-;;              (who:str "...javascript code..."))))
-
-;; (render-template-to-string 'baz)
-
-;; ;; Args
-
-;; (deftemplate hello (:parent base-1)
-;;   (block body
-;;     (:h1 (who:str (targ :hello)))))
-
-;; (render-template-to-string 'hello :hello "Hello!!")
-
-;; (deftemplate hello-2 (:parent base-1)
-;;   (block body
-;;     (&args hello)
-;;     (:h1 (who:str hello))
-;;     (:h2 (who:str hello))))
-
-;; (render-template-to-string 'hello-2 :hello "Hi!!")
-
-;; (deftemplate hello-3 (:parent base-1)
-;;   (block body
-;;     (with-targs (hello)
-;;       (:h1 (who:str hello))
-;;       (:h2 (who:str hello)))))
-
-;; (render-template-to-string 'hello-3 :hello "Hi!!")
-
-;; ;; Include
-;; (deftemplate snippet ()
-;;   (:p (who:str "This stuff has been included")))
-
-;; (deftemplate include (:parent base-1)
-;;   (block body
-;;     (include 'snippet)))
-
-;; (render-template-to-string 'include)
 
 (provide :who-templates)
