@@ -35,6 +35,6 @@
               ;; Would that be possible to add?
               (warn 'lisp-critic-style-warning :format-control critique))))))))
 
-;; (pushnew 'critique-file compiler-hooks:*after-compile-file-hooks*)
+(pushnew 'critique-file compiler-hooks:*after-compile-file-hooks*)
 
 (provide :lisp-critic-warnings)
