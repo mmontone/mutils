@@ -27,12 +27,17 @@
 #+(or clasp mkcl ecl)
 (pushnew 'module-provide-directory *load-hooks*)
 
-(defun list-all-modules ()
+(declaim (ftype (function (&optional (member :name :pathname)) list)
+                list-all-modules))
+(defun list-all-modules (&optional (return :name))
   (let ((modules '()))
     (dolist (dir *module-directories*)
       (dolist (lisp-module-file (uiop/filesystem:directory-files dir "*.lisp"))
-        (pushnew (intern (string-upcase (pathname-name lisp-module-file)) :keyword)
-                 modules)))
+        (pushnew
+         (case return
+           (:name (intern (string-upcase (pathname-name lisp-module-file)) :keyword))
+           (:pathname lisp-module-file))
+         modules)))
     modules))
 
 (provide :directory-module-loader)
