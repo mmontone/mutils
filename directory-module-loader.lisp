@@ -6,7 +6,9 @@
                 #:*module-provider-functions*
                 #+ecl #:*load-hooks*)
   #+(or clasp mkcl) (:import-from :si #:*load-hooks*)
-  (:export #:*module-directories*))
+  (:export
+   #:*module-directories*
+   #:list-all-modules))
 
 (in-package :directory-module-loader)
 
@@ -24,5 +26,13 @@
 (pushnew 'module-provide-directory *module-provider-functions*)
 #+(or clasp mkcl ecl)
 (pushnew 'module-provide-directory *load-hooks*)
+
+(defun list-all-modules ()
+  (let ((modules '()))
+    (dolist (dir *module-directories*)
+      (dolist (lisp-module-file (uiop/filesystem:directory-files dir "*.lisp"))
+        (pushnew (intern (string-upcase (pathname-name lisp-module-file)) :keyword)
+                 modules)))
+    modules))
 
 (provide :directory-module-loader)
