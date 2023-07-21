@@ -13,8 +13,6 @@
 
 ;; Progress display with estimated time.
 
-;;; Code:
-
 ;; Usage:
 
 ;; Enable the progress bars:
