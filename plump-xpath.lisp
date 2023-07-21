@@ -1,3 +1,20 @@
+;;; plump-xpath --- xpath extension for plump
+
+;; Copyright (C) 2023 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.  
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
+;; Author: Mariano Montone <marianomontone@gmail.com>
+;; Version: 0.1
+;; Requires: plump, xpath
+
+;;; Commentary:
+
+;; xpath extension for plump
+
+;;; Code:
+
 (require :plump)
 (require :xpath)
 

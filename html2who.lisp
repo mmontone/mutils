@@ -1,3 +1,25 @@
+;;; html2who --- Parse HTML and create cl-who source code.
+
+;; Copyright (C) 2023 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.  
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
+;; Author: Mariano Montone <marianomontone@gmail.com>
+;; Version: 0.1
+;; Requires: cl-who, cl-html5-parser
+
+;;; Commentary:
+
+;; Parse HTML and create cl-who source code.
+
+;; Usage:
+
+;;(html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :who :strictp nil)
+;;(html5-parser:parse-html5-fragment #p"/vagrant/admin/index.html" :dom :who :strictp nil)
+;;(html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :xmls :strictp nil)
+;;; Code:
+
 (require :cl-who)
 (require :cl-html5-parser)
 
@@ -112,11 +134,5 @@
                          (format nil "<!--~A-->" (html5-parser:node-value node)))
                     "")))))
     (node-to-text node)))
-
-;; Usage:
-
-;;(html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :who :strictp nil)
-;;(html5-parser:parse-html5-fragment #p"/vagrant/admin/index.html" :dom :who :strictp nil)
-;;(html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :xmls :strictp nil)
 
 (provide :html2who)

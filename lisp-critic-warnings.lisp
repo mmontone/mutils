@@ -1,3 +1,20 @@
+;;; lisp-critic-warnings --- Signal compiler warnings with lisp-critic critiques.
+
+;; Copyright (C) 2023 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.  
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
+;; Author: Mariano Montone <marianomontone@gmail.com>
+;; Version: 0.1
+;; Requires: lisp-critic, compiler-hooks
+
+;;; Commentary:
+
+;; Signal compiler warnings with lisp-critic critiques.
+
+;;; Code:
+
 (require :lisp-critic)
 (require :compiler-hooks)
 

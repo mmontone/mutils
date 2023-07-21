@@ -95,4 +95,8 @@ RETURN can be:
     (:details
      (let ((directory-module-loader:*module-directories*
              (list (asdf:system-source-directory :mutils))))
-       (mapcar #'parse-lisp-module-file (directory-module-loader:list-all-modules :pathname))))))
+       (mapcar #'parse-lisp-module-file
+               (remove "mutils"
+                       (directory-module-loader:list-all-modules :pathname)
+                       :key #'pathname-name
+                       :test #'string=))))))
