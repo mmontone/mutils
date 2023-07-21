@@ -2,7 +2,8 @@
   (:use :cl)
   (:export
    #:condp
-   #:parse-lisp-module-file))
+   #:parse-lisp-module-file
+   #:list-modules))
 
 (in-package :mutils)
 
@@ -61,6 +62,9 @@ its long description/comment with instructions of usage, etc."
                        properties))))
             (:commentary
              (cond
+               ((ppcre:scan commented-line-regex line)
+                (push (aref (second (multiple-value-list (ppcre:scan-to-strings commented-line-regex line))) 0)
+                      commentary))
                ((ppcre:scan code-regex line)
                 (when (null commentary)
                   (error "Commentary is empty"))
@@ -68,11 +72,13 @@ its long description/comment with instructions of usage, etc."
                       (with-output-to-string (s)
                         (dolist (line (nreverse commentary))
                           (write-line line s))))                          
-                (setf status :code))
-               ((ppcre:scan commented-line-regex line)
-                (push (aref (second (multiple-value-list (ppcre:scan-to-strings commented-line-regex line))) 0)
-                      commentary))))))
+                (setf status :code))))))
         (list :name module-name
               :description short-desc
               :properties properties
               :commentary commentary)))))
+
+(defun list-modules ()
+  (let ((directory-module-loader:*module-directories*
+          (list (asdf:system-source-directory :mutils))))
+    (remove :mutils (directory-module-loader:list-all-modules))))
