@@ -253,7 +253,7 @@
         (*template-args* args)
         (*out* stream))
     (let ((renderer (find-renderer *template*)))
-      (when (not renderer)
+      (unless renderer
         (error "Don't know how to render template ~A" name))
       (funcall renderer))))
 
