@@ -2,7 +2,7 @@
 
 A collection of Common Lisp utilities provided as modules.
 
-The modules provided are small enough to fit in a single Common Lisp package and an ASDF system definition may not justified for them.
+The modules provided are small enough to fit in a single file and Common Lisp package, and an ASDF system definition may not be justified for them.
 
 ## Usage
 

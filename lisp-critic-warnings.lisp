@@ -25,7 +25,7 @@
     (with-open-file (in file)
       (let ((eof (list nil)))
         (do ((code (read in nil eof) (read in nil eof)))
-            ((eql code eof) (values))
+            ((eq code eof) (values))
           (let ((critique
                   (with-output-to-string (out)
                     (lisp-critic::critique-definition code out names))))
