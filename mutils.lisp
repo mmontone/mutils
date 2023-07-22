@@ -115,7 +115,7 @@ RETURN can be:
       (write-line "## Modules" f)
       (terpri f)
       (dolist (module-details modules-details)
-        (format f  "* [#~a](~a) - ~a~%"
+        (format f  "* [~a](#~a) - ~a~%"
                 (getf module-details :name)
                 (getf module-details :name)
                 (getf module-details :description)))
