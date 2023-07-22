@@ -17,12 +17,94 @@ Example:
                  (:require :auto-gensym)))
 ```
 
-
 ## Modules
+
+Modules are single Lisp files that follow a format similar to Emacs packages.
+
+They start with a commented section:
+
+* The first line is header with the module name and a short description.
+* Then a Copyright and license, followed by some module properties, like author, version, requirements, and more.
+* A commentary section with a long description of the module, with usage instructions and examples.
+
+Then the code starts:
+
+* `require` calls are placed at the top.
+* The definition of a package and the source code of the module.
+* A `provide` call at the end of the file.
+
+The template looks like this:
+
+```
+;;; <module name> --- <module short description>
+
+;; Copyright (C) 2023 <author>. All rights reserved.
+
+;; This work is licensed under the terms of the <license> license.  
+;; For a copy, see <https://opensource.org/licenses/<license>>.
+
+;; Author: <author> <email>
+;; Version: <module version>
+;; Requires: <required modules separated by comma>
+
+;;; Commentary:
+
+;; <long module description with usage instructions and examples>
+
+;;; Code:
+
+(require :<requirementA>)
+(require :<requirementB>)
+
+(defpackage :<module-package>
+  (:use :cl))
+
+(in-package :<module-package>)
+
+... <module source code> ...
+
+(provide :<module-name>)
+```
+
+An example module:
+
+```lisp
+;;; plump-xpath --- xpath extension for plump.
+
+;; Copyright (C) 2023 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.  
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
+;; Author: Mariano Montone <marianomontone@gmail.com>
+;; Version: 0.1
+;; Requires: plump, xpath
+
+;;; Commentary:
+
+;; xpath extension for plump.
+
+;;; Code:
+
+(require :plump)
+(require :xpath)
+
+(defpackage :plump-xpath
+  (:use :cl))
+
+(in-package :plump-xpath)
+
+...
+
+(provide :plump-xpath)
+```
+
+
+## List of modules
 
 * [who-templates](#who-templates) - Templating system with CL-WHO. Supports inheritance.
 * [quicksearch](#quicksearch) - Search Engine Interface for Common Lisp.
-* [plump-xpath](#plump-xpath) - xpath extension for plump
+* [plump-xpath](#plump-xpath) - xpath extension for plump.
 * [lisp-critic-warnings](#lisp-critic-warnings) - Signal compiler warnings with lisp-critic critiques.
 * [html2who](#html2who) - Parse HTML and create cl-who source code.
 * [estimated-time-progress](#estimated-time-progress) - Progress display with estimated time.
@@ -33,6 +115,7 @@ Example:
 * [auto-gensym](#auto-gensym) - Clojure style AUTO-GENSYM macro.
 
 
+## Details of modules
 ### who-templates 
 
 
@@ -470,7 +553,7 @@ Example:
 ### plump-xpath 
 
 
- xpath extension for plump
+ xpath extension for plump.
 
 
 

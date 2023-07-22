@@ -1,4 +1,4 @@
-;;; plump-xpath --- xpath extension for plump
+;;; plump-xpath --- xpath extension for plump.
 
 ;; Copyright (C) 2023 Mariano Montone. All rights reserved.
 
@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; xpath extension for plump
+;; xpath extension for plump.
 
 ;;; Code:
 

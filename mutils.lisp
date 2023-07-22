@@ -131,7 +131,7 @@ RETURN can be:
                                    :external-format :utf-8)
       (write-string (alexandria:read-file-into-string (asdf:system-relative-pathname :mutils "README.base.md")) f)
       (terpri f) (terpri f)
-      (write-line "## Modules" f)
+      (write-line "## List of modules" f)
       (terpri f)
       (dolist (module-details modules-details)
         (format f  "* [~a](#~a) - ~a~%"
@@ -141,6 +141,7 @@ RETURN can be:
       (terpri f) (terpri f)
 
       ;; Modules docs
+      (write-line "## Details of modules" f)
       (dolist (module-details modules-details)
         (format f "### ~a ~%~%" (getf module-details :name))
         (write-string (getf module-details :commentary) f)
