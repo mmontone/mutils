@@ -98,3 +98,52 @@ An example module:
 
 (provide :plump-xpath)
 ```
+
+## mutils utilities
+
+### describe-module
+
+```lisp
+(module-name)
+```
+
+Print a description of module.
+
+### describe-modules
+
+```lisp
+()
+```
+
+Print a description of available mutils modules.
+
+### generate-readme
+
+```lisp
+()
+```
+
+Generate a README file with information about available modules.
+
+### list-modules
+
+```lisp
+(&optional (return :name))
+```
+
+List mutils modules.
+RETURN can be:
+- :name . Just returns the name of the modules, as a keyword. Default.
+- :details. Parses the modules and returns its details.
+
+### parse-lisp-module-file
+
+```lisp
+(file)
+```
+
+Parse a Lisp module file.
+
+Returns the name of the module, its short description,
+its properties (author, requirements, keywords, etc.),
+its long description/comment with instructions of usage, etc.

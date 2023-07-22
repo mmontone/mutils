@@ -112,6 +112,7 @@ RETURN can be:
             (getf module-description :description))))
 
 (defun describe-module (module-name)
+  "Print a description of module."
   (let ((module (find module-name (list-modules :details)
                       :key (alexandria:rcurry #'getf :name)
                       :test #'string=)))
