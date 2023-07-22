@@ -5,6 +5,7 @@
    #:parse-lisp-module-file
    #:list-modules
    #:generate-readme
+   #:describe-module
    #:describe-modules))
 
 (in-package :mutils)
@@ -108,7 +109,17 @@ RETURN can be:
   (dolist (module-description (list-modules :details))
     (format t "~a - ~a~%"
             (getf module-description :name)
-            (getf module-description :description)))))
+            (getf module-description :description))))
+
+(defun describe-module (module-name)
+  (let ((module (find module-name (list-modules :details)
+                      :key (alexandria:rcurry #'getf :name)
+                      :test #'string=)))
+    (unless module
+      (error "Module not found: ~a" module-name))
+    (format t "~a~%~%~a"
+            (getf module :name)
+            (getf module :commentary))))
 
 (defun generate-readme ()
   "Generate a README file with information about available modules."
