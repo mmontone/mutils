@@ -19,7 +19,7 @@ Example:
 
 ## Modules
 
-Modules are single Lisp files that follow a format similar to Emacs packages.
+Modules are single Lisp files that follow a format similar to [Emacs Packages](https://www.gnu.org/software/emacs/manual/html_node/elisp/Simple-Packages.html).
 
 They start with a commented section:
 
