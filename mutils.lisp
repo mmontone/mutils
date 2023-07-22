@@ -4,7 +4,8 @@
    #:condp
    #:parse-lisp-module-file
    #:list-modules
-   #:generate-readme))
+   #:generate-readme
+   #:describe-modules))
 
 (in-package :mutils)
 
@@ -101,6 +102,13 @@ RETURN can be:
                        (directory-module-loader:list-all-modules :pathname)
                        :key #'pathname-name
                        :test #'string=))))))
+
+(defun describe-modules ()
+  "Print a description of available mutils modules."
+  (dolist (module-description (list-modules :details))
+    (format t "~a - ~a~%"
+            (getf module-description :name)
+            (getf module-description :description)))))
 
 (defun generate-readme ()
   "Generate a README file with information about available modules."
