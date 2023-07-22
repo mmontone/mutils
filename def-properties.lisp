@@ -1,3 +1,20 @@
+;;; def-properties --- Portable extractor of information from Common Lisp definitions.
+
+;; Copyright (C) 2023 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.  
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
+;; Author: Mariano Montone <marianomontone@gmail.com>
+;; Version: 0.1
+;; Requires: alexandria
+
+;;; Commentary:
+
+;; Portable extractor of information from Common Lisp definitions.
+
+;;; Code:
+
 (defpackage :def-properties
   (:use :cl)
   (:export

@@ -1,3 +1,23 @@
+;;; directory-module-loader --- Loader of Lisp module files from directories.
+
+;; Copyright (C) 2023 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.  
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
+;; Author: Mariano Montone <marianomontone@gmail.com>
+;; Version: 0.1
+;; Requires: alexandria
+
+;;; Commentary:
+
+;; Loader of Lisp module files from directories.
+;; Lisp module files are similar to Emacs packages.
+;; requires at the top, and provide at the bottom.
+;; and package information in source code comments.
+
+;;; Code:
+
 (defpackage directory-module-loader
   (:use :cl)
   ;; Happily, all those implementations all have the same module-provider hook interface.

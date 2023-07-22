@@ -1,3 +1,20 @@
+;;; compiler-hooks --- Provides hooks for Common Lisp compilation api.
+
+;; Copyright (C) 2023 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.  
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
+;; Author: Mariano Montone <marianomontone@gmail.com>
+;; Version: 0.1
+;; Requires: alexandria, cl-package-locks
+
+;;; Commentary:
+
+;; Provides hooks for Common Lisp compilation api.
+
+;;; Code:
+
 (require :cl-package-locks)
 
 (defpackage :compiler-hooks
