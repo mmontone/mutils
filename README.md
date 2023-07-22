@@ -27,7 +27,7 @@ They start with a commented section:
 * Then a Copyright and license, followed by some module properties, like author, version, requirements, and more.
 * A commentary section with a long description of the module, with usage instructions and examples.
 
-Then the code starts:
+Then a section with the module source code:
 
 * `require` calls are placed at the top.
 * The definition of a package and the source code of the module.
@@ -98,6 +98,14 @@ An example module:
 
 (provide :plump-xpath)
 ```
+
+## Contributing
+
+I welcome contributions of new modules. If you are interested in mutils shipping yours, create a pull request or attach your file with the module.
+
+Modules should be general purpose and be compact enough to fit into a single file and package. Although they can also depend on other modules.
+
+The module file should follow the format described in this document.
 
 ## mutils utilities
 
