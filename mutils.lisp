@@ -3,7 +3,8 @@
   (:export
    #:condp
    #:parse-lisp-module-file
-   #:list-modules))
+   #:list-modules
+   #:generate-readme))
 
 (in-package :mutils)
 
@@ -100,3 +101,19 @@ RETURN can be:
                        (directory-module-loader:list-all-modules :pathname)
                        :key #'pathname-name
                        :test #'string=))))))
+
+(defun generate-readme ()
+  "Generate a README file with information about available modules."
+  (let ((output-file (asdf:system-relative-pathname :mutils "README.md")))
+    (with-open-file (f output-file :direction :output
+                                   :if-exists :supersede
+                                   :if-does-not-exist :create
+                                   :external-format :utf-8)
+      (write-string (alexandria:read-file-into-string (asdf:system-relative-pathname :mutils "README.base.md")) f)
+      (terpri f) (terpri f)
+      (write-line "## Modules" f)
+      (terpri f)
+      (dolist (module-details (list-modules :details))
+        (format f "### ~a ~%~%" (getf module-details :name))
+        (write-string (getf module-details :commentary) f)
+        (terpri f) (terpri f)))))
