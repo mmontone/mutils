@@ -20,7 +20,20 @@ Example:
 
 ## Modules
 
-### who-templates  
+* [#who-templates](who-templates) - Templating system with CL-WHO. Supports inheritance.
+* [#quicksearch](quicksearch) - Search Engine Interface for Common Lisp.
+* [#plump-xpath](plump-xpath) - xpath extension for plump
+* [#lisp-critic-warnings](lisp-critic-warnings) - Signal compiler warnings with lisp-critic critiques.
+* [#html2who](html2who) - Parse HTML and create cl-who source code.
+* [#estimated-time-progress](estimated-time-progress) - Progress display with estimated time.
+* [#directory-module-loader](directory-module-loader) - Loader of Lisp module files from directories.
+* [#def-properties](def-properties) - Portable extractor of information from Common Lisp definitions.
+* [#compiler-info](compiler-info) - Provides compiler info (specially from declarations) in a portable way.
+* [#compiler-hooks](compiler-hooks) - Provides hooks for Common Lisp compilation api.
+* [#auto-gensym](auto-gensym) - Clojure style AUTO-GENSYM macro.
+
+
+### who-templates 
 
 
  Templating system with CL-WHO. Supports inheritance.
@@ -105,7 +118,7 @@ Example:
 
 
 
-### quicksearch  
+### quicksearch 
 
 
  Quicksearch is a search-engine-interface for Common Lisp.
@@ -454,21 +467,21 @@ Example:
 
 
 
-### plump-xpath  
+### plump-xpath 
 
 
  xpath extension for plump
 
 
 
-### lisp-critic-warnings  
+### lisp-critic-warnings 
 
 
  Signal compiler warnings with lisp-critic critiques.
 
 
 
-### html2who  
+### html2who 
 
 
  Parse HTML and create cl-who source code.
@@ -480,7 +493,7 @@ Example:
 (html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :xmls :strictp nil)
 
 
-### estimated-time-progress  
+### estimated-time-progress 
 
 
  Progress display with estimated time.
@@ -511,7 +524,7 @@ Example:
 
 
 
-### directory-module-loader  
+### directory-module-loader 
 
 
  Loader of Lisp module files from directories.
@@ -521,28 +534,28 @@ Example:
 
 
 
-### def-properties  
+### def-properties 
 
 
  Portable extractor of information from Common Lisp definitions.
 
 
 
-### compiler-info  
+### compiler-info 
 
 
  Provides compiler info (specially from declarations) in a portable way.
 
 
 
-### compiler-hooks  
+### compiler-hooks 
 
 
  Provides hooks for Common Lisp compilation api.
 
 
 
-### auto-gensym  
+### auto-gensym 
 
 
  Clojure style AUTO-GENSYM macro.

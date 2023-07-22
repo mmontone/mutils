@@ -17,9 +17,9 @@
   (let ((pred (gensym)))
     `(let ((,pred ,predicate))
        (cond
-	 ,@(loop for clause in clauses
-		 collect `((funcall ,pred ,(car clause))
-			   ,@(cdr clause)))))))
+         ,@(loop for clause in clauses
+                 collect `((funcall ,pred ,(car clause))
+                           ,@(cdr clause)))))))
 
 (defun parse-lisp-module-file (file)
   "Parse a Lisp module file.
@@ -32,7 +32,7 @@ its long description/comment with instructions of usage, etc."
         (code-regex "^\\s*;;;\\s*Code\\:")
         (property-regex "^\\s*;;\\s*(\\w*)\\:\\s*(.*)")
         (commented-line-regex "^\\s*;*(.*)"))
-        
+
     (with-open-file (in file)
       ;; The first line has the module name followed by a short description.
       (let* ((first-line (read-line in))
@@ -45,8 +45,8 @@ its long description/comment with instructions of usage, etc."
              (status :properties))
         (unless module-name-and-desc
           (error "Module should start with: ;;; <module name> --- <short description>"))
-        (setf module-name (aref module-name-and-desc 0))
-        (setf short-desc (aref module-name-and-desc 1))
+        (setf module-name (string-trim '(#\space) (aref module-name-and-desc 0)))
+        (setf short-desc (string-trim '(#\space) (aref module-name-and-desc 1)))
         (handler-case
             (do ((line (read-line in) (read-line in)))
                 ((eql status :code) (values))
@@ -70,7 +70,7 @@ its long description/comment with instructions of usage, etc."
                     (setf commentary
                           (with-output-to-string (s)
                             (dolist (line (nreverse commentary))
-                              (write-line line s))))                          
+                              (write-line line s))))
                     (setf status :code))
                    ((ppcre:scan commented-line-regex line)
                     (push (aref (second (multiple-value-list (ppcre:scan-to-strings commented-line-regex line))) 0)
@@ -104,7 +104,8 @@ RETURN can be:
 
 (defun generate-readme ()
   "Generate a README file with information about available modules."
-  (let ((output-file (asdf:system-relative-pathname :mutils "README.md")))
+  (let ((output-file (asdf:system-relative-pathname :mutils "README.md"))
+        (modules-details (list-modules :details)))
     (with-open-file (f output-file :direction :output
                                    :if-exists :supersede
                                    :if-does-not-exist :create
@@ -113,7 +114,15 @@ RETURN can be:
       (terpri f) (terpri f)
       (write-line "## Modules" f)
       (terpri f)
-      (dolist (module-details (list-modules :details))
+      (dolist (module-details modules-details)
+        (format f  "* [#~a](~a) - ~a~%"
+                (getf module-details :name)
+                (getf module-details :name)
+                (getf module-details :description)))
+      (terpri f) (terpri f)
+
+      ;; Modules docs
+      (dolist (module-details modules-details)
         (format f "### ~a ~%~%" (getf module-details :name))
         (write-string (getf module-details :commentary) f)
         (terpri f) (terpri f)))))
