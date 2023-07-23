@@ -1,6 +1,7 @@
 # hunchentoot-errors
 
 Augments Hunchentoot error pages and logs with request and session information.
+
 [[source code]](../hunchentoot-errors.lisp)
 
 - **Requires**: hunchentoot
