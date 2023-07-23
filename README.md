@@ -167,6 +167,7 @@ its long description/comment with instructions of usage, etc.
 * [estimated-time-progress](#estimated-time-progress) - Progress display with estimated time.
 * [html2who](#html2who) - Parse HTML and create cl-who source code.
 * [hunchentoot-errors](#hunchentoot-errors) - Augments Hunchentoot error pages and logs with request and session information.
+* [hunchentoot-trace-acceptor](#hunchentoot-trace-acceptor) - A Hunchentoot acceptor that traces requests.
 * [lisp-critic-warnings](#lisp-critic-warnings) - Signal compiler warnings with lisp-critic critiques.
 * [plump-xpath](#plump-xpath) - xpath extension for plump.
 * [quicksearch](#quicksearch) - Search Engine Interface for Common Lisp.
@@ -298,6 +299,26 @@ its long description/comment with instructions of usage, etc.
    USER: 3
    FORWARD-URL: "/"
  ```
+
+
+
+### hunchentoot-trace-acceptor 
+
+
+ A Hunchentoot acceptor that traces requests.
+
+ Example usage:
+
+ ```lisp
+ (defclass my-acceptor (hunchentoot:easy-acceptor hunchentoot-trace:trace-acceptor)
+   ())
+
+ (hunchentoot:start (make-instance 'my-acceptor :port 5000))
+ ```
+
+ Result:
+
+ HTTP requests information is printed to *standard-output*
 
 
 
