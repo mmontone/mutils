@@ -7,7 +7,6 @@
    ;; Modules api
    #:parse-lisp-module-file
    #:list-modules
-   #:generate-readme
    #:describe-module
    #:describe-modules))
 
@@ -150,9 +149,11 @@ RETURN can be:
             (getf module-description :name)
             (getf module-description :description))))
 
+(declaim (ftype (function ((or symbol string)) (values)) describe-module))
 (defun describe-module (module-name)
   "Print a description of module."
-  (let ((module (find module-name (list-modules :details)
+  (let ((module (find (string-downcase (string module-name))
+                      (list-modules :details)
                       :key (alexandria:rcurry #'getf :name)
                       :test #'string=)))
     (unless module
@@ -160,29 +161,3 @@ RETURN can be:
     (format t "~a~%~%~a"
             (getf module :name)
             (getf module :commentary))))
-
-(defun generate-readme ()
-  "Generate a README file with information about available modules."
-  (let ((output-file (asdf:system-relative-pathname :mutils "README.md"))
-        (modules-details (list-modules :details)))
-    (with-open-file (f output-file :direction :output
-                                   :if-exists :supersede
-                                   :if-does-not-exist :create
-                                   :external-format :utf-8)
-      (write-string (alexandria:read-file-into-string (asdf:system-relative-pathname :mutils "README.base.md")) f)
-      (terpri f) (terpri f)
-      (write-line "## List of modules" f)
-      (terpri f)
-      (dolist (module-details modules-details)
-        (format f  "* [~a](#~a) - ~a~%"
-                (getf module-details :name)
-                (getf module-details :name)
-                (getf module-details :description)))
-      (terpri f) (terpri f)
-
-      ;; Modules docs
-      (write-line "## Details of modules" f)
-      (dolist (module-details modules-details)
-        (format f "### ~a ~%~%" (getf module-details :name))
-        (write-string (getf module-details :commentary) f)
-        (terpri f) (terpri f)))))

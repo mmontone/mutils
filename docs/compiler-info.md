@@ -1,0 +1,16 @@
+# compiler-info
+%Provides compiler info (specially from declarations) in a portable way.
+
+**Version**: 0.1
+**Author**: Mariano Montone <marianomontone@gmail.com>
+
+
+ Provides compiler info (specially from declarations) in a portable way.
+
+
+
+# COMPILER-INFO
+
+nil
+
+## Functions
