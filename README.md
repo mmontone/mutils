@@ -159,102 +159,159 @@ its long description/comment with instructions of usage, etc.
 
 ## List of modules
 
-* [who-templates](#who-templates) - Templating system with CL-WHO. Supports inheritance.
-* [quicksearch](#quicksearch) - Search Engine Interface for Common Lisp.
-* [plump-xpath](#plump-xpath) - xpath extension for plump.
-* [lisp-critic-warnings](#lisp-critic-warnings) - Signal compiler warnings with lisp-critic critiques.
-* [html2who](#html2who) - Parse HTML and create cl-who source code.
-* [estimated-time-progress](#estimated-time-progress) - Progress display with estimated time.
-* [directory-module-loader](#directory-module-loader) - Loader of Lisp module files from directories.
-* [def-properties](#def-properties) - Portable extractor of information from Common Lisp definitions.
-* [compiler-info](#compiler-info) - Provides compiler info (specially from declarations) in a portable way.
-* [compiler-hooks](#compiler-hooks) - Provides hooks for Common Lisp compilation api.
 * [auto-gensym](#auto-gensym) - Clojure style AUTO-GENSYM macro.
+* [compiler-hooks](#compiler-hooks) - Provides hooks for Common Lisp compilation api.
+* [compiler-info](#compiler-info) - Provides compiler info (specially from declarations) in a portable way.
+* [def-properties](#def-properties) - Portable extractor of information from Common Lisp definitions.
+* [directory-module-loader](#directory-module-loader) - Loader of Lisp module files from directories.
+* [estimated-time-progress](#estimated-time-progress) - Progress display with estimated time.
+* [html2who](#html2who) - Parse HTML and create cl-who source code.
+* [hunchentoot-errors](#hunchentoot-errors) - Augments Hunchentoot error pages and logs with request and session information.
+* [lisp-critic-warnings](#lisp-critic-warnings) - Signal compiler warnings with lisp-critic critiques.
+* [plump-xpath](#plump-xpath) - xpath extension for plump.
+* [quicksearch](#quicksearch) - Search Engine Interface for Common Lisp.
+* [who-templates](#who-templates) - Templating system with CL-WHO. Supports inheritance.
 
 
 ## Details of modules
-### who-templates 
+### auto-gensym 
 
 
- Templating system with CL-WHO. Supports inheritance.
+ Clojure style AUTO-GENSYM macro.
 
- Example:
 
- Base template example:
 
- (deftemplate base-1 ()
-   (&args title)
-   (:html
-    (:head
-     (:title (who:str (or title "WHO TEMPLATES")))
-     (block styles
-       (:link :rel "stylesheet" :href "/bootstrap.css")))
-    (:body
-     (block body)
-     (block scripts))))
+### compiler-hooks 
 
- (render-template-to-string 'base-1)
- (render-template-to-string 'base-1 :title "lala")
 
- Inheritance/block overwrite. Calls to parent:
+ Provides hooks for Common Lisp compilation api.
 
- (deftemplate foo (:parent base-1)
-   (block body
-     (:h1 (who:str "Foo"))))
 
- (render-template-to-string 'foo)
 
- (deftemplate bar (:parent base-1)
-   (block body
-     (:h1 (who:str "Bar")))
-   (block styles
-     (parent)
-     (:link :rel "stylesheet" :href "/bar.css")))
+### compiler-info 
 
- (render-template-to-string 'bar)
 
- (deftemplate baz (:parent bar)
-   (block scripts
-     (parent)
-     (:script :type "text/javacript"
-              (who:str "...javascript code..."))))
+ Provides compiler info (specially from declarations) in a portable way.
 
- (render-template-to-string 'baz)
 
- Args:
 
- (deftemplate hello (:parent base-1)
-   (block body
-     (:h1 (who:str (targ :hello)))))
+### def-properties 
 
- (render-template-to-string 'hello :hello "Hello!!")
 
- (deftemplate hello-2 (:parent base-1)
-   (block body
-     (&args hello)
-     (:h1 (who:str hello))
-     (:h2 (who:str hello))))
+ Portable extractor of information from Common Lisp definitions.
 
- (render-template-to-string 'hello-2 :hello "Hi!!")
 
- (deftemplate hello-3 (:parent base-1)
-   (block body
-     (with-targs (hello)
-       (:h1 (who:str hello))
-       (:h2 (who:str hello)))))
 
- (render-template-to-string 'hello-3 :hello "Hi!!")
+### directory-module-loader 
 
- Include:
 
- (deftemplate snippet ()
-   (:p (who:str "This stuff has been included")))
+ Loader of Lisp module files from directories.
+ Lisp module files are similar to Emacs packages.
+ requires at the top, and provide at the bottom.
+ and package information in source code comments.
 
- (deftemplate include (:parent base-1)
-   (block body
-     (include 'snippet)))
 
- (render-template-to-string 'include)
+
+### estimated-time-progress 
+
+
+ Progress display with estimated time.
+
+ Usage:
+
+ Enable the progress bars:
+
+ (setf cl-progress-bar:*progress-bar-enabled* t)
+
+ (defun perform-step () ; Calls to the update can occur anywhere.
+   (sleep 1.7)
+   (cl-progress-bar:update 1))
+
+ (with-estimated-time-progress (5 "This is just a example. Number of steps is ~a." 5)
+   (dotimes (i 5) (perform-step)))
+
+ Example output:
+
+ This is just a example. Number of steps is 5.
+ Progress: 20% (1 of 5) at 0.5707746/sec. Elapsed: 1 seconds. Remaining: 7 seconds.
+ Progress: 40% (2 of 5) at 0.5787024/sec. Elapsed: 3 seconds. Remaining: 5 seconds.
+ Progress: 60% (3 of 5) at 0.5804938/sec. Elapsed: 5 seconds. Remaining: 3 seconds.
+ Progress: 80% (4 of 5) at 0.58207065/sec. Elapsed: 6 seconds. Remaining: 1 seconds.
+ Progress: 100% (5 of 5) at 0.58220625/sec. Elapsed: 8 seconds. Remaining: .
+
+ Finished in 8.60 seconds
+
+
+
+### html2who 
+
+
+ Parse HTML and create cl-who source code.
+
+ Usage:
+
+(html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :who :strictp nil)
+(html5-parser:parse-html5-fragment #p"/vagrant/admin/index.html" :dom :who :strictp nil)
+(html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :xmls :strictp nil)
+
+
+### hunchentoot-errors 
+
+
+ Augments Hunchentoot error pages and logs with request and session information.
+ ### Usage
+
+ Subclass your acceptor from `HUNCHENTOOT-ERRORS:ERRORS-ACCEPTOR`.
+
+ When `hunchentoot:*show-lisp-errors-p*` is on, you get HTTP request and session information printed in errors pages and logs, like:
+
+ ```
+ Backtrace for: #<SB-THREAD:THREAD "hunchentoot-worker-127.0.0.1:46428" RUNNING {1002007DE3}>
+ 0: (TRIVIAL-BACKTRACE:PRINT-BACKTRACE-TO-STREAM #<SB-IMPL::CHARACTER-STRING-OSTREAM {1003C82953}>)
+ 1: ((FLET "FORM-FUN-4" :IN HUNCHENTOOT::GET-BACKTRACE))
+ 2: (HUNCHENTOOT::GET-BACKTRACE)
+ 3: ((FLET "H0" :IN HUNCHENTOOT:HANDLE-REQUEST) #<SIMPLE-ERROR "sdf" {1003C827F3}>)
+ 4: (SB-KERNEL::%SIGNAL #<SIMPLE-ERROR "sdf" {1003C827F3}>)
+ 5: (ERROR "sdf")
+ 6: (INVOICE-ENGINE::ADMIN/USERS/CREATE)
+ 7: ((LAMBDA NIL :IN EASY-ROUTES::PROCESS-ROUTE))
+ 8: (EASY-ROUTES::CALL-WITH-DECORATORS NIL #<CLOSURE (LAMBDA NIL :IN EASY-ROUTES::PROCESS-ROUTE) {1003C7C57B}>)
+ 9: ((LAMBDA NIL :IN EASY-ROUTES::CALL-WITH-DECORATORS))
+ ...
+ 31: (SB-THREAD::CALL-WITH-MUTEX #<CLOSURE (FLET SB-THREAD::WITH-MUTEX-THUNK :IN SB-THREAD::NEW-LISP-THREAD-TRAMPOLINE) {7FD95C27ED9B}> #<SB-THREAD:MUTEX "thread result lock" owner: #<SB-THREAD:THREAD "hunchentoot-worker-127.0.0.1:46428" RUNNING {1002007DE3}>> NIL T NIL)
+ 32: (SB-THREAD::NEW-LISP-THREAD-TRAMPOLINE #<SB-THREAD:THREAD "hunchentoot-worker-127.0.0.1:46428" RUNNING {1002007DE3}> NIL #<CLOSURE (LAMBDA NIL :IN BORDEAUX-THREADS::BINDING-DEFAULT-SPECIALS) {1001FF7FBB}> NIL)
+ 33: ("foreign function: call_into_lisp")
+ 34: ("foreign function: new_thread_trampoline")
+
+ HTTP REQUEST:
+   uri: /admin/users/new
+   method: POST
+   post parameters:
+     name: asdf
+     username: asdf
+     email: sdf@asdfasdf.com
+     password: asdfasdf
+
+ SESSION:
+   FLASH-MESSAGES: NIL
+   ROLE: "superadmin"
+   USER: 3
+   FORWARD-URL: "/"
+ ```
+
+
+
+### lisp-critic-warnings 
+
+
+ Signal compiler warnings with lisp-critic critiques.
+
+
+
+### plump-xpath 
+
+
+ xpath extension for plump.
 
 
 
@@ -607,98 +664,88 @@ its long description/comment with instructions of usage, etc.
 
 
 
-### plump-xpath 
+### who-templates 
 
 
- xpath extension for plump.
+ Templating system with CL-WHO. Supports inheritance.
 
+ Example:
 
+ Base template example:
 
-### lisp-critic-warnings 
+ (deftemplate base-1 ()
+   (&args title)
+   (:html
+    (:head
+     (:title (who:str (or title "WHO TEMPLATES")))
+     (block styles
+       (:link :rel "stylesheet" :href "/bootstrap.css")))
+    (:body
+     (block body)
+     (block scripts))))
 
+ (render-template-to-string 'base-1)
+ (render-template-to-string 'base-1 :title "lala")
 
- Signal compiler warnings with lisp-critic critiques.
+ Inheritance/block overwrite. Calls to parent:
 
+ (deftemplate foo (:parent base-1)
+   (block body
+     (:h1 (who:str "Foo"))))
 
+ (render-template-to-string 'foo)
 
-### html2who 
+ (deftemplate bar (:parent base-1)
+   (block body
+     (:h1 (who:str "Bar")))
+   (block styles
+     (parent)
+     (:link :rel "stylesheet" :href "/bar.css")))
 
+ (render-template-to-string 'bar)
 
- Parse HTML and create cl-who source code.
+ (deftemplate baz (:parent bar)
+   (block scripts
+     (parent)
+     (:script :type "text/javacript"
+              (who:str "...javascript code..."))))
 
- Usage:
+ (render-template-to-string 'baz)
 
-(html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :who :strictp nil)
-(html5-parser:parse-html5-fragment #p"/vagrant/admin/index.html" :dom :who :strictp nil)
-(html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :xmls :strictp nil)
+ Args:
 
+ (deftemplate hello (:parent base-1)
+   (block body
+     (:h1 (who:str (targ :hello)))))
 
-### estimated-time-progress 
+ (render-template-to-string 'hello :hello "Hello!!")
 
+ (deftemplate hello-2 (:parent base-1)
+   (block body
+     (&args hello)
+     (:h1 (who:str hello))
+     (:h2 (who:str hello))))
 
- Progress display with estimated time.
+ (render-template-to-string 'hello-2 :hello "Hi!!")
 
- Usage:
+ (deftemplate hello-3 (:parent base-1)
+   (block body
+     (with-targs (hello)
+       (:h1 (who:str hello))
+       (:h2 (who:str hello)))))
 
- Enable the progress bars:
+ (render-template-to-string 'hello-3 :hello "Hi!!")
 
- (setf cl-progress-bar:*progress-bar-enabled* t)
+ Include:
 
- (defun perform-step () ; Calls to the update can occur anywhere.
-   (sleep 1.7)
-   (cl-progress-bar:update 1))
+ (deftemplate snippet ()
+   (:p (who:str "This stuff has been included")))
 
- (with-estimated-time-progress (5 "This is just a example. Number of steps is ~a." 5)
-   (dotimes (i 5) (perform-step)))
+ (deftemplate include (:parent base-1)
+   (block body
+     (include 'snippet)))
 
- Example output:
-
- This is just a example. Number of steps is 5.
- Progress: 20% (1 of 5) at 0.5707746/sec. Elapsed: 1 seconds. Remaining: 7 seconds.
- Progress: 40% (2 of 5) at 0.5787024/sec. Elapsed: 3 seconds. Remaining: 5 seconds.
- Progress: 60% (3 of 5) at 0.5804938/sec. Elapsed: 5 seconds. Remaining: 3 seconds.
- Progress: 80% (4 of 5) at 0.58207065/sec. Elapsed: 6 seconds. Remaining: 1 seconds.
- Progress: 100% (5 of 5) at 0.58220625/sec. Elapsed: 8 seconds. Remaining: .
-
- Finished in 8.60 seconds
-
-
-
-### directory-module-loader 
-
-
- Loader of Lisp module files from directories.
- Lisp module files are similar to Emacs packages.
- requires at the top, and provide at the bottom.
- and package information in source code comments.
-
-
-
-### def-properties 
-
-
- Portable extractor of information from Common Lisp definitions.
-
-
-
-### compiler-info 
-
-
- Provides compiler info (specially from declarations) in a portable way.
-
-
-
-### compiler-hooks 
-
-
- Provides hooks for Common Lisp compilation api.
-
-
-
-### auto-gensym 
-
-
- Clojure style AUTO-GENSYM macro.
+ (render-template-to-string 'include)
 
 
 

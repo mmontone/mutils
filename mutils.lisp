@@ -94,15 +94,19 @@ RETURN can be:
     (:name
      (let ((directory-module-loader:*module-directories*
              (list (asdf:system-source-directory :mutils))))
-       (remove :mutils (directory-module-loader:list-all-modules))))
+       (sort (remove :mutils (directory-module-loader:list-all-modules))
+             #'string< :key #'string)))
     (:details
      (let ((directory-module-loader:*module-directories*
              (list (asdf:system-source-directory :mutils))))
-       (mapcar #'parse-lisp-module-file
-               (remove "mutils"
-                       (directory-module-loader:list-all-modules :pathname)
-                       :key #'pathname-name
-                       :test #'string=))))))
+       (sort
+        (mapcar #'parse-lisp-module-file
+                (remove "mutils"
+                        (directory-module-loader:list-all-modules :pathname)
+                        :key #'pathname-name
+                        :test #'string=))
+        #'string<
+        :key (alexandria:rcurry #'getf :name))))))
 
 (defun describe-modules ()
   "Print a description of available mutils modules."
