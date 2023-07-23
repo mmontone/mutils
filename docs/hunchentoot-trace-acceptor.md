@@ -1,6 +1,7 @@
 # hunchentoot-trace-acceptor
 
 A Hunchentoot acceptor that traces requests.
+[[source code]](../hunchentoot-trace-acceptor.lisp)
 
 - **Requires**: hunchentoot
 - **Version**: 0.1

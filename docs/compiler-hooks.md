@@ -1,6 +1,7 @@
 # compiler-hooks
 
 Provides hooks for Common Lisp compilation api.
+[[source code]](../compiler-hooks.lisp)
 
 - **Requires**: alexandria, cl-package-locks
 - **Version**: 0.1

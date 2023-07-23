@@ -1,6 +1,7 @@
 # compiler-info
 
 Provides compiler info (specially from declarations) in a portable way.
+[[source code]](../compiler-info.lisp)
 
 - **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>

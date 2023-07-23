@@ -1,6 +1,7 @@
 # mutils-docs
 
 Documentation generator for mutils.
+[[source code]](../mutils-docs.lisp)
 
 - **Requires**: mutils, simple-doc
 - **Version**: 0.1

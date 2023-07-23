@@ -1,6 +1,7 @@
 # html2who
 
 Parse HTML and create cl-who source code.
+[[source code]](../html2who.lisp)
 
 - **Requires**: cl-who, cl-html5-parser
 - **Version**: 0.1

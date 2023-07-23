@@ -32,7 +32,7 @@
                               :external-format :utf-8)
     (format f "# ~a~%~%" (getf module-details :name))
     (write-string (getf module-details :description) f)
-    (terpri f) (terpri f)
+    (format f "~%[[source code]](../~a.lisp)~%~%" (getf module-details :name))
     (dolist (property (getf module-details :properties))
       (format f "- **~a**: ~a~%" (car property) (cdr property)))
     (terpri f)

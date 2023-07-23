@@ -1,6 +1,7 @@
 # directory-module-loader
 
 Loader of Lisp module files from directories.
+[[source code]](../directory-module-loader.lisp)
 
 - **Requires**: alexandria
 - **Version**: 0.1

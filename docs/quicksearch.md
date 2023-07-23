@@ -1,6 +1,7 @@
 # quicksearch
 
 Search Engine Interface for Common Lisp.
+[[source code]](../quicksearch.lisp)
 
 - **Requires**: anaphora, iterate, drakma, do-urlencode, yason, html-entities
 - **Version**: 0.1
