@@ -24,9 +24,11 @@
 
 ;; Result:
 
-;; HTTP requests information is printed to *standard-output*
+;; HTTP requests information is printed to `*standard-output*`.
 
 ;;; Code:
+
+(require :hunchentoot)
 
 (defpackage :hunchentoot-trace-acceptor
   (:use :cl :hunchentoot)

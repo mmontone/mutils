@@ -55,6 +55,7 @@
 ;;; Code:
 
 (require :hunchentoot)
+(require :cl-mimeparse)
 
 (defpackage #:hunchentoot-errors
   (:use #:cl #:hunchentoot)

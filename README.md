@@ -318,7 +318,7 @@ its long description/comment with instructions of usage, etc.
 
  Result:
 
- HTTP requests information is printed to *standard-output*
+ HTTP requests information is printed to `*standard-output*`.
 
 
 
