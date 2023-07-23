@@ -25,4 +25,13 @@ A Hunchentoot acceptor that traces requests.
 
 
 ## Variables
+### \*trace-requests\*
+nil
+
+### \*trace-session\*
+nil
+
 ## Classs
+### trace-acceptor
+nil
+

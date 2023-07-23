@@ -36,3 +36,20 @@ Progress display with estimated time.
 
 
 ## Macros
+### with-estimated-time-progress
+
+```lisp
+((steps-count description &rest desc-args) &body body)
+```
+
+Display progress with estimated times.
+
+- **STEPS-COUNT**: The total number of steps.
+- **DESCRIPTION**: A FORMAT control string for the progress display.
+- **DESC-ARGS**: The format arguments for DESCRIPTION.
+
+
+Example:
+(with-estimated-time-progress (5 "This is just a example. Number of steps is ~a." 5)
+  (dotimes (i 5) (perform-step)))
+

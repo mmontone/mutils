@@ -41,6 +41,7 @@
     (require (getf module-details :name))
     (simple-doc:generate-markdown-doc
      f (intern (string-upcase (getf module-details :name)) :keyword)
+     :output-undocumented t
      :include nil)))
 
 (defun generate-readme ()

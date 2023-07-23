@@ -102,6 +102,13 @@ BLOCK name form*
 
 Evaluate the FORMS as a PROGN. Within the lexical scope of the body,
 RETURN-FROM can be used to exit the form.
+### include
+
+```lisp
+(template-name)
+```
+
+
 ### parent
 
 ```lisp
@@ -113,4 +120,41 @@ Render the parent block
 
 
 
+### render-template
+
+```lisp
+(name stream &rest args)
+```
+
+
+### render-template-to-string
+
+```lisp
+(name &rest args)
+```
+
+
+### targ
+
+```lisp
+(symbol)
+```
+
+
 ## Macros
+### deftemplate
+
+```lisp
+(name args &body body)
+```
+
+
+
+### with-targs
+
+```lisp
+(args &body body)
+```
+
+
+

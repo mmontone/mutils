@@ -12,6 +12,34 @@ Portable extractor of information from Common Lisp definitions.
 
 
 ## Functions
+### asdf-system-packages
+
+```lisp
+(system)
+```
+
+
+### class-properties
+
+```lisp
+(class-name &optional shallow)
+```
+
+
+### function-properties
+
+```lisp
+(symbol &optional shallow)
+```
+
+
+### generic-function-properties
+
+```lisp
+(symbol &optional shallow)
+```
+
+
 ### list-lambda-list-args
 
 ```lisp
@@ -21,6 +49,20 @@ Portable extractor of information from Common Lisp definitions.
 Takes a LAMBDA-LIST and returns the list of all the argument names.
 
 
+
+
+### macro-properties
+
+```lisp
+(symbol &optional shallow)
+```
+
+
+### package-properties
+
+```lisp
+(package &optional shallow)
+```
 
 
 ### parse-docstring
@@ -38,6 +80,41 @@ PACKAGE: the package to use to read the docstring symbols.
 
 
 
+### special-operator-properties
+
+```lisp
+(symbol &optional shallow)
+```
+
+
+### symbol-class-p
+
+```lisp
+(symbol)
+```
+
+
+### symbol-function-p
+
+```lisp
+(symbol)
+```
+
+
+### symbol-generic-function-p
+
+```lisp
+(symbol)
+```
+
+
+### symbol-kind-p
+
+```lisp
+(symbol kind)
+```
+
+
 ### symbol-kinds
 
 ```lisp
@@ -47,6 +124,13 @@ PACKAGE: the package to use to read the docstring symbols.
 Return the kinds of the SYMBOL.
 
 
+
+
+### symbol-macro-p
+
+```lisp
+(symbol)
+```
 
 
 ### symbol-properties
@@ -61,5 +145,40 @@ If SHALLOW is T, then only fundamental properties are collected.
 Returns a list of alists of properties, one alist for each type of definition that SYMBOL is bound to.
 
 
+
+
+### symbol-structure-p
+
+```lisp
+(symbol)
+```
+
+
+### symbol-type-p
+
+```lisp
+(symbol)
+```
+
+
+### symbol-variable-p
+
+```lisp
+(symbol)
+```
+
+
+### type-properties
+
+```lisp
+(symbol)
+```
+
+
+### variable-properties
+
+```lisp
+(symbol &optional shallow)
+```
 
 

@@ -103,6 +103,16 @@
       (finish-output))))
 
 (defmacro with-estimated-time-progress ((steps-count description &rest desc-args) &body body)
+  "Display progress with estimated times.
+Args:
+- STEPS-COUNT: The total number of steps.
+- DESCRIPTION: A FORMAT control string for the progress display.
+- DESC-ARGS: The format arguments for DESCRIPTION.
+
+Example:
+(with-estimated-time-progress (5 \"This is just a example. Number of steps is ~a.\" 5)
+  (dotimes (i 5) (perform-step)))
+"
   (let ((!old-bar (gensym)))
     `(let* ((,!old-bar cl-progress-bar::*progress-bar*)
             (cl-progress-bar::*progress-bar* (or ,!old-bar

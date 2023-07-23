@@ -15,4 +15,14 @@ Loader of Lisp module files from directories.
 
 
 ## Functions
+### list-all-modules
+
+```lisp
+(&optional (return :name))
+```
+
+
 ## Variables
+### \*module-directories\*
+nil
+

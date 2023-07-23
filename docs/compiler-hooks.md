@@ -12,3 +12,15 @@ Provides hooks for Common Lisp compilation api.
 
 
 ## Variables
+### \*after-compile-file-hooks\*
+nil
+
+### \*after-compile-hooks\*
+nil
+
+### \*before-compile-file-hooks\*
+nil
+
+### \*before-compile-hooks\*
+nil
+
