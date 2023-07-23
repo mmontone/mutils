@@ -1,9 +1,10 @@
 # hunchentoot-errors
-%Augments Hunchentoot error pages and logs with request and session information.
 
-**Requires**: hunchentoot
-**Version**: 0.1
-**Author**: Mariano Montone <marianomontone@gmail.com>
+Augments Hunchentoot error pages and logs with request and session information.
+
+- **Requires**: hunchentoot
+- **Version**: 0.1
+- **Author**: Mariano Montone <marianomontone@gmail.com>
 
 
  Augments Hunchentoot error pages and logs with request and session information.
@@ -48,10 +49,6 @@
  ```
 
 
-
-# HUNCHENTOOT-ERRORS
-
-nil
 
 ## Classs
 ### errors-acceptor

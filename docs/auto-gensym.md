@@ -1,17 +1,14 @@
 # auto-gensym
-%Clojure style AUTO-GENSYM macro.
 
-**Version**: 0.1
-**Author**: Mariano Montone <marianomontone@gmail.com>
+Clojure style AUTO-GENSYM macro.
+
+- **Version**: 0.1
+- **Author**: Mariano Montone <marianomontone@gmail.com>
 
 
  Clojure style AUTO-GENSYM macro.
 
 
-
-# AUTO-GENSYM
-
-nil
 
 ## Macros
 ### with-auto-gensym

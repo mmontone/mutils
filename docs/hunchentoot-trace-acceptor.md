@@ -1,9 +1,10 @@
 # hunchentoot-trace-acceptor
-%A Hunchentoot acceptor that traces requests.
 
-**Requires**: hunchentoot
-**Version**: 0.1
-**Author**: Mariano Montone <marianomontone@gmail.com>
+A Hunchentoot acceptor that traces requests.
+
+- **Requires**: hunchentoot
+- **Version**: 0.1
+- **Author**: Mariano Montone <marianomontone@gmail.com>
 
 
  A Hunchentoot acceptor that traces requests.
@@ -22,10 +23,6 @@
  HTTP requests information is printed to `*standard-output*`.
 
 
-
-# HUNCHENTOOT-TRACE-ACCEPTOR
-
-nil
 
 ## Variables
 ## Classs

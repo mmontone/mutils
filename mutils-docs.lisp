@@ -30,16 +30,18 @@
                               :if-exists :supersede
                               :if-does-not-exist :create
                               :external-format :utf-8)
-    (format f "# ~a~%%" (getf module-details :name))
+    (format f "# ~a~%~%" (getf module-details :name))
     (write-string (getf module-details :description) f)
     (terpri f) (terpri f)
     (dolist (property (getf module-details :properties))
-      (format f "**~a**: ~a~%" (car property) (cdr property)))
+      (format f "- **~a**: ~a~%" (car property) (cdr property)))
     (terpri f)
     (write-string (getf module-details :commentary) f)
     (terpri f) (terpri f)
     (require (getf module-details :name))
-    (simple-doc:generate-markdown-doc f (intern (string-upcase (getf module-details :name)) :keyword))))                  
+    (simple-doc:generate-markdown-doc
+     f (intern (string-upcase (getf module-details :name)) :keyword)
+     :include nil)))
 
 (defun generate-readme ()
   "Generate a README file with information about available modules."

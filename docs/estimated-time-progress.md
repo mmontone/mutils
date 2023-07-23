@@ -1,9 +1,10 @@
 # estimated-time-progress
-%Progress display with estimated time.
 
-**Requires**: cl-progress-bar
-**Version**: 0.1
-**Author**: Mariano Montone <marianomontone@gmail.com>
+Progress display with estimated time.
+
+- **Requires**: cl-progress-bar
+- **Version**: 0.1
+- **Author**: Mariano Montone <marianomontone@gmail.com>
 
 
  Progress display with estimated time.
@@ -33,9 +34,5 @@
  Finished in 8.60 seconds
 
 
-
-# ESTIMATED-TIME-PROGRESS
-
-nil
 
 ## Macros

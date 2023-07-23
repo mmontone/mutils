@@ -1,18 +1,15 @@
 # def-properties
-%Portable extractor of information from Common Lisp definitions.
 
-**Requires**: alexandria
-**Version**: 0.1
-**Author**: Mariano Montone <marianomontone@gmail.com>
+Portable extractor of information from Common Lisp definitions.
+
+- **Requires**: alexandria
+- **Version**: 0.1
+- **Author**: Mariano Montone <marianomontone@gmail.com>
 
 
  Portable extractor of information from Common Lisp definitions.
 
 
-
-# DEF-PROPERTIES
-
-nil
 
 ## Functions
 ### list-lambda-list-args

@@ -1,9 +1,10 @@
 # who-templates
-%Templating system with CL-WHO. Supports inheritance.
 
-**Requires**: cl-who
-**Version**: 0.1
-**Author**: Mariano Montone <marianomontone@gmail.com>
+Templating system with CL-WHO. Supports inheritance.
+
+- **Requires**: cl-who
+- **Version**: 0.1
+- **Author**: Mariano Montone <marianomontone@gmail.com>
 
 
  Templating system with CL-WHO. Supports inheritance.
@@ -87,10 +88,6 @@
  (render-template-to-string 'include)
 
 
-
-# WHO-TEMPLATES
-
-nil
 
 ## Functions
 ### block
