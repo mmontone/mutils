@@ -76,34 +76,32 @@
 ;; Render:
 ;;
 ;;    (render-template-to-string 'hello :hello "Hello!!")
-
-;; (deftemplate hello-2 (:parent base-1)
-;;   (block body
-;;     (&args hello)
-;;     (:h1 (who:str hello))
-;;     (:h2 (who:str hello))))
-
-;; (render-template-to-string 'hello-2 :hello "Hi!!")
-
-;; (deftemplate hello-3 (:parent base-1)
-;;   (block body
-;;     (with-targs (hello)
-;;       (:h1 (who:str hello))
-;;       (:h2 (who:str hello)))))
-
-;; (render-template-to-string 'hello-3 :hello "Hi!!")
-
+;;
+;; Another example with arguments:
+;;
+;;     (deftemplate hello-2 (:parent base-1)
+;;       (block body
+;;          (&args hello)
+;;         (:h1 (who:str hello))
+;;         (:h2 (who:str hello))))
+;;
+;; Render:
+;; 
+;;     (render-template-to-string 'hello-2 :hello "Hi!!")
+;;
 ;; Include:
-
-;; (deftemplate snippet ()
-;;   (:p (who:str "This stuff has been included")))
-
-;; (deftemplate include (:parent base-1)
-;;   (block body
-;;     (include 'snippet)))
-
-;; (render-template-to-string 'include)
-
+;;
+;;     (deftemplate snippet ()
+;;        (:p (who:str "This stuff has been included")))
+;;
+;;     (deftemplate include (:parent base-1)
+;;        (block body
+;;         (include 'snippet)))
+;;
+;; Render:
+;;
+;;     (render-template-to-string 'include)
+;;
 ;;; Code:
 
 (require :cl-who)
