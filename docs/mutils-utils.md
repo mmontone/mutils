@@ -68,3 +68,15 @@ If it is T, then *STANDARD-OUTPUT* is used for the stream.
 
 
 
+### with-retry-restart
+
+```lisp
+((&optional (msg "Retry.") &rest args) &body body)
+```
+
+Setup a RETRY restart for evaluating BODY.
+
+
+
+
+

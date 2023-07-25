@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2023 Mariano Montone. All rights reserved.
 
-;; This work is licensed under the terms of the MIT license.  
+;; This work is licensed under the terms of the MIT license.
 ;; For a copy, see <https://opensource.org/licenses/MIT>.
 
 ;; Author: Mariano Montone <marianomontone@gmail.com>
@@ -20,7 +20,8 @@
   (:export
    #:condp
    #:with-output-to-destination
-   #:with-auto-gensym))
+   #:with-auto-gensym
+   #:with-retry-restart))
 
 (in-package :mutils-utils)
 
@@ -60,7 +61,7 @@ If it is T, then *STANDARD-OUTPUT* is used for the stream."
        (funcall function stream)))
     ((eql t)
      (funcall function *standard-output*))))
-    
+
 (defmacro with-output-to-destination ((var destination &rest args) &body body)
   "Evaluate BODY with VAR bound to a stream created from DESTINATION.
 If DESTINATION is a pathname, then open the file for writing. ARGS are used in the OPEN call.
@@ -73,8 +74,8 @@ If it is T, then *STANDARD-OUTPUT* is used for the stream."
 (defun auto-gensym-p (thing)
   (and (symbolp thing)
        (char= #\#
-	      (aref (symbol-name thing)
-		    (1- (length (symbol-name thing)))))))
+              (aref (symbol-name thing)
+                    (1- (length (symbol-name thing)))))))
 
 (defun auto-gensym-name (symbol)
   (subseq (symbol-name symbol) 0 (1- (length (symbol-name symbol)))))
@@ -82,17 +83,17 @@ If it is T, then *STANDARD-OUTPUT* is used for the stream."
 (defun insert-gensyms (form)
   (let (gensyms)
     (labels ((get-gensym (symbol)
-	       (if (assoc symbol gensyms)
-		   (cdr (assoc symbol gensyms))
-		   (let ((auto-gensym (gensym (auto-gensym-name symbol))))
-		     (push (cons symbol auto-gensym) gensyms)
-		     auto-gensym)))
-	     (replace-auto-gensyms (%form)
-	       (if (atom %form)
-		   (if (auto-gensym-p %form)
-		       (get-gensym %form)
-		       %form)
-		   (mapcar #'replace-auto-gensyms %form))))
+               (if (assoc symbol gensyms)
+                   (cdr (assoc symbol gensyms))
+                   (let ((auto-gensym (gensym (auto-gensym-name symbol))))
+                     (push (cons symbol auto-gensym) gensyms)
+                     auto-gensym)))
+             (replace-auto-gensyms (%form)
+               (if (atom %form)
+                   (if (auto-gensym-p %form)
+                       (get-gensym %form)
+                       %form)
+                   (mapcar #'replace-auto-gensyms %form))))
       (replace-auto-gensyms form))))
 
 (defmacro with-auto-gensym (body)
@@ -114,5 +115,17 @@ Examples:
   (+ #:X1 22))
 "
   (insert-gensyms body))
+
+(defun call-with-retry-restart (thunk msg &rest args)
+  (loop
+    (restart-case (return (funcall thunk))
+      (retry nil :report
+        (lambda (s)
+          (apply #'format s msg args))))))
+
+(defmacro with-retry-restart ((&optional (msg "Retry.") &rest args) &body body)
+  "Setup a RETRY restart for evaluating BODY."
+  (check-type msg string)
+  `(call-with-retry-restart (lambda () ,@body) ,msg ,@args))
 
 (provide :mutils-utils)
