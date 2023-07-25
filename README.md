@@ -107,7 +107,7 @@ Modules should be general purpose and be compact enough to fit into a single fil
 
 The module file should follow the format described in this document.
 
-## mutils utilities
+## Modules api (mutils package)
 
 ### describe-module
 
