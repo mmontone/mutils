@@ -125,14 +125,6 @@ Print a description of module.
 
 Print a description of available mutils modules.
 
-### generate-readme
-
-```lisp
-()
-```
-
-Generate a README file with information about available modules.
-
 ### list-modules
 
 ```lisp

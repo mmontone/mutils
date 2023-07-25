@@ -125,14 +125,6 @@ Print a description of module.
 
 Print a description of available mutils modules.
 
-### generate-readme
-
-```lisp
-()
-```
-
-Generate a README file with information about available modules.
-
 ### list-modules
 
 ```lisp
@@ -170,6 +162,7 @@ its long description/comment with instructions of usage, etc.
 * [hunchentoot-trace-acceptor](docs/hunchentoot-trace-acceptor.md) - A Hunchentoot acceptor that traces requests.
 * [lisp-critic-warnings](docs/lisp-critic-warnings.md) - Signal compiler warnings with lisp-critic critiques.
 * [mutils-docs](docs/mutils-docs.md) - Documentation generator for mutils.
+* [mutils-utils](docs/mutils-utils.md) - General purpose utilities.
 * [plump-xpath](docs/plump-xpath.md) - xpath extension for plump.
 * [quicksearch](docs/quicksearch.md) - Search Engine Interface for Common Lisp.
 * [who-templates](docs/who-templates.md) - Templating system with CL-WHO. Supports inheritance.
