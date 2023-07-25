@@ -11,56 +11,69 @@ Templating system with CL-WHO. Supports inheritance.
 
  Templating system with CL-WHO. Supports inheritance.
 
- Example:
 
  Base template example:
 
- (deftemplate base-1 ()
-   (&args title)
-   (:html
-    (:head
-     (:title (who:str (or title "WHO TEMPLATES")))
-     (block styles
-       (:link :rel "stylesheet" :href "/bootstrap.css")))
-    (:body
-     (block body)
-     (block scripts))))
+    (deftemplate base-1 ()
+      (&args title)
+      (:html
+       (:head
+        (:title (who:str (or title "WHO TEMPLATES")))
+        (block styles
+          (:link :rel "stylesheet" :href "/bootstrap.css")))
+       (:body
+        (block body)
+        (block scripts))))
 
- (render-template-to-string 'base-1)
- (render-template-to-string 'base-1 :title "lala")
+ Render:
+
+     (render-template-to-string 'base-1)
+     (render-template-to-string 'base-1 :title "lala")
 
  Inheritance/block overwrite. Calls to parent:
 
- (deftemplate foo (:parent base-1)
-   (block body
-     (:h1 (who:str "Foo"))))
+     (deftemplate foo (:parent base-1)
+       (block body
+         (:h1 (who:str "Foo"))))
 
- (render-template-to-string 'foo)
+ Render:
 
- (deftemplate bar (:parent base-1)
-   (block body
-     (:h1 (who:str "Bar")))
-   (block styles
-     (parent)
-     (:link :rel "stylesheet" :href "/bar.css")))
+     (render-template-to-string 'foo)
 
- (render-template-to-string 'bar)
+ Another example:
 
- (deftemplate baz (:parent bar)
-   (block scripts
-     (parent)
-     (:script :type "text/javacript"
+    (deftemplate bar (:parent base-1)
+      (block body
+        (:h1 (who:str "Bar")))
+      (block styles
+        (parent)
+        (:link :rel "stylesheet" :href "/bar.css")))
+
+ Render:
+
+    (render-template-to-string 'bar)
+
+ Another example:
+
+    (deftemplate baz (:parent bar)
+      (block scripts
+        (parent)
+        (:script :type "text/javacript"
               (who:str "...javascript code..."))))
 
- (render-template-to-string 'baz)
+ Render:
 
- Args:
+   (render-template-to-string 'baz)
 
- (deftemplate hello (:parent base-1)
-   (block body
-     (:h1 (who:str (targ :hello)))))
+ Example with arguments:
 
- (render-template-to-string 'hello :hello "Hello!!")
+    (deftemplate hello (:parent base-1)
+      (block body
+        (:h1 (who:str (targ :hello)))))
+
+ Render:
+
+    (render-template-to-string 'hello :hello "Hello!!")
 
  (deftemplate hello-2 (:parent base-1)
    (block body

@@ -13,8 +13,9 @@ Parse HTML and create cl-who source code.
 
  Usage:
 
-(html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :who :strictp nil)
-(html5-parser:parse-html5-fragment #p"/vagrant/admin/index.html" :dom :who :strictp nil)
-(html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :xmls :strictp nil)
+   (html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :who :strictp nil)
+   (html5-parser:parse-html5-fragment #p"/vagrant/admin/index.html" :dom :who :strictp nil)
+   (html5-parser:parse-html5 #p"/vagrant/admin/index.html" :dom :xmls :strictp nil)
+
 
 
