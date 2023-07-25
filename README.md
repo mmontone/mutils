@@ -151,7 +151,6 @@ its long description/comment with instructions of usage, etc.
 
 ## List of modules
 
-* [auto-gensym](docs/auto-gensym.md) - Clojure style AUTO-GENSYM macro.
 * [compiler-hooks](docs/compiler-hooks.md) - Provides hooks for Common Lisp compilation api.
 * [compiler-info](docs/compiler-info.md) - Provides compiler info (specially from declarations) in a portable way.
 * [def-properties](docs/def-properties.md) - Portable extractor of information from Common Lisp definitions.
