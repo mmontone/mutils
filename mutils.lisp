@@ -70,7 +70,7 @@ its long description/comment with instructions of usage, etc."
             (error "End of file when trying to parse module ~a" status)))
         (list :name module-name
               :description short-desc
-              :properties properties
+              :properties (nreverse properties)
               :commentary commentary)))))
 
 (declaim (ftype (function (&optional (member :name :details)) list) list-modules))
