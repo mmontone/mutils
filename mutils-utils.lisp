@@ -147,14 +147,15 @@ Every symbol matching a unique foo# symbol within a syntax quoted form will be r
 
 Examples:
 
-(defmacro auto-gensym-test (x)
-  (with-auto-gensym
-    `(let ((x# ,x))
-       (+ x# 22))))
+    (defmacro auto-gensym-test (x)
+      (with-auto-gensym
+        `(let ((x# ,x))
+           (+ x# 22))))
 
-(macroexpand '(auto-gensym-test 44)) =>
-(LET ((#:X1 44))
-  (+ #:X1 22))
+Macroexpansion of `(auto-gensym-test 44)`:
+
+    (LET ((#:X1 44))
+      (+ #:X1 22))
 "
   (insert-gensyms body))
 
