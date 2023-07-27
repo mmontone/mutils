@@ -26,7 +26,49 @@
 (in-package :mutils-utils)
 
 (defmacro condp (predicate &body clauses)
-  "COND using PREDICATE."
+  "COND using PREDICATE.
+
+This macro allows the implementation of \"custom pattern matchers\",
+with the resulting code being easy to read.
+
+For example:
+
+    (defun object-kind (obj)
+      (cond
+        ((typep obj 'number) \"number\")
+        ((typep obj 'string) \"string\")
+        ((typep obj 'hashtable) \"map\")
+        ((typep obj 'package) \"module\")
+        ((typep obj 'class) \"type\")))
+
+can be rewritten as:
+
+    (defun object-kind (obj)
+      (condp (alexandria:curry #'typep obj)
+        ('number \"number\")
+        ('string \"string\")
+        ('boolean \"boolean\")
+        ('hash-table \"map\")
+        ('package \"module\")
+        ('class \"type\")))
+
+ALEXANDRIA:CURRY and ALEXANDRIA:RCURRY are very useful in companion with this macro.
+
+A regular expression matcher:
+
+    (condp (alexandria:rcurry #'ppcre:scan \"my-string\")
+       (\"^foo\" :foo)
+       (\"^bar\" :bar)
+       (\"^my.*\" :mine)
+       (\"^mi.*\" :mio))
+
+A string matcher:
+
+    (condp (alexandria:curry #'string= \"some\")
+       (\"foo\" :foo)
+       (\"bar\" :bar)
+       (\"some\" :some))
+"
   (let ((pred (gensym)))
     `(let ((,pred ,predicate))
        (cond

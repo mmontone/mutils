@@ -4,9 +4,9 @@ General purpose utilities.
 
 [[source code]](../mutils-utils.lisp)
 
-- **Requires**: mutils
-- **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>
+- **Version**: 0.1
+- **Requires**: mutils
 
 
  General purpose utilities.
@@ -24,7 +24,46 @@ COND using PREDICATE.
 
 
 
+This macro allows the implementation of "custom pattern matchers",
+with the resulting code being easy to read.
 
+For example:
+
+    (defun object-kind (obj)
+      (cond
+        ((typep obj 'number) "number")
+        ((typep obj 'string) "string")
+        ((typep obj 'hashtable) "map")
+        ((typep obj 'package) "module")
+        ((typep obj 'class) "type")))
+
+can be rewritten as:
+
+    (defun object-kind (obj)
+      (condp [(alexandria:curry]((alexandria:curry) #'typep obj)
+        ('number "number")
+        ('string "string")
+        ('boolean "boolean")
+        ('hash-table "map")
+        ('package "module")
+        ('class "type")))
+
+[ALEXANDRIA:CURRY](ALEXANDRIA:CURRY) and [ALEXANDRIA:RCURRY](ALEXANDRIA:RCURRY) are very useful in companion with this macro.
+
+A regular expression matcher:
+
+    (condp [(alexandria:rcurry]((alexandria:rcurry) [#'ppcre:scan](#'ppcre:scan) "my-string")
+       ("^foo" :foo)
+       ("^bar" :bar)
+       ("^my.*" :mine)
+       ("^mi.*" :mio))
+
+A string matcher:
+
+    (condp [(alexandria:curry]((alexandria:curry) #'string= "some")
+       ("foo" :foo)
+       ("bar" :bar)
+       ("some" :some))
 
 ### with-auto-gensym
 

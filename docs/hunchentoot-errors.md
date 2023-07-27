@@ -4,9 +4,9 @@ Augments Hunchentoot error pages and logs with request and session information.
 
 [[source code]](../hunchentoot-errors.lisp)
 
-- **Requires**: hunchentoot
-- **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>
+- **Version**: 0.1
+- **Requires**: hunchentoot
 
 
  Augments Hunchentoot error pages and logs with request and session information.

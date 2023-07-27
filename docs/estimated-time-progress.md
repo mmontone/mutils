@@ -4,9 +4,9 @@ Progress display with estimated time.
 
 [[source code]](../estimated-time-progress.lisp)
 
-- **Requires**: cl-progress-bar
-- **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>
+- **Version**: 0.1
+- **Requires**: cl-progress-bar
 
 
  Progress display with estimated time.

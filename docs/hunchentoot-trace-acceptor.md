@@ -4,10 +4,10 @@ A Hunchentoot acceptor for tracing HTTP requests.
 
 [[source code]](../hunchentoot-trace-acceptor.lisp)
 
-- **Keywords**: debugging, web, hunchentoot
-- **Requires**: hunchentoot
-- **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>
+- **Version**: 0.1
+- **Requires**: hunchentoot
+- **Keywords**: debugging, web, hunchentoot
 
 
  A Hunchentoot acceptor for tracing HTTP requests.

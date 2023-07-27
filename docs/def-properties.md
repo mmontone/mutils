@@ -4,9 +4,9 @@ Portable extractor of information from Common Lisp definitions.
 
 [[source code]](../def-properties.lisp)
 
-- **Requires**: alexandria
-- **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>
+- **Version**: 0.1
+- **Requires**: alexandria
 
 
  Portable extractor of information from Common Lisp definitions.

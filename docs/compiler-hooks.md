@@ -4,9 +4,9 @@ Provides hooks for Common Lisp compilation api.
 
 [[source code]](../compiler-hooks.lisp)
 
-- **Requires**: alexandria, cl-package-locks
-- **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>
+- **Version**: 0.1
+- **Requires**: alexandria, cl-package-locks
 
 
  Provides hooks for Common Lisp compilation api.

@@ -4,9 +4,9 @@ Documentation generator for mutils.
 
 [[source code]](../mutils-docs.lisp)
 
-- **Requires**: mutils, simple-doc
-- **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>
+- **Version**: 0.1
+- **Requires**: mutils, simple-doc
 
 
  Documentation generator for mutils.

@@ -4,9 +4,9 @@ Parse HTML and create cl-who source code.
 
 [[source code]](../html2who.lisp)
 
-- **Requires**: cl-who, cl-html5-parser
-- **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>
+- **Version**: 0.1
+- **Requires**: cl-who, cl-html5-parser
 
 
  Parse HTML and create cl-who source code.

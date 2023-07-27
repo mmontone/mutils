@@ -4,9 +4,9 @@ Search Engine Interface for Common Lisp.
 
 [[source code]](../quicksearch.lisp)
 
-- **Requires**: anaphora, iterate, drakma, do-urlencode, yason, html-entities
-- **Version**: 0.1
 - **Author**: Takaya OCHIAI <#.(reverse "moc.liamg@lper.hcykt")>
+- **Version**: 0.1
+- **Requires**: anaphora, iterate, drakma, do-urlencode, yason, html-entities
 
 
  Quicksearch is a search-engine-interface for Common Lisp.

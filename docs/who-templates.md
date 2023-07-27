@@ -4,9 +4,9 @@ Templating system with CL-WHO. Supports inheritance.
 
 [[source code]](../who-templates.lisp)
 
-- **Requires**: cl-who
-- **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>
+- **Version**: 0.1
+- **Requires**: cl-who
 
 
  Templating system with CL-WHO. Supports inheritance.

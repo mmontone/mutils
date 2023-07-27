@@ -4,9 +4,9 @@ Loader of Lisp module files from directories.
 
 [[source code]](../directory-module-loader.lisp)
 
-- **Requires**: alexandria
-- **Version**: 0.1
 - **Author**: Mariano Montone <marianomontone@gmail.com>
+- **Version**: 0.1
+- **Requires**: alexandria
 
 
  Loader of Lisp module files from directories.
