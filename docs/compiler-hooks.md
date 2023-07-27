@@ -15,14 +15,14 @@ Provides hooks for Common Lisp compilation api.
 
 ## Variables
 ### \*after-compile-file-hooks\*
-nil
+List of function-designators that are called after COMPILE-FILE.
 
 ### \*after-compile-hooks\*
-nil
+List of function-designators that are called after COMPILE.
 
 ### \*before-compile-file-hooks\*
-nil
+List of function-designators that are called before COMPILE-FILE.
 
 ### \*before-compile-hooks\*
-nil
+List of function-designators that are called before COMPILE.
 

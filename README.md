@@ -158,7 +158,7 @@ its long description/comment with instructions of usage, etc.
 * [estimated-time-progress](docs/estimated-time-progress.md) - Progress display with estimated time.
 * [html2who](docs/html2who.md) - Parse HTML and create cl-who source code.
 * [hunchentoot-errors](docs/hunchentoot-errors.md) - Augments Hunchentoot error pages and logs with request and session information.
-* [hunchentoot-trace-acceptor](docs/hunchentoot-trace-acceptor.md) - A Hunchentoot acceptor that traces requests.
+* [hunchentoot-trace-acceptor](docs/hunchentoot-trace-acceptor.md) - A Hunchentoot acceptor for tracing HTTP requests.
 * [lisp-critic-warnings](docs/lisp-critic-warnings.md) - Signal compiler warnings with lisp-critic critiques.
 * [mutils-docs](docs/mutils-docs.md) - Documentation generator for mutils.
 * [mutils-utils](docs/mutils-utils.md) - General purpose utilities.

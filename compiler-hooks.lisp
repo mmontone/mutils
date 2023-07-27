@@ -27,11 +27,15 @@
 
 (in-package :compiler-hooks)
 
-(defvar *after-compile-hooks* nil)
-(defvar *before-compile-hooks* nil)
+(defvar *after-compile-hooks* nil
+  "List of function-designators that are called after COMPILE.")
+(defvar *before-compile-hooks* nil
+  "List of function-designators that are called before COMPILE.")
 
-(defvar *before-compile-file-hooks* nil)
-(defvar *after-compile-file-hooks* nil)
+(defvar *before-compile-file-hooks* nil
+  "List of function-designators that are called before COMPILE-FILE.")
+(defvar *after-compile-file-hooks* nil
+  "List of function-designators that are called after COMPILE-FILE.")
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (cl-package-locks:without-package-locks

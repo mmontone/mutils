@@ -1,4 +1,4 @@
-;;; hunchentoot-trace-acceptor --- A Hunchentoot acceptor that traces requests.
+;;; hunchentoot-trace-acceptor --- A Hunchentoot acceptor for tracing HTTP requests.
 
 ;; Copyright (C) 2023 Mariano Montone. All rights reserved.
 
@@ -8,24 +8,19 @@
 ;; Author: Mariano Montone <marianomontone@gmail.com>
 ;; Version: 0.1
 ;; Requires: hunchentoot
-
+;; Keywords: debugging, web, hunchentoot
+;;
 ;;; Commentary:
-
-;; A Hunchentoot acceptor that traces requests.
-
+;;
+;; A Hunchentoot acceptor for tracing HTTP requests.
+;;
 ;; Example usage:
-
-;; ```lisp
-;; (defclass my-acceptor (hunchentoot:easy-acceptor hunchentoot-trace:trace-acceptor)
-;;   ())
-
-;; (hunchentoot:start (make-instance 'my-acceptor :port 5000))
-;; ```
-
-;; Result:
-
+;;
+;;     (defclass my-acceptor (hunchentoot:easy-acceptor hunchentoot-trace:trace-acceptor)
+;;       ())
+;;
 ;; HTTP requests information is printed to `*standard-output*`.
-
+;;
 ;;; Code:
 
 (require :hunchentoot)
@@ -39,11 +34,14 @@
 
 (in-package :hunchentoot-trace-acceptor)
 
-(defvar *trace-requests* t)
-(defvar *trace-session* nil)
+(defvar *trace-requests* t
+  "Request tracing is enabled when this is T. Default is T.")
+(defvar *trace-session* nil
+  "Session tracing is enabled when this is T. Default is NIL.")
 
 (defclass trace-acceptor (acceptor)
-  ())
+  ()
+  (:documentation "A Hunchentoot acceptor for tracing requests"))
 
 (defgeneric print-request (request format stream)
   (:documentation "Prints REQUEST to STREAM in FORMAT"))
