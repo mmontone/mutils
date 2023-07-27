@@ -23,8 +23,13 @@ Loader of Lisp module files from directories.
 (&optional (return :name))
 ```
 
+List all modules available for loading in *MODULE-DIRECTORIES*.
+
+- **RETURN**: What the function should return. Either :name or :pathname.
+
+
 
 ## Variables
 ### \*module-directories\*
-nil
+A list of pathnames (directories) where to look for module files.
 

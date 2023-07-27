@@ -32,7 +32,8 @@
 
 (in-package :directory-module-loader)
 
-(defvar *module-directories* nil)
+(defvar *module-directories* nil
+  "A list of pathnames (directories) where to look for module files.")
 
 (defun module-provide-directory (module-name)
   (dolist (dir *module-directories*)
@@ -50,6 +51,9 @@
 (declaim (ftype (function (&optional (member :name :pathname)) list)
                 list-all-modules))
 (defun list-all-modules (&optional (return :name))
+  "List all modules available for loading in *MODULE-DIRECTORIES*.
+Args:
+- RETURN: What the function should return. Either :name or :pathname."
   (let ((modules '()))
     (dolist (dir *module-directories*)
       (dolist (lisp-module-file (uiop/filesystem:directory-files dir "*.lisp"))
