@@ -98,15 +98,14 @@ Macroexpansion of (auto-gensym-test 44)`:
 ```
 
 Evaluate BODY with VAR bound to a stream created from DESTINATION.
-If DESTINATION is a pathname, then open the file for writing. ARGS are used in the OPEN call.
-If it is a string with a fill-pointer, use WITH-OUTPUT-TO-STRING to create a stream for it.
-If it is a stream, then it is used as it is.
-If it is NIL, then WITH-OUTPUT-TO-STRING is used to create the stream.
-If it is T, then *STANDARD-OUTPUT* is used for the stream.
 
 
 
-
+- If DESTINATION is a pathname, then open the file for writing. ARGS are used in the OPEN call.
+- If it is a string with a fill-pointer, use WITH-OUTPUT-TO-STRING to create a stream for it.
+- If it is a stream, then it is used as it is.
+- If it is NIL, then WITH-OUTPUT-TO-STRING is used to create the stream.
+- If it is T, then *STANDARD-OUTPUT* is used for the stream.
 
 ### with-retry-restart
 

@@ -106,11 +106,12 @@ If it is T, then *STANDARD-OUTPUT* is used for the stream."
 
 (defmacro with-output-to-destination ((var destination &rest args) &body body)
   "Evaluate BODY with VAR bound to a stream created from DESTINATION.
-If DESTINATION is a pathname, then open the file for writing. ARGS are used in the OPEN call.
-If it is a string with a fill-pointer, use WITH-OUTPUT-TO-STRING to create a stream for it.
-If it is a stream, then it is used as it is.
-If it is NIL, then WITH-OUTPUT-TO-STRING is used to create the stream.
-If it is T, then *STANDARD-OUTPUT* is used for the stream."
+
+- If DESTINATION is a pathname, then open the file for writing. ARGS are used in the OPEN call.
+- If it is a string with a fill-pointer, use WITH-OUTPUT-TO-STRING to create a stream for it.
+- If it is a stream, then it is used as it is.
+- If it is NIL, then WITH-OUTPUT-TO-STRING is used to create the stream.
+- If it is T, then *STANDARD-OUTPUT* is used for the stream."
   `(call-with-output-to-destination ,destination (lambda (,var) ,@body) ,@args))
 
 (defun auto-gensym-p (thing)
