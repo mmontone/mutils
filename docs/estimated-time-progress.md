@@ -55,6 +55,7 @@ Display progress with estimated times.
 
 
 Example:
-(with-estimated-time-progress (5 "This is just a example. Number of steps is ~a." 5)
-  (dotimes (i 5) (perform-step)))
+
+    (with-estimated-time-progress (5 "This is just a example. Number of steps is ~a." 5)
+      (dotimes (i 5) (perform-step)))
 
