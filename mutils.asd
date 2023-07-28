@@ -5,4 +5,5 @@
   :homepage "https://github.com/mmontone/mutils"
   :components
   ((:file "directory-module-loader")
-   (:file "mutils")))
+   (:file "mutils"))
+  :depends-on (:cl-ppcre))
