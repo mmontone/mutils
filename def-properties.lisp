@@ -7,13 +7,16 @@
 
 ;; Author: Mariano Montone <marianomontone@gmail.com>
 ;; Version: 0.1
-;; Requires: alexandria
+;; Requires: alexandria, swank
 
 ;;; Commentary:
 
 ;; Portable extractor of information from Common Lisp definitions.
 
 ;;; Code:
+
+(require :alexandria)
+(require :swank)
 
 (defpackage :def-properties
   (:use :cl)

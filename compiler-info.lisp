@@ -14,6 +14,8 @@
 
 ;;; Code:
 
+#+sbcl(require :SB-CLTL2)
+
 (defpackage :compiler-info
   (:use :cl)
   (:export #:function-info

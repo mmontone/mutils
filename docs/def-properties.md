@@ -6,7 +6,7 @@ Portable extractor of information from Common Lisp definitions.
 
 - **Author**: Mariano Montone <marianomontone@gmail.com>
 - **Version**: 0.1
-- **Requires**: alexandria
+- **Requires**: alexandria, swank
 
 
  Portable extractor of information from Common Lisp definitions.
