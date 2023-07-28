@@ -21,7 +21,8 @@
    #:condp
    #:with-output-to-destination
    #:with-auto-gensym
-   #:with-retry-restart))
+   #:with-retry-restart
+   #:condition-message))
 
 (in-package :mutils-utils)
 
@@ -171,5 +172,12 @@ Macroexpansion of `(auto-gensym-test 44)`:
   "Setup a RETRY restart for evaluating BODY."
   (check-type msg string)
   `(call-with-retry-restart (lambda () ,@body) ,msg ,@args))
+
+
+(declaim (ftype (function (condition) string) condition-message))
+(defun condition-message (condition)
+  "Get the descriptive message of CONDITION."
+  (with-output-to-string (s)
+    (write condition :escape nil :stream s)))
 
 (provide :mutils-utils)

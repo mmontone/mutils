@@ -13,6 +13,18 @@ General purpose utilities.
 
 
 
+## Functions
+### condition-message
+
+```lisp
+(condition)
+```
+
+Get the descriptive message of CONDITION.
+
+
+
+
 ## Macros
 ### condp
 
