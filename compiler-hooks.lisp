@@ -40,13 +40,15 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (cl-package-locks:without-package-locks
     (let ((compile (fdefinition 'compile)))
-      (flet ((compile-with-hooks (name &optional definition warnings-p failure-p)
+      (flet ((compile-with-hooks (name &optional definition)
                (dolist (hook *before-compile-hooks*)
-                 (funcall hook name definition warnings-p failure-p))
+                 (funcall hook name definition))
                (prog1
-                   (funcall compile name definition warnings-p failure-p)
+                   (if definition
+                       (funcall compile name definition)
+                       (funcall compile name))
                  (dolist (hook *after-compile-hooks*)
-                   (funcall hook name definition warnings-p failure-p)))))
+                   (funcall hook name definition)))))
         (setf (fdefinition 'compile) #'compile-with-hooks)))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
