@@ -21,11 +21,17 @@
   (:export #:function-info
            #:variable-info
            #:function-type
-           #:variable-type))
+           #:variable-type
+           #:function-name))
 
 (in-package :compiler-info)
 
-(declaim (ftype (function (symbol) t) function-type variable-type))
+(declaim (ftype (function ((or symbol function)) t) function-type variable-type))
+
+(declaim (ftype (function (function) symbol) function-name))
+#+sbcl
+(defun function-name (function)
+  (sb-impl::%fun-name function))
 
 #+sbcl
 (defun function-type (fname)
