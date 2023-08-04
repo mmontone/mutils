@@ -6,4 +6,4 @@
   :components
   ((:file "directory-module-loader")
    (:file "mutils"))
-  :depends-on (:cl-ppcre))
+  :depends-on (:alexandria :cl-ppcre))
