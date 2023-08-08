@@ -31,3 +31,20 @@
 (foo *standard-output* t)
 
 (typep *standard-output* '(and stream (implements my-protocol)))
+
+(declaim (ftype (function ((implements my-protocol) &rest t) t)
+                my-func))
+(defun my-func (object &rest args)
+  (foo object args))
+
+(my-func "hello")
+
+;; =>
+;; The value
+;;   "hello"
+;; is not of type
+;;   (satisfies
+;;    muprotocols-tests::implements-my-protocol-protocol-p)
+
+(my-func *standard-output*)
+
