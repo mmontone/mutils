@@ -10,7 +10,7 @@
 
 ;;; Commentary:
 ;;
-;; An implementation of protocols for Common Lisp that plays nicely with Common Lisp type system.
+;; An implementation of protocols that plays nicely with Common Lisp type system.
 ;;
 ;; This is work in progress at the moment.
 ;;
@@ -23,13 +23,16 @@
    #:implement-protocol
    #:check-implements
    #:implements
-   #:implements-protocol-p))
+   #:implements-protocol-p)
+  (:documentation "Protocols that play nicely with Common Lisp type system."))
 
 (in-package :muprotocols)
 
-(defvar *protocols* (make-hash-table))
+(defvar *protocols* (make-hash-table)
+  "The defined protocols.")
 
 (defstruct protocol
+  "The protocol structure."
   name
   definitions
   documentation)
@@ -37,34 +40,64 @@
 (declaim (ftype (function (symbol &optional boolean) (or protocol null))
                 find-protocol))
 (defun find-protocol (name &optional (error-p t))
+  "Find a PROTOCOL by NAME."
   (or (gethash name *protocols*)
       (when error-p
         (error "Protocol not defined: ~s" name))))
 
 (defgeneric implements-protocol-p (object protocol)
+  (:documentation "Tests if OBJECT implements PROTOCOL.")
   (:method (object protocol)
     (find-protocol protocol)
     nil))
 
 (defun implements-protocols-p (object &rest protocols)
+  "Tests if OBJECT implements PROTOCOLS."
   (every (lambda (protocol)
            (implements-protocol-p object protocol))
          protocols))
 
-(defun protocol-satisfies-name (protocol-name)
+(defun protocol-satisfies-predicate-name (protocol-name)
+  "Name for the SATISFY predicate."
   (intern
    (format nil "IMPLEMENTS-~a-PROTOCOL-P"
            (string-upcase (string protocol-name)))))
 
 (defmacro defprotocol (name &body definitions)
+  "Define a protocol.
+
+Protocols have a NAME followed by generic function DEFINITIONS.
+
+Syntax:
+    defprotocol ::= (name [documentation] definitions*)
+    definitions ::= definition*
+    definition ::= (function-name gf-lambda-list)
+
+Example:
+
+    (defprotocol indexable
+       \"Protocol for indexable objects\"
+       (get-at (index indexable)
+         (:documentation \"Get element at INDEX from INDEXABLE.\"))
+       (set-at (value index indexable)
+         (:documentation \"Set element at INDEX from INDEXABLE.\")))
+
+It is required that the name of the protocol (`indexable` in the example)
+appears in all definitions, in at least one of the arguments, at the positions where the generic functions are passed instances of objects that implement the protocol.
+
+Protocols are implemented by types using IMPLEMENT-PROTOCOL."
   `(progn
      (setf (gethash ',name *protocols*)
            (make-protocol :name ',name
                           :definitions ',definitions
                           :documentation "TODO"))
-     (defun ,(protocol-satisfies-name name) (object)
+     (defun ,(protocol-satisfies-predicate-name name) (object)
        (implements-protocol-p object ',name))
      ,@(loop for def in definitions
+             for (def-name def-args &rest def-options) := def
+             do (unless (member name def-args)
+                  (error "An argument named: ~a should appear in the arguments of definition: ~a of protocol: ~a"
+                         name def-name name))
              collect `(defgeneric ,@def))
      ',name))
 
@@ -86,19 +119,30 @@
       (error "Not part of the protocol ~a: ~a"
              (protocol-name protocol)
              not-belonging-implementations))
-    ;; Check that TYPE appears as an specializer
-    ;; in the implementation lambda-list
-    ;; FIXME: do this in a precise way (perhaps parse the method lambda-list),
-    ;; and ensure that appears as a required parameter specializer.
+    ;; Check that implementation lambda lists match
+    ;; the lambda-lists of the protocol definitions.
     (dolist (implementation implementations)
       (destructuring-bind (name args &body body) implementation
         (declare (ignore body))
-        (unless (member type (mapcar (lambda (arg)
-                                       (when (listp arg)
-                                         (cadr arg)))
-                                     args))
-          (error "~a should appear as specializer in lambda-list of definition: ~a"
-                 type name))))
+        (let ((definition (find name (protocol-definitions protocol)
+                                :key #'car)))
+          (loop for def-arg in (second definition)
+                for impl-arg in args
+                do
+                   (cond
+                     ((and (member def-arg lambda-list-keywords)
+                           (not (eql def-arg impl-arg)))
+                      (error "~a expected in ~a in place of ~a"
+                             def-arg name impl-arg))
+                     ((and (member impl-arg lambda-list-keywords)
+                           (not (eql def-arg impl-arg)))
+                      (error "~a expected in ~a in place of ~a"
+                             def-arg name impl-arg))
+                     ((and (eql def-arg (protocol-name protocol))
+                           (not (and (listp impl-arg)
+                                     (eql (second impl-arg) type))))
+                      (error "An argument specializing: ~a is expected in: ~a in place of: ~a"
+                             type name impl-arg)))))))
     t))
 
 (defmacro implement-protocol (name type &body implementations)
@@ -114,13 +158,11 @@
 
 (deftype implements (&rest protocols)
   (if (= (length protocols) 1)
-      `(satisfies ,(protocol-satisfies-name (first protocols)))
+      `(satisfies ,(protocol-satisfies-predicate-name (first protocols)))
       `(and ,@(mapcar (lambda (protocol)
-                        `(satisfies ,(protocol-satisfies-name protocol)))
+                        `(satisfies ,(protocol-satisfies-predicate-name protocol)))
                       protocols))))
 
-(declaim (ftype (function (t symbol) t)
-                check-implements))
 (defmacro check-implements (object &rest protocols)
   `(unless (implements-protocols-p ,object ,@(mapcar (lambda (x) `(quote ,x)) protocols))
      (error "~s does not implement protocols: ~{~a~^, ~}" ,object ',protocols)))
