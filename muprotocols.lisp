@@ -69,6 +69,7 @@
 Protocols have a NAME followed by generic function DEFINITIONS.
 
 Syntax:
+
     defprotocol ::= (name [documentation] definitions*)
     definitions ::= definition*
     definition ::= (function-name gf-lambda-list)
@@ -82,6 +83,7 @@ Example:
        (set-at (value index indexable)
          (:documentation \"Set element at INDEX from INDEXABLE.\")))
 
+Definitions follow the syntax of DEFGENERIC.
 It is required that the name of the protocol (`indexable` in the example)
 appears in all definitions, in at least one of the arguments, at the positions where the generic functions are passed instances of objects that implement the protocol.
 
@@ -104,6 +106,7 @@ Protocols are implemented by types using IMPLEMENT-PROTOCOL."
 (declaim (ftype (function (protocol symbol list) t)
                 check-protocol-implementation))
 (defun check-protocol-implementation (protocol type implementations)
+  "Check that the protocol implementation is valid."
   (let ((missing-implementations
           (set-difference
            (mapcar #'car (protocol-definitions protocol))
@@ -146,6 +149,24 @@ Protocols are implemented by types using IMPLEMENT-PROTOCOL."
     t))
 
 (defmacro implement-protocol (name type &body implementations)
+  "Implement an already defined via DEFPROTOCOL.
+TYPE is the name of the type that implements the PROTOCOL.
+
+Syntax:
+
+    defprotocol ::= (name type implementation*)
+    implementation := (name specialized-lambda-list [{declaration}* | documentation] {form}*)
+
+Implementations follow the syntax of DEFMETHOD. It is required that the TYPE specializer appears in the same position as in the protocol definition.
+
+Example:
+
+    (implement-protocol indexable array
+        (get-at ((index integer) (arr array))
+            (aref arr index))
+        (set-at (value (index integer) (arr array))
+            (setf (aref arr index) value)))
+"
   (let ((protocol (find-protocol name)))
     (check-protocol-implementation protocol type implementations)
     `(progn
@@ -157,6 +178,7 @@ Protocols are implemented by types using IMPLEMENT-PROTOCOL."
        ',name)))
 
 (deftype implements (&rest protocols)
+  "Type whose instances are implementors of PROTOCOLS."
   (if (= (length protocols) 1)
       `(satisfies ,(protocol-satisfies-predicate-name (first protocols)))
       `(and ,@(mapcar (lambda (protocol)
@@ -164,6 +186,8 @@ Protocols are implemented by types using IMPLEMENT-PROTOCOL."
                       protocols))))
 
 (defmacro check-implements (object &rest protocols)
+  "Check that OBJECT implements PROTOCOLS.
+An ERROR is signaled if not."
   `(unless (implements-protocols-p ,object ,@(mapcar (lambda (x) `(quote ,x)) protocols))
      (error "~s does not implement protocols: ~{~a~^, ~}" ,object ',protocols)))
 

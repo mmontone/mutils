@@ -160,6 +160,7 @@ its long description/comment with instructions of usage, etc.
 * [hunchentoot-errors](docs/hunchentoot-errors.md) - Augments Hunchentoot error pages and logs with request and session information.
 * [hunchentoot-trace-acceptor](docs/hunchentoot-trace-acceptor.md) - A Hunchentoot acceptor for tracing HTTP requests.
 * [lisp-critic-warnings](docs/lisp-critic-warnings.md) - Signal compiler warnings with lisp-critic critiques.
+* [muprotocols](docs/muprotocols.md) - An implementation of protocols that plays nicely with Common Lisp type system.
 * [mutils-docs](docs/mutils-docs.md) - Documentation generator for mutils.
 * [mutils-utils](docs/mutils-utils.md) - General purpose utilities.
 * [plump-xpath](docs/plump-xpath.md) - xpath extension for plump.
