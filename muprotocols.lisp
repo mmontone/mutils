@@ -93,16 +93,16 @@
 ;;
 ;; 1) Declaring function types at top-level:
 ;;
-;;      (declaim (ftype (function ((implements mutable indexable)) t)
+;;     (declaim (ftype (function ((implements mutable indexable)) t)
 ;;                     mutate-indexable-collection))
 ;;
-;;      (defun mutate-indexable-collection (coll)
-;;         (add "foo" coll)
-;;         (at 0 coll))
+;;     (defun mutate-indexable-collection (coll)
+;;        (add "foo" coll)
+;;        (at 0 coll))
 ;;
 ;; If we try to compile a function call to MUTATE-INDEXABLE-COLLECTION with something that is not both mutable and indexable:
 ;;
-;;      (mutate-indexable-collection (make-set-collection))
+;;     (mutate-indexable-collection (make-set-collection))
 ;;
 ;; we get a compile-time error:
 ;;
@@ -120,7 +120,7 @@
 ;;
 ;; 3) Don't use the type system. Use CHECK-IMPLEMENTS:
 ;;
-;;      (defun mutate-indexable-collection-3 (coll)
+;;     (defun mutate-indexable-collection-3 (coll)
 ;;         (check-implements coll mutable indexable)
 ;;         (add "foo" coll)
 ;;         (at 0 coll))
