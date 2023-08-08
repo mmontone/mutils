@@ -130,6 +130,7 @@
 ;;        (at 0 coll))
 ;;     ```
 ;;
+;;     ```
 ;;     (defun mutate-indexable-collection-3 (coll)
 ;;         (check-implements coll mutable indexable)
 ;;         (add "foo" coll)
