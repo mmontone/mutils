@@ -51,6 +51,16 @@
 
 (typep (make-set-collection) '(implements indexable))
 
+(implement-protocol indexable list
+  (at ((index integer) (list list))
+      (nth index list)))
+
+(implement-protocol indexable array
+  (at ((index integer) (array array))
+      (aref array index)))
+
+(typep (make-array 0) '(implements indexable))
+
 (declaim (ftype (function ((implements mutable indexable)) t)
                 mutate-indexable-collection))
 
@@ -80,8 +90,16 @@
 
 (mutate-indexable-collection-3 (make-set-collection))
 
-(let ((list (make-list-collection))
-      (set (make-set-collection)))
-  (add 1 list)
-  (add 2 set)
-  (at 0 set))
+(defparameter *list* (make-list-collection))
+(defparameter *set* (make-set-collection))
+
+(add 1 *list*)
+(add 2 *list*)
+(mutate-indexable-collection *list*)
+(at 0 *list*)
+
+(add 1 *set*)
+(add 2 *set*)
+(add 2 *set*)
+(mutate-indexable-collection *set*)
+(at 0 *set*)
