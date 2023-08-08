@@ -46,6 +46,11 @@
     (find-protocol protocol)
     nil))
 
+(defun implements-protocols-p (object &rest protocols)
+  (every (lambda (protocol)
+           (implements-protocol-p object protocol))
+         protocols))
+
 (defun protocol-satisfies-name (protocol-name)
   (intern
    (format nil "IMPLEMENTS-~a-PROTOCOL-P"
@@ -94,7 +99,7 @@
                                      args))
           (error "~a should appear as specializer in lambda-list of definition: ~a"
                  type name))))
-    t))            
+    t))
 
 (defmacro implement-protocol (name type &body implementations)
   (let ((protocol (find-protocol name)))
@@ -107,13 +112,17 @@
                `(defmethod ,@implementation))
        ',name)))
 
-(deftype implements (protocol-name)
-  `(satisfies ,(protocol-satisfies-name protocol-name)))
+(deftype implements (&rest protocols)
+  (if (= (length protocols) 1)
+      `(satisfies ,(protocol-satisfies-name (first protocols)))
+      `(and ,@(mapcar (lambda (protocol)
+                        `(satisfies ,(protocol-satisfies-name protocol)))
+                      protocols))))
 
 (declaim (ftype (function (t symbol) t)
                 check-implements))
-(defmacro check-implements (object protocol)
-  `(unless (implements-protocol-p ,object ',protocol)
-     (error "~s does not implement ~a protocol" ,object 'protocol)))
+(defmacro check-implements (object &rest protocols)
+  `(unless (implements-protocols-p ,object ,@(mapcar (lambda (x) `(quote ,x)) protocols))
+     (error "~s does not implement protocols: ~{~a~^, ~}" ,object ',protocols)))
 
 (provide :muprotocols)
