@@ -87,17 +87,18 @@ An implementation of protocols that plays nicely with Common Lisp type system.
      (typep (make-set-collection) '(implements mutable)) => t
      (typep (make-set-collection) '(implements indexable)) => nil
 
- Now we can use Common Lisp type system to restrict the types of inputs to functions based on protocols:
+ Now we can use Common Lisp type system to restrict the types of inputs to functions based on protocols either:
 
  1) Declaring function types at top-level:
 
+     ```
      (declaim (ftype (function ((implements mutable indexable)) t)
                      mutate-indexable-collection))
 
      (defun mutate-indexable-collection (coll)
         (add "foo" coll)
         (at 0 coll))
-
+     ```
  If we try to compile a function call to MUTATE-INDEXABLE-COLLECTION with something that is not both mutable and indexable:
 
      (mutate-indexable-collection (make-set-collection))
@@ -111,17 +112,21 @@ An implementation of protocols that plays nicely with Common Lisp type system.
 
  2) Using local function declarations:
 
+     ```
      (defun mutate-indexable-collection-2 (coll)
          (declare (type (implements mutable indexable) coll))
          (add "foo" coll)
          (at 0 coll))
+     ```
 
  3) Don't use the type system. Use CHECK-IMPLEMENTS:
 
+     ```
      (defun mutate-indexable-collection-3 (coll)
          (check-implements coll mutable indexable)
          (add "foo" coll)
          (at 0 coll))
+     ```
 
 
 
