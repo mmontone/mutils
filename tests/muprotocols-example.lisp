@@ -90,6 +90,11 @@
 
 (mutate-indexable-collection-3 (make-set-collection))
 
+(defun mutate-indexable-collection-3 (coll)
+  (check-type coll (implements indexable mutable))
+  (add "foo" coll)
+  (at 0 coll))
+
 (defparameter *list* (make-list-collection))
 (defparameter *set* (make-set-collection))
 

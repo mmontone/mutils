@@ -119,9 +119,15 @@ An implementation of protocols that plays nicely with Common Lisp type system.
          (at 0 coll))
      ```
 
- 3) Don't use the type system. Use CHECK-IMPLEMENTS:
+ 3) Check with either CHECK-TYPE or CHECK-IMPLEMENTS:
 
      ```
+     (defun mutate-indexable-collection-3 (coll)
+        (check-type coll (implements indexable mutable))
+        (add "foo" coll)
+        (at 0 coll))
+     ```
+
      (defun mutate-indexable-collection-3 (coll)
          (check-implements coll mutable indexable)
          (add "foo" coll)
