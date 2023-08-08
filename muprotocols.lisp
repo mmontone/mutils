@@ -12,16 +12,17 @@
 ;;
 ;; An implementation of protocols that plays nicely with Common Lisp type system.
 ;;
-;; A protocol is a nominated set of generic functions that are then implemented by Lisp types.
+;; A protocol is a named set of generic functions that are then implemented by different types.
 ;;
-;; The fact that a type implements a certain protocol is reflected on the Lisp type system, via IMPLEMENTS types.
+;; The fact that a type implements a certain protocol is reflected on the Lisp type system as `implements` types.
 ;;
 ;; Here is an example usage:
+;;
 ;; Let's define two protocols, one for mutable collections, and another for indexable collections.
 ;;
 ;; Elements can be added and removed to/from mutable collections.
 ;;
-;; Protocols are defined via DEFPROTOCOL, that takes a name and a list of definitions, which follow the syntax of GENERIC-FUNCTION definitions:
+;; Protocols are defined with DEFPROTOCOL, that takes a name and a list of definitions, which follow the syntax of DEFGENERIC:
 ;;
 ;;     (defprotocol mutable
 ;;       (add (thing mutable)
@@ -35,7 +36,7 @@
 ;;       (at (index indexable)
 ;;          (:documentation "Get element of INDEXABLE at INDEX.")))
 ;;
-;; Protocols are implemented by a type using IMPLEMENT-PROTOCOL:
+;; Protocols are implemented by a type using IMPLEMENT-PROTOCOL.
 ;;
 ;; Our list collections are both mutable and indexable:
 ;;
@@ -89,7 +90,7 @@
 ;;     (typep (make-set-collection) '(implements mutable)) => t
 ;;     (typep (make-set-collection) '(implements indexable)) => nil
 ;;
-;; Now we can use Common Lisp type system to restrict the types of inputs to functions based on protocols either:
+;; Now we can use Common Lisp type system to restrict the types of inputs to functions based on protocols by:
 ;;
 ;; 1) Declaring function types at top-level:
 ;;
