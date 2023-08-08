@@ -128,6 +128,7 @@ An implementation of protocols that plays nicely with Common Lisp type system.
         (at 0 coll))
      ```
 
+     ```
      (defun mutate-indexable-collection-3 (coll)
          (check-implements coll mutable indexable)
          (add "foo" coll)
