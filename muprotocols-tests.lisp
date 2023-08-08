@@ -29,3 +29,5 @@
 (check-implements *standard-output* my-protocol)
 
 (foo *standard-output* t)
+
+(typep *standard-output* '(and stream (implements my-protocol)))
