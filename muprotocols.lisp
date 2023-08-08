@@ -88,20 +88,25 @@ It is required that the name of the protocol (`indexable` in the example)
 appears in all definitions, in at least one of the arguments, at the positions where the generic functions are passed instances of objects that implement the protocol.
 
 Protocols are implemented by types using IMPLEMENT-PROTOCOL."
-  `(progn
-     (setf (gethash ',name *protocols*)
-           (make-protocol :name ',name
-                          :definitions ',definitions
-                          :documentation "TODO"))
-     (defun ,(protocol-satisfies-predicate-name name) (object)
-       (implements-protocol-p object ',name))
-     ,@(loop for def in definitions
-             for (def-name def-args &rest def-options) := def
-             do (unless (member name def-args)
-                  (error "An argument named: ~a should appear in the arguments of definition: ~a of protocol: ~a"
-                         name def-name name))
-             collect `(defgeneric ,@def))
-     ',name))
+  (let ((documentation (when (stringp (first definitions))
+                         (first definitions)))
+        (definitions (if (stringp (first definitions))
+                         (rest definitions)
+                         definitions)))
+    `(progn
+       (setf (gethash ',name *protocols*)
+             (make-protocol :name ',name
+                            :definitions ',definitions
+                            :documentation ,documentation))
+       (defun ,(protocol-satisfies-predicate-name name) (object)
+         (implements-protocol-p object ',name))
+       ,@(loop for def in definitions
+               for (def-name def-args &rest def-options) := def
+               do (unless (member name def-args)
+                    (error "An argument named: ~a should appear in the arguments of definition: ~a of protocol: ~a"
+                           name def-name name))
+               collect `(defgeneric ,@def))
+       ',name)))
 
 (declaim (ftype (function (protocol symbol list) t)
                 check-protocol-implementation))
@@ -179,7 +184,7 @@ Example:
 
 (deftype implements (&rest protocols)
   "Type whose instances are implementors of PROTOCOLS."
-  (if (= (length protocols) 1)
+  (if (null (cdr protocols))
       `(satisfies ,(protocol-satisfies-predicate-name (first protocols)))
       `(and ,@(mapcar (lambda (protocol)
                         `(satisfies ,(protocol-satisfies-predicate-name protocol)))
