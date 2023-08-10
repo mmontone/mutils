@@ -81,7 +81,7 @@
 ;;     (at 0 *set*) => error. Not indexable.
 ;;
 ;; The implementation of a protocol extends the Lisp type system.
-;; Types that implement a protocol satisfy the type `(implements &rest protocols)`.
+;; Instances of the types that implement a protocol satisfy the type `(implements &rest protocols)`.
 ;;
 ;; We can check that for our example:
 ;;
