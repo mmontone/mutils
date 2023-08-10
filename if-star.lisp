@@ -1,5 +1,6 @@
 ;;; if-star --- The if* macro used in Allegro.
 ;;
+;; http://www.franz.com/~jkf/ifstar.txt
 ;; This is in the public domain... please feel free to put this definition
 ;; in your code or distribute it with your version of lisp.
 ;;
