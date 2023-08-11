@@ -15,3 +15,7 @@ Signal compiler warnings with lisp-critic critiques.
 
 
 
+## Variables
+### \*critic-warnings\*
+Variable for enabling or disabling Lisp critic warnings.
+

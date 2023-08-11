@@ -21,9 +21,13 @@
 (require :compiler-hooks)
 
 (defpackage :lisp-critic-warnings
-  (:use :cl))
+  (:use :cl)
+  (:export #:*critic-warnings*))
 
 (in-package :lisp-critic-warnings)
+
+(defvar *critic-warnings* t
+  "Variable for enabling or disabling Lisp critic warnings.")
 
 (define-condition lisp-critic-style-warning (alexandria:simple-style-warning)
   ())
@@ -54,6 +58,10 @@
               ;; Would that be possible to add?
               (warn 'lisp-critic-style-warning :format-control critique))))))))
 
-(pushnew 'critique-file compiler-hooks:*after-compile-file-hooks*)
+(defun maybe-critique-file (file &rest args)
+  (when *critic-warnings*
+    (apply #'critique-file file args)))
+
+(pushnew 'maybe-critique-file compiler-hooks:*after-compile-file-hooks*)
 
 (provide :lisp-critic-warnings)
