@@ -122,20 +122,13 @@
 ;;         (at 0 coll))
 ;;     ```
 ;;
-;; 3) Check with either CHECK-TYPE or CHECK-IMPLEMENTS:
+;; 3) Check with CHECK-TYPE:
 ;;
 ;;     ```
 ;;     (defun mutate-indexable-collection-3 (coll)
 ;;        (check-type coll (implements indexable mutable))
 ;;        (add "foo" coll)
 ;;        (at 0 coll))
-;;     ```
-;;
-;;     ```
-;;     (defun mutate-indexable-collection-3 (coll)
-;;         (check-implements coll mutable indexable)
-;;         (add "foo" coll)
-;;         (at 0 coll))
 ;;     ```
 ;;
 ;;; Code:
@@ -145,9 +138,7 @@
   (:export
    #:defprotocol
    #:implement-protocol
-   #:check-implements
-   #:implements
-   #:implements-protocol-p)
+   #:implements)
   (:documentation "Protocols that play nicely with Common Lisp type system."))
 
 (in-package :muprotocols)
@@ -313,11 +304,5 @@ Example:
       `(and ,@(mapcar (lambda (protocol)
                         `(satisfies ,(protocol-satisfies-predicate-name protocol)))
                       protocols))))
-
-(defmacro check-implements (object &rest protocols)
-  "Check that OBJECT implements PROTOCOLS.
-An ERROR is signaled if not."
-  `(unless (implements-protocols-p ,object ,@(mapcar (lambda (x) `(quote ,x)) protocols))
-     (error "~s does not implement protocols: ~{~a~^, ~}" ,object ',protocols)))
 
 (provide :muprotocols)
