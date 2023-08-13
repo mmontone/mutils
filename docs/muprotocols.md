@@ -132,19 +132,6 @@ An implementation of protocols that plays nicely with Common Lisp type system.
 
 
 ## Macros
-### check-implements
-
-```lisp
-(object &rest protocols)
-```
-
-Check that OBJECT implements PROTOCOLS.
-An ERROR is signaled if not.
-
-
-
-
-
 ### defprotocol
 
 ```lisp
@@ -203,8 +190,4 @@ Example:
             (aref arr index))
         (set-at (value (index integer) (arr array))
             (setf (aref arr index) value)))
-
-## Generic-Functions
-### implements-protocol-p
-Tests if OBJECT implements PROTOCOL.
 
