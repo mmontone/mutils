@@ -23,6 +23,9 @@
 (in-package :image-dimensions-reader)
 
 (defgeneric image-size (input)
+  (:documentation "Get the sizes of the image designated by INPUT, without loading the file.
+INPUT can be a PATHNAME, a STRING or a STREAM.
+The size of the image are returned in a list: (width height).")
   (:method ((input pathname))
     (with-open-file (input input :element-type 'unsigned-byte)
       (image-size input)))
