@@ -167,4 +167,5 @@ its long description/comment with instructions of usage, etc.
 * [mutils-utils](docs/mutils-utils.md) - General purpose utilities.
 * [plump-xpath](docs/plump-xpath.md) - xpath extension for plump.
 * [quicksearch](docs/quicksearch.md) - Search Engine Interface for Common Lisp.
+* [type-annotations](docs/type-annotations.md) - Support for inline type annotations.
 * [who-templates](docs/who-templates.md) - Templating system with CL-WHO. Supports inheritance.
