@@ -160,6 +160,7 @@ its long description/comment with instructions of usage, etc.
 * [hunchentoot-errors](docs/hunchentoot-errors.md) - Augments Hunchentoot error pages and logs with request and session information.
 * [hunchentoot-trace-acceptor](docs/hunchentoot-trace-acceptor.md) - A Hunchentoot acceptor for tracing HTTP requests.
 * [if-star](docs/if-star.md) - The if* macro used in Allegro.
+* [image-dimensions-reader](docs/image-dimensions-reader.md) - Get image dimensions (PNG/JPG) without loading the file.
 * [lisp-critic-warnings](docs/lisp-critic-warnings.md) - Signal compiler warnings with lisp-critic critiques.
 * [muprotocols](docs/muprotocols.md) - An implementation of protocols that plays nicely with Common Lisp type system.
 * [mutils-docs](docs/mutils-docs.md) - Documentation generator for mutils.
