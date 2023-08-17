@@ -37,6 +37,10 @@ its long description/comment with instructions of usage, etc."
         (unless module-name-and-desc
           (error "Module should start with: ;;; <module name> --- <short description>"))
         (setf module-name (string-trim '(#\space) (aref module-name-and-desc 0)))
+        (unless (string= module-name (pathname-name file))
+          (error "Error in module header (~a).~%
+Module name should be the same as file name (~a)."
+                 module-name (pathname-name file)))
         (setf short-desc (string-trim '(#\space) (aref module-name-and-desc 1)))
         (handler-case
             (do ((line (read-line in) (read-line in)))

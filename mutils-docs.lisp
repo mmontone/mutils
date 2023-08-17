@@ -66,7 +66,9 @@
   "Generate library docs."
   (generate-readme)
   (dolist (module-details (mutils:list-modules :details))
-    (generate-module-docs module-details (asdf:system-relative-pathname :mutils
-                                                                        (format nil "docs/~a.md" (getf module-details :name))))))
+    (format t "Generating docs for module: ~a~%" (getf module-details :name))
+    (generate-module-docs module-details
+                          (asdf:system-relative-pathname :mutils
+                                                         (format nil "docs/~a.md" (getf module-details :name))))))
 
 (provide :mutils-docs)
