@@ -26,3 +26,6 @@ List of function-designators that are called before COMPILE-FILE.
 ### \*before-compile-hooks\*
 List of function-designators that are called before COMPILE.
 
+### \*compiler-hooks-enabled\*
+Toggle this variable for enabling or disabling compiler hooks.
+
