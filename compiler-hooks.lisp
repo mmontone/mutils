@@ -20,7 +20,7 @@
 (defpackage :compiler-hooks
   (:use :cl)
   (:export
-   #:compiler-hooks-enabled
+   #:*compiler-hooks-enabled*
    #:*before-compile-hooks*
    #:*after-compile-hooks*
    #:*before-compile-file-hooks*
