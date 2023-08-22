@@ -153,6 +153,7 @@ its long description/comment with instructions of usage, etc.
 
 * [compiler-hooks](docs/compiler-hooks.md) - Provides hooks for Common Lisp compilation api.
 * [compiler-info](docs/compiler-info.md) - Provides compiler info (specially from declarations) in a portable way.
+* [debug-print](docs/debug-print.md) - A reader macro package for debug printing.
 * [def-properties](docs/def-properties.md) - Portable extractor of information from Common Lisp definitions.
 * [directory-module-loader](docs/directory-module-loader.md) - Loader of Lisp module files from directories.
 * [estimated-time-progress](docs/estimated-time-progress.md) - Progress display with estimated time.
