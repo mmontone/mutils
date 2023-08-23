@@ -13,11 +13,11 @@
 ;;
 ;; A reader macro package for debug printing.
 ;;
-;; ** Usage
+;; ## Usage
 ;;
 ;;    (debug-print:use-debug-print)
 ;;
-;;    ;;; Debug print
+;; ### Debug print
 ;;
 ;;    (defun fact (n)
 ;;      (if (= #>n 0)
@@ -48,7 +48,7 @@
 ;;    ;; (FACT (1- N)) => 40320
 ;;    ;; (FACT (1- N)) => 362880
 ;;
-;;    ;;; Debug push
+;; ### Debug push
 ;;
 ;;    (defun fact2 (n)
 ;;      (if (= n 0)
@@ -58,7 +58,7 @@
 ;;    (fact2 10)
 ;;    ;; => 3628800
 ;;
-;;    ;;; Debug push results are stored to *dbg*
+;; ### Debug push results are stored to *dbg*
 ;;
 ;;    debug-print:*dbg*
 ;;    ;; => (362880 40320 5040 720 120 24 6 2 1 1)
@@ -70,7 +70,7 @@
 ;;    debug-print:*dbg*
 ;;    ;; => nil
 ;;
-;; *** Configure variables
+;; ### Configure variables
 ;;
 ;;    ;;; Setting destination stream (default value is *standard-output*)
 ;;
@@ -103,6 +103,7 @@
 ;;    ;;     Return the sine of NUMBER.
 ;;    ;;   Known attributes: foldable, flushable, unsafely-flushable, movable, recursive
 ;;    ;;   Source file: SYS:SRC;CODE;IRRAT.LISP
+;;
 ;;; Code:
 
 (require :cl-syntax)
