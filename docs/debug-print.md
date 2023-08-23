@@ -68,13 +68,13 @@ A reader macro package for debug printing.
     debug-print:*dbg*
     ;; => nil
 
- ### Configure variables
+ ## Configure variables
 
-    ;;; Setting destination stream (default value is *standard-output*)
+ ### Setting destination stream (default value is *standard-output*)
 
     (setf debug-print:*destination* *error-output*)
 
-    ;;; Setting for using DESCRIBE instead of mere value (default value is nil)
+ ### Setting for using DESCRIBE instead of mere value (default value is nil)
 
     (setf debug-print:*use-describe* t)
 
