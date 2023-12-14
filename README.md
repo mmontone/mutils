@@ -158,6 +158,7 @@ its long description/comment with instructions of usage, etc.
 * [def-properties](docs/def-properties.md) - Portable extractor of information from Common Lisp definitions.
 * [directory-module-loader](docs/directory-module-loader.md) - Loader of Lisp module files from directories.
 * [estimated-time-progress](docs/estimated-time-progress.md) - Progress display with estimated time.
+* [extended-trace](docs/extended-trace.md) - A TRACE replacement with some extra report options.
 * [html2who](docs/html2who.md) - Parse HTML and create cl-who source code.
 * [hunchentoot-errors](docs/hunchentoot-errors.md) - Augments Hunchentoot error pages and logs with request and session information.
 * [hunchentoot-trace-acceptor](docs/hunchentoot-trace-acceptor.md) - A Hunchentoot acceptor for tracing HTTP requests.
