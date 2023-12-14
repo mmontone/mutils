@@ -4,6 +4,7 @@ The if* macro used in Allegro.
 
 [[source code]](../if-star.lisp)
 
+- **http**: //www.franz.com/~jkf/ifstar.txt
 - **Author**: John Foderaro
 
 
