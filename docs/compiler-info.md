@@ -20,6 +20,13 @@ Provides compiler info (specially from declarations) in a portable way.
 ```
 
 
+### function-name
+
+```lisp
+(function)
+```
+
+
 ### function-type
 
 ```lisp
