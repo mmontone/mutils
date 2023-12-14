@@ -92,7 +92,7 @@ Returns a list of alists of properties, one alist for each type of definition th
       (push (function-properties symbol shallow) properties))
     (when (and (or (not type) (eql type 'cl:generic-function))
 	       (symbol-generic-function-p symbol))
-      (push (function-properties symbol shallow) properties))
+      (push (generic-function-properties symbol shallow) properties))
     (when (and (or (not type) (eql type 'cl:macro-function))
 	       (symbol-macro-p symbol))
       (push (function-properties symbol shallow) properties))
