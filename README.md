@@ -168,6 +168,7 @@ its long description/comment with instructions of usage, etc.
 * [muprotocols](docs/muprotocols.md) - An implementation of protocols that plays nicely with Common Lisp type system.
 * [mutils-docs](docs/mutils-docs.md) - Documentation generator for mutils.
 * [mutils-utils](docs/mutils-utils.md) - General purpose utilities.
+* [parametric-types](docs/parametric-types.md) - Some parametric types for CL (an experiment).
 * [plump-xpath](docs/plump-xpath.md) - xpath extension for plump.
 * [quicksearch](docs/quicksearch.md) - Search Engine Interface for Common Lisp.
 * [type-annotations](docs/type-annotations.md) - Support for inline type annotations.
