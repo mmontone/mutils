@@ -17,7 +17,7 @@ Documentation generator for mutils.
 ### generate-docs
 
 ```lisp
-nil
+()
 ```
 
 Generate library docs.

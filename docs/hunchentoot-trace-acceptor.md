@@ -28,7 +28,7 @@ Request tracing is enabled when this is T. Default is T.
 ### \*trace-session\*
 Session tracing is enabled when this is T. Default is NIL.
 
-## Classs
+## Classes
 ### trace-acceptor
 A Hunchentoot acceptor for tracing requests
 

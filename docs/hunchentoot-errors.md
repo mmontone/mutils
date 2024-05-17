@@ -52,7 +52,7 @@ Augments Hunchentoot error pages and logs with request and session information.
 
 
 
-## Classs
+## Classes
 ### errors-acceptor
 Subclasses of this acceptor augment Hunchentoot error pages and logs with request and session information.
 

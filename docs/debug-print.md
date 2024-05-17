@@ -108,7 +108,7 @@ A reader macro package for debug printing.
 ### clear-dbg
 
 ```lisp
-nil
+()
 ```
 
 
@@ -143,7 +143,7 @@ nil
 ### use-debug-print
 
 ```lisp
-nil
+()
 ```
 
 
@@ -159,5 +159,3 @@ To clear this variable, use the CLEAR-DBG function.
 When \*USE-DESCRIBE\* is true, describe is used for debug prints.
 
 ### debug-print-syntax
-nil
-

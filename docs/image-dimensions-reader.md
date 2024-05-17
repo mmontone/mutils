@@ -16,7 +16,15 @@ Get image dimensions (PNG/JPG) without loading the file.
 
 ## Generic-Functions
 ### image-size
+
+```lisp
+(input)
+```
+
 Get the sizes of the image designated by INPUT, without loading the file.
 INPUT can be a PATHNAME, a STRING or a STREAM.
 The size of the image are returned in a list: (width height).
+
+
+
 
