@@ -151,6 +151,7 @@ its long description/comment with instructions of usage, etc.
 
 ## List of modules
 
+* [asdf-local](docs/asdf-local.md) - A module for treating local systems compilation differently from third party systems.
 * [clhs-linker](docs/clhs-linker.md) - Replace Lisp terms in a file by hyperlinks to Common Lisp HyperSpec.
 * [compiler-hooks](docs/compiler-hooks.md) - Provides hooks for Common Lisp compilation api.
 * [compiler-info](docs/compiler-info.md) - Provides compiler info (specially from declarations) in a portable way.
