@@ -6,7 +6,7 @@ A module for copying all ASDF system dependencies to a directory.
 
 - **Author**: Mariano Montone <marianomontone@gmail.com>
 - **Version**: 0.1
-- **Requires**: ASDF
+- **Requires**: ASDF, ALEXANDRIA
 
 
  This module copies all the dependencies of an ASDF system to a directory.
@@ -18,7 +18,7 @@ A module for copying all ASDF system dependencies to a directory.
  ```lisp
  (asdf:initialize-source-registry
   '(:source-registry
-    :inherit-configuration
+    :ignore-inherited-configuration
     (:tree <dependencies-directory>)))
  ```
  `(asdf:operate 'asdf:load-op <my-asdf-system>)`

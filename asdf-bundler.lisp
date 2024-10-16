@@ -7,7 +7,7 @@
 
 ;; Author: Mariano Montone <marianomontone@gmail.com>
 ;; Version: 0.1
-;; Requires: ASDF
+;; Requires: ASDF, ALEXANDRIA
 
 ;;; Commentary:
 
@@ -20,7 +20,7 @@
 ;; ```lisp
 ;; (asdf:initialize-source-registry
 ;;  '(:source-registry
-;;    :inherit-configuration
+;;    :ignore-inherited-configuration
 ;;    (:tree <dependencies-directory>)))
 ;; ```
 ;; `(asdf:operate 'asdf:load-op <my-asdf-system>)`
@@ -29,6 +29,7 @@
 
 (require :asdf)
 (require :uiop)
+(require :alexandria)
 
 (defpackage :asdf-bundler
   (:use :cl)
@@ -68,8 +69,9 @@
                          (and (not (eq d dir))
                               (uiop/pathname:subpathp dir d)))
                        all-directories))
-        (push dir top-level-directories)))
-    (remove nil (remove-duplicates top-level-directories))))
+        (when dir
+          (pushnew dir top-level-directories))))
+    top-level-directories))
 
 (defun copy-dependencies (asdf-system target-directory)
   "Copy dependencies of ASDF-SYSTEM to TARGET-DIRECTORY."

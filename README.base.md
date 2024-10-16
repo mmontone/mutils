@@ -107,6 +107,10 @@ Modules should be general purpose and be compact enough to fit into a single fil
 
 The module file should follow the format described in this document.
 
+### Maintenance
+
+Evaluate `(mutils-docs:generate-docs)` after adding a new module.
+
 ## Modules api (mutils package)
 
 ### describe-module
