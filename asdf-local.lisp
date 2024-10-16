@@ -47,7 +47,7 @@
    #:*fail-on-style-warnings*
    #:operate-locally))
 
-(in-package :asdf/local)
+(in-package :asdf-local)
 
 (defvar *local-directories* ()
   "A list of PATHNAME. List of directories considered local.")

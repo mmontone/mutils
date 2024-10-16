@@ -32,3 +32,34 @@ A module for treating local systems compilation differently from third party sys
 
 
 
+## Functions
+### operate-locally
+
+```lisp
+(operation component &rest args)
+```
+
+Utility function that includes COMPONENT in the list of *LOCAL-SYSTEMS* before applying the ASDF OPERATION.
+
+
+
+
+## Variables
+### \*asdf-component-being-compiled\*
+The current ASDF:COMPONENT being compiled.
+
+### \*fail-on-style-warnings\*
+When enabled, style-warning errors are signaled as errors for local systems.
+
+### \*local-component-predicates\*
+A list of FUNCTION-DESIGNATOR that are invoked by COMPONENT-LOCAL-P to determine if a component is local.
+
+### \*local-directories\*
+A list of PATHNAME. List of directories considered local.
+
+### \*local-systems\*
+A list of ASDF:SYSTEM considered local.
+
+### \*non-local-directories\*
+A list of PATHNAME. List of directories considered non-local.
+
