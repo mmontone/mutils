@@ -30,3 +30,11 @@ A helper package for pagination of collections.
 ```
 
 
+### print-pagination-html
+
+```lisp
+(pagination link-renderer &key (stream *standard-output*)
+ (first-and-last-buttons t) (prev-and-next-buttons t))
+```
+
+

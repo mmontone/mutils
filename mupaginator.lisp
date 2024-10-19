@@ -85,10 +85,10 @@
     (print-pagination (paginate (1+ i) pages :padding 3))
     (terpri)))
 
-(defun print-pagination-to-html (pagination link-renderer
-                                 &key (stream *standard-output*)
-                                   (first-and-last-buttons t)
-                                   (prev-and-next-buttons t))
+(defun print-pagination-html (pagination link-renderer
+                              &key (stream *standard-output*)
+                                (first-and-last-buttons t)
+                                (prev-and-next-buttons t))
   (who:with-html-output (html stream)
     (:div :class "pagination"
           (when first-and-last-buttons
@@ -122,5 +122,5 @@
    (lambda (page)
      (format nil "/page/~a" page))
    :stream s))
-  
+
 (provide :mupaginator)
