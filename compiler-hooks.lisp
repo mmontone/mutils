@@ -28,7 +28,7 @@
 
 (in-package :compiler-hooks)
 
-(defvar *compiler-hooks-enabled* t
+(defvar *compiler-hooks-enabled* nil
   "Toggle this variable for enabling or disabling compiler hooks.")
 
 (defvar *after-compile-hooks* nil
