@@ -1,5 +1,7 @@
 ;;; mupaginator --- A helper package for pagination of collections.
 ;;
+;; https://www.zacfukuda.com/blog/pagination-algorithm
+;;
 ;; Version: 0.1
 ;; Requires: cl-who
 ;;
@@ -15,9 +17,10 @@
 
 (defpackage :mupaginator
   (:use :cl)
-  (:export #:make-pagination
+  (:export #:paginate
            #:print-pagination
-           #:print-pagination-html))
+           #:print-pagination-html
+           #:print-pagination-bootstrap))
 
 (in-package :mupaginator)
 
@@ -73,45 +76,45 @@
             (format stream "~a" button)))
     (write-char #\space stream)))
 
-(defun test1 (&optional (pages 30))
-  (dotimes (i pages)
-    (format t "Current ~a: " (1+ i))
-    (print-pagination (paginate (1+ i) pages))
-    (terpri)))
-
-(defun test2 (&optional (pages 30))
-  (dotimes (i pages)
-    (format t "Current ~a: " (1+ i))
-    (print-pagination (paginate (1+ i) pages :padding 3))
-    (terpri)))
-
-(defun print-pagination-html (pagination link-renderer
-                              &key (stream *standard-output*)
+(defun print-pagination-html (pagination 
+                              &key
+                                href
+                                on-click
+                                (stream *standard-output*)
                                 (first-and-last-buttons t)
                                 (prev-and-next-buttons t))
   (who:with-html-output (html stream)
     (:div :class "pagination"
           (when first-and-last-buttons
             (who:htm
-             (:a :class "btn" :href (funcall link-renderer 1)
+             (:a :class "btn"
+                 :href (when href (funcall href 1))
+                 :onclick (when on-click (funcall on-click 1))
                  (who:str (who:escape-string "<<")))))
           (when (and prev-and-next-buttons (pagination-prev pagination))
             (who:htm
-             (:a :class "btn" :href (funcall link-renderer (pagination-prev pagination))
+             (:a :class "btn"
+                 :href (when href (funcall href (pagination-prev pagination)))
+                 :onclick (when on-click (funcall on-click (pagination-prev pagination)))
                  (who:str (who:escape-string "<")))))
           (dolist (page (pagination-pages pagination))
             (if (eq page :ellipsis)
                 (who:htm (:span :class "ellipsis" (who:str "...")))
                 (who:htm
                  (:a :class (concatenate 'string "btn" (if (= page (pagination-current pagination)) " btn-primary" ""))
-                     :href (funcall link-renderer page)))))
+                     :href (when href (funcall href page))
+                     :onclick (when on-click (funcall on-click page))))))
           (when (and prev-and-next-buttons (pagination-next pagination))
             (who:htm
-             (:a :class "btn" :href (funcall link-renderer (pagination-next pagination))
+             (:a :class "btn"
+                 :href (when href (funcall href (pagination-next pagination)))
+                 :onclick (when on-click (funcall on-click (pagination-next pagination)))
                  (who:str (who:escape-string ">")))))
           (when first-and-last-buttons
             (who:htm
-             (:a :class "btn" :href (funcall link-renderer (pagination-total pagination))
+             (:a :class "btn"
+                 :href (when href (funcall href (pagination-total pagination)))
+                 :onclick (when on-click (funcall on-click (pagination-total pagination)))
                  (who:str (who:escape-string ">>")))))
           )))
 
@@ -122,5 +125,76 @@
    (lambda (page)
      (format nil "/page/~a" page))
    :stream s))
+
+;; <nav aria-label="Page navigation example">
+;;   <ul class="pagination justify-content-center">
+;;     <li class="page-item disabled">
+;;       <a class="page-link" href="#" tabindex="-1">Previous</a>
+;;     </li>
+;;     <li class="page-item"><a class="page-link" href="#">1</a></li>
+;;     <li class="page-item"><a class="page-link" href="#">2</a></li>
+;;     <li class="page-item"><a class="page-link" href="#">3</a></li>
+;;     <li class="page-item">
+;;       <a class="page-link" href="#">Next</a>
+;;     </li>
+;;   </ul>
+;; </nav>
+
+;; https://getbootstrap.com/docs/4.1/components/pagination/?
+
+(defun print-pagination-bootstrap (pagination
+                                   &key
+                                     href on-click
+                                     (stream *standard-output*)
+                                     (first-and-last-buttons t)
+                                     (prev-and-next-buttons t))
+  (who:with-html-output (html stream)
+    (:ul :class "pagination justify-content-center"
+          (when first-and-last-buttons
+            (who:htm
+             (:li :class "page-item"
+                  (:a :class "page-link"
+                      :href (when href (funcall href 1))
+                      :onclick (when on-click (funcall on-click 1))
+                      (who:str (who:escape-string "<<"))))))
+          (when (and prev-and-next-buttons (pagination-prev pagination))
+            (who:htm
+             (:li :class "page-item"
+                  (:a :class "page-link"
+                      :href (when href (funcall href (pagination-prev pagination)))
+                      :onclick (when on-click (funcall on-click (pagination-prev pagination)))
+                      (who:str (who:escape-string "<"))))))
+          (dolist (page (pagination-pages pagination))
+            (if (eq page :ellipsis)
+                (who:htm (:li :class "page-item disabled"
+                              (:a :class "page-link" :href "#" (who:str "..."))))
+                (who:htm
+                 (:li :class (concatenate 'string "page-item" (if (= page (pagination-current pagination)) " active" ""))
+                      (:a :class "page-link"
+                          :href (when href (funcall href page))
+                          :onclick (when on-click (funcall on-click page)))))))
+          (when (and prev-and-next-buttons (pagination-next pagination))
+            (who:htm
+             (:li :class "page-item"
+                  (:a :class "page-link"
+                      :href (when href (funcall href (pagination-next pagination)))
+                      :onclick (when on-click (funcall on-click (pagination-next pagination)))
+                      (who:str (who:escape-string ">"))))))
+          (when first-and-last-buttons
+            (who:htm
+             (:li :class "page-item"
+                  (:a :class "page-link"
+                      :href (when href (funcall href (pagination-total pagination)))
+                      :onclick (when on-click (funcall on-click (pagination-total pagination)))
+                      (who:str (who:escape-string ">>"))))))
+          )))
+
+;; https://www.w3schools.com/w3css/w3css_pagination.asp
+(defun print-pagination-w3css (pagination
+                                   &key
+                                     href on-click
+                                     (stream *standard-output*)
+                                     (first-and-last-buttons t)
+                                     (prev-and-next-buttons t)))
 
 (provide :mupaginator)
