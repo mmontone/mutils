@@ -172,7 +172,8 @@
                  (:li :class (concatenate 'string "page-item" (if (= page (pagination-current pagination)) " active" ""))
                       (:a :class "page-link"
                           :href (when href (funcall href page))
-                          :onclick (when on-click (funcall on-click page)))))))
+                          :onclick (when on-click (funcall on-click page))
+                          (who:str page))))))
           (when (and prev-and-next-buttons (pagination-next pagination))
             (who:htm
              (:li :class "page-item"
