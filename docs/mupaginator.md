@@ -27,7 +27,7 @@ A helper package for pagination of collections.
        (mupaginator:print-pagination-bootstrap
         pagination
         :href (lambda (page-nr)
-                (easy-routes:genurl 'vanilla-pagination-test :page page-nr))
+                (easy-routes:genurl 'pagination-test :page page-nr))
         :stream html))))
  ```
 
@@ -41,6 +41,7 @@ A helper package for pagination of collections.
 ```
 
 Utility function for calculating start and end for PAGE, PAGE-SIZE and TOTAL.
+Useful for getting the items of a page, given those arguments and a sequence.
 
 
 
@@ -115,3 +116,5 @@ Like PRINT-PAGINATION-HTML, but for W3CSS framework.
 
 
 
+## Classes
+### pagination

@@ -25,7 +25,7 @@
 ;;       (mupaginator:print-pagination-bootstrap
 ;;        pagination
 ;;        :href (lambda (page-nr)
-;;                (easy-routes:genurl 'vanilla-pagination-test :page page-nr))
+;;                (easy-routes:genurl 'pagination-test :page page-nr))
 ;;        :stream html))))
 ;; ```
 ;;
@@ -36,7 +36,8 @@
 
 (defpackage :mupaginator
   (:use :cl)
-  (:export #:paginate
+  (:export #:pagination
+           #:paginate
            #:print-pagination
            #:print-pagination-html
            #:print-pagination-bootstrap
@@ -302,6 +303,7 @@ Args:
 
 (defun page-start-end (page page-size total)
   "Utility function for calculating start and end for PAGE, PAGE-SIZE and TOTAL.
+Useful for getting the items of a page, given those arguments and a sequence.
 
 Example usage:
     (apply #'subseq my-seq (multiple-value-list page page-size (length my-seq)))"
