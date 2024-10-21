@@ -43,8 +43,7 @@
   (let* ((total (floor (/ (length *countries*) *page-size*)))
          (pagination (mupaginator:paginate page total))
          (items (mapcar #'cadr
-                        (subseq *countries* (* (1- page) *page-size*)
-                                (min (+ (* (1- page) *page-size*) *page-size*) (length *countries*))))))
+                        (apply #'subseq *countries* (multiple-value-list (mupaginator:page-start-end page *page-size* (length *countries*)))))))
     (with-html
       (:ul
        (dolist (item items)
@@ -60,8 +59,7 @@
   (let* ((total (floor (/ (length *countries*) *page-size*)))
          (pagination (mupaginator:paginate page total))
          (items (mapcar #'cadr
-                        (subseq *countries* (* (1- page) *page-size*)
-                                (min (+ (* (1- page) *page-size*) *page-size*) (length *countries*))))))
+                        (apply #'subseq *countries* (multiple-value-list (mupaginator:page-start-end page *page-size* (length *countries*)))))))
     (let ((*stylesheets* '("https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css")))
       (with-html
         (:ul :class "list-group"
@@ -78,8 +76,7 @@
   (let* ((total (floor (/ (length *countries*) *page-size*)))
          (pagination (mupaginator:paginate page total))
          (items (mapcar #'cadr
-                        (subseq *countries* (* (1- page) *page-size*)
-                                (min (+ (* (1- page) *page-size*) *page-size*) (length *countries*))))))
+                        (apply #'subseq *countries* (multiple-value-list (mupaginator:page-start-end page *page-size* (length *countries*)))))))
     (let ((*stylesheets* '("https://www.w3schools.com/w3css/4/w3.css")))
       (with-html
         (:ul :class "w3-ul"
