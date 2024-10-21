@@ -105,7 +105,8 @@
                 (who:htm
                  (:a :class (concatenate 'string "btn" (if (= page (pagination-current pagination)) " btn-primary" ""))
                      :href (when href (funcall href page))
-                     :onclick (when on-click (funcall on-click page))))))
+                     :onclick (when on-click (funcall on-click page))
+                     (who:str page)))))
           (when (and prev-and-next-buttons (pagination-next pagination))
             (who:htm
              (:a :class "btn"
