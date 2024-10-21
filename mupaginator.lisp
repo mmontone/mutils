@@ -11,6 +11,9 @@
 ;;
 ;; Usage:
 ;;
+;; Create a PAGINATION object using PAGINATE function, passing the current page and the total number of pages.
+;; Then print that object to an HTML stream, using of the PRINT-PAGINATION functions, and passing HREF or ON-CLICK handlers for resolving urls/actions for the page buttons.
+;;
 ;; ```lisp
 ;; (defroute pagination-test "/"
 ;;     ((page :parameter-type 'integer :init-form 1))
