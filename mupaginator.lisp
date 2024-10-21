@@ -79,7 +79,7 @@
 ;; (paginate 3 10)
 ;; (paginate 4 10)
 ;; (paginate 5 10)
-;; (paginate 5 10 :window-size 2 :padding 3)
+;; (paginate 5 10 :padding 3)
 ;; (paginate 5 10 :padding 3 :use-ellipsis nil)
 
 (defun print-pagination (pagination &optional (stream *standard-output*))
