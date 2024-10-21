@@ -13,6 +13,24 @@ A helper package for pagination of collections.
 
  Usage:
 
+ ```lisp
+ (defroute pagination-test "/"
+     ((page :parameter-type 'integer :init-form 1))
+   (let* ((total (floor (/ (length *countries*) *page-size*)))
+          (pagination (mupaginator:paginate page total))
+          (items (mapcar #'cadr
+                         (apply #'subseq *countries* (multiple-value-list (mupaginator:page-start-end page *page-size* (length *countries*)))))))
+     (with-html
+       (:ul
+        (dolist (item items)
+          (who:htm (:li (who:str item)))))
+       (mupaginator:print-pagination-bootstrap
+        pagination
+        :href (lambda (page-nr)
+                (easy-routes:genurl 'vanilla-pagination-test :page page-nr))
+        :stream html))))
+ ```
+
 
 
 ## Functions
