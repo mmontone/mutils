@@ -20,7 +20,8 @@
   (:export #:paginate
            #:print-pagination
            #:print-pagination-html
-           #:print-pagination-bootstrap))
+           #:print-pagination-bootstrap
+           #:print-pagination-w3css))
 
 (in-package :mupaginator)
 
@@ -149,7 +150,7 @@
                                      (first-and-last-buttons t)
                                      (prev-and-next-buttons t))
   (who:with-html-output (html stream)
-    (:ul :class "pagination justify-content-center"
+    (:ul :class "pagination"
           (when first-and-last-buttons
             (who:htm
              (:li :class "page-item"
@@ -192,10 +193,45 @@
 
 ;; https://www.w3schools.com/w3css/w3css_pagination.asp
 (defun print-pagination-w3css (pagination
-                                   &key
-                                     href on-click
-                                     (stream *standard-output*)
-                                     (first-and-last-buttons t)
-                                     (prev-and-next-buttons t)))
+                               &key
+                                 href on-click
+                                 (stream *standard-output*)
+                                 (first-and-last-buttons t)
+                                 (prev-and-next-buttons t))
+  (who:with-html-output (html stream)
+    (:div :class "w3-bar"
+          (when first-and-last-buttons
+            (who:htm
+             (:a :class "w3-button"
+                 :href (when href (funcall href 1))
+                 :onclick (when on-click (funcall on-click 1))
+                 (who:str (who:escape-string "<<")))))
+          (when (and prev-and-next-buttons (pagination-prev pagination))
+            (who:htm
+             (:a :class "w3-button"
+                 :href (when href (funcall href (pagination-prev pagination)))
+                 :onclick (when on-click (funcall on-click (pagination-prev pagination)))
+                 (who:str (who:escape-string "<")))))
+          (dolist (page (pagination-pages pagination))
+            (if (eq page :ellipsis)
+                (who:htm (:a :class "w3-button" :href "#" (who:str "...")))
+                (who:htm
+                 (:a :class (concatenate 'string "w3-button" (if (= page (pagination-current pagination)) " w3-green" ""))
+                     :href (when href (funcall href page))
+                     :onclick (when on-click (funcall on-click page))
+                     (who:str page)))))
+          (when (and prev-and-next-buttons (pagination-next pagination))
+            (who:htm
+             (:a :class "w3-button"
+                 :href (when href (funcall href (pagination-next pagination)))
+                 :onclick (when on-click (funcall on-click (pagination-next pagination)))
+                 (who:str (who:escape-string ">")))))
+          (when first-and-last-buttons
+            (who:htm
+             (:a :class "w3-button"
+                 :href (when href (funcall href (pagination-total pagination)))
+                 :onclick (when on-click (funcall on-click (pagination-total pagination)))
+                 (who:str (who:escape-string ">>")))))
+          )))
 
 (provide :mupaginator)
