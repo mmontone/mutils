@@ -102,35 +102,43 @@
     (:div :class "pagination"
           (when first-and-last-buttons
             (who:htm
-             (:a :class "btn"
-                 :href (when href (funcall href 1))
+             (:a :href (when href (funcall href 1))
+                 :class (when (= (pagination-current pagination) 1) "disabled")
                  :onclick (when on-click (funcall on-click 1))
+                 :alt "First"
                  (who:str (who:escape-string "<<")))))
-          (when (and prev-and-next-buttons (pagination-prev pagination))
+          (when prev-and-next-buttons
             (who:htm
-             (:a :class "btn"
-                 :href (when href (funcall href (pagination-prev pagination)))
-                 :onclick (when on-click (funcall on-click (pagination-prev pagination)))
+             (:a :class (when (not (pagination-prev pagination)) "disabled")
+                 :href (when (and (pagination-prev pagination) href) (funcall href (pagination-prev pagination)))
+                 :onclick (when (and (pagination-prev pagination) on-click) (funcall on-click (pagination-prev pagination)))
+                 :alt "Previous"
                  (who:str (who:escape-string "<")))))
           (dolist (page (pagination-pages pagination))
             (if (eq page :ellipsis)
                 (who:htm (:span :class "ellipsis" (who:str "...")))
                 (who:htm
-                 (:a :class (concatenate 'string "btn" (if (= page (pagination-current pagination)) " btn-primary active" ""))
+                 (:a :class (when (= page (pagination-current pagination)) "active")
                      :href (when href (funcall href page))
                      :onclick (when on-click (funcall on-click page))
                      (who:str page)))))
-          (when (and prev-and-next-buttons (pagination-next pagination))
+          (when prev-and-next-buttons
             (who:htm
-             (:a :class "btn"
-                 :href (when href (funcall href (pagination-next pagination)))
-                 :onclick (when on-click (funcall on-click (pagination-next pagination)))
+             (:a :class (when (not (pagination-next pagination)) "disabled")
+                 :href (when (and (pagination-next pagination) href)
+                         (funcall href (pagination-next pagination)))
+                 :onclick (when (and (pagination-next pagination) on-click)
+                            (funcall on-click (pagination-next pagination)))
+                 :alt "Next"
                  (who:str (who:escape-string ">")))))
           (when first-and-last-buttons
             (who:htm
-             (:a :class "btn"
+             (:a :class (when (= (pagination-current pagination)
+                                 (pagination-total pagination))
+                          "disabled")
                  :href (when href (funcall href (pagination-total pagination)))
                  :onclick (when on-click (funcall on-click (pagination-total pagination)))
+                 :alt "Last"
                  (who:str (who:escape-string ">>")))))
           )))
 
