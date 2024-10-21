@@ -3,7 +3,7 @@
 ;; https://www.zacfukuda.com/blog/pagination-algorithm
 ;;
 ;; Version: 0.1
-;; Requires: cl-who
+;; Requires: cl-who, alexandria
 ;;
 ;;; Commentary:
 ;;
@@ -14,6 +14,7 @@
 ;;; Code:
 
 (require :cl-who)
+(require :alexandria)
 
 (defpackage :mupaginator
   (:use :cl)
@@ -29,10 +30,10 @@
 (defstruct pagination
   current next prev pages total)
 
-(defun paginate (current total &key (use-ellipsis t) (window-size 4) (padding 2))
+(defun paginate (current total &key (use-ellipsis t) (padding 2))
   (let ((prev (if (= current 1) nil (1- current)))
         (next (if (= current total) nil (1+ current)))
-        (pages (list 1)))
+        (pages '()))
     (when (= current total 1)
       (return-from paginate
         (make-pagination :current current
@@ -40,18 +41,28 @@
                          :prev prev
                          :pages pages
                          :total total)))
-    (when (and use-ellipsis (> current window-size))
-      (alexandria:appendf pages (list :ellipsis)))
-    (let ((r1 (- current padding))
-          (r2 (+ current padding)))
-      (loop with i = (if (> r1 padding) r1 padding)
-            while (<= i (min total r2))
-            do (alexandria:appendf pages (list i))
-               (incf i))
-      (when (and use-ellipsis (< (+ r2 1) total))
+    ;; first page
+    (alexandria:appendf pages '(1))
+
+    (let* ((r1 (max (- current padding) 2))
+           (r2 (min (+ r1 padding padding) total)))
+
+      ;; first ellipsis
+      (when (and use-ellipsis (> r1 2))
         (alexandria:appendf pages (list :ellipsis)))
+
+      ;; pages slice
+      (loop for i from r1 to r2
+            do (alexandria:appendf pages (list i)))
+
+      ;; second ellipsis
+      (when (and use-ellipsis (< (1+ r2) total))
+        (alexandria:appendf pages (list :ellipsis)))
+
+      ;; last page
       (when (< r2 total)
         (alexandria:appendf pages (list total)))
+
       (assert (member current pages))
       (make-pagination :current current
                        :next next
@@ -103,7 +114,7 @@
             (if (eq page :ellipsis)
                 (who:htm (:span :class "ellipsis" (who:str "...")))
                 (who:htm
-                 (:a :class (concatenate 'string "btn" (if (= page (pagination-current pagination)) " btn-primary" ""))
+                 (:a :class (concatenate 'string "btn" (if (= page (pagination-current pagination)) " btn-primary active" ""))
                      :href (when href (funcall href page))
                      :onclick (when on-click (funcall on-click page))
                      (who:str page)))))
@@ -240,3 +251,15 @@
   "(apply #'subseq my-seq (multiple-value-list page page-size (length my-seq)))"
   (values (* (1- page) page-size)
           (min (+ (* (1- page) page-size) page-size) total)))
+
+(defun pagination-sample (total &rest args)
+  (dotimes (x total)
+    (let* ((page (1+ x))
+           (pagination (apply #'paginate page total args)))
+      (print-pagination pagination)
+      (terpri))))
+
+#+test(pagination-sample 30)
+#+test(pagination-sample 30 :padding 1)
+#+test(pagination-sample 30 :padding 2)
+#+test(pagination-sample 30 :padding 3)
