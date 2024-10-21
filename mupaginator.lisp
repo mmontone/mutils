@@ -42,28 +42,36 @@
                          :prev prev
                          :pages pages
                          :total total)))
-    ;; first page
-    (when include-first-and-last
-      (alexandria:appendf pages '(1)))
 
-    (let* ((r1 (max (- current padding) (if include-first-and-last 2 1)))
-           (r2 (min (+ r1 padding padding) total)))
+    (let* ((range (cond
+                    ((< (- current padding) 1)
+                     (cons 1 (+ padding padding 1)))
+                    ((> (+ current padding) total)
+                     (cons (- total padding padding) total))
+                    (t
+                     (cons (- current padding)
+                           (+ current padding)))))
+           (r1 (car range))
+           (r2 (cdr range)))
 
-      ;; first ellipsis
-      (when (and use-ellipsis (> r1 2))
-        (alexandria:appendf pages (list :ellipsis)))
+      ;; first page
+      (when (> r1 1)
+        (when use-ellipsis
+          (when include-first-and-last
+            (alexandria:appendf pages '(1)))
+          (alexandria:appendf pages (list :ellipsis))))
 
       ;; pages slice
       (loop for i from r1 to r2
             do (alexandria:appendf pages (list i)))
 
-      ;; second ellipsis
-      (when (and use-ellipsis (< (1+ r2) total))
-        (alexandria:appendf pages (list :ellipsis)))
+      (when (< r2 total)
+        (when use-ellipsis
+          (alexandria:appendf pages (list :ellipsis))
 
-      ;; last page
-      (when (and include-first-and-last (< r2 total))
-        (alexandria:appendf pages (list total)))
+          ;; last page
+          (when include-first-and-last
+            (alexandria:appendf pages (list total)))))
 
       (assert (member current pages))
       (make-pagination :current current
