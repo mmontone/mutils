@@ -238,4 +238,4 @@
 (defun page-start-end (page page-size total)
   "(apply #'subseq my-seq (multiple-value-list page page-size (length my-seq)))"
   (values (* (1- page) page-size)
-          (min (+ (* (1- page) page-size) page-size) total)))vide :mupaginator)
+          (min (+ (* (1- page) page-size) page-size) total)))
