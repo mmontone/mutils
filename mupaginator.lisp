@@ -30,7 +30,8 @@
 (defstruct pagination
   current next prev pages total)
 
-(defun paginate (current total &key (use-ellipsis t) (padding 2))
+(defun paginate (current total &key (use-ellipsis t) (padding 2)
+                                 (include-first-and-last t))
   (let ((prev (if (= current 1) nil (1- current)))
         (next (if (= current total) nil (1+ current)))
         (pages '()))
@@ -42,9 +43,10 @@
                          :pages pages
                          :total total)))
     ;; first page
-    (alexandria:appendf pages '(1))
+    (when include-first-and-last
+      (alexandria:appendf pages '(1)))
 
-    (let* ((r1 (max (- current padding) 2))
+    (let* ((r1 (max (- current padding) (if include-first-and-last 2 1)))
            (r2 (min (+ r1 padding padding) total)))
 
       ;; first ellipsis
@@ -60,7 +62,7 @@
         (alexandria:appendf pages (list :ellipsis)))
 
       ;; last page
-      (when (< r2 total)
+      (when (and include-first-and-last (< r2 total))
         (alexandria:appendf pages (list total)))
 
       (assert (member current pages))
@@ -263,3 +265,5 @@
 #+test(pagination-sample 30 :padding 1)
 #+test(pagination-sample 30 :padding 2)
 #+test(pagination-sample 30 :padding 3)
+#+test(pagination-sample 30 :include-first-and-last nil)
+#+test(pagination-sample 30 :include-first-and-last nil :use-ellipsis nil)
