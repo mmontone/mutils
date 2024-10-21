@@ -42,7 +42,12 @@
            #:print-pagination-html
            #:print-pagination-bootstrap
            #:print-pagination-w3css
-           #:page-start-end))
+           #:page-start-end
+           #:pagination-current
+           #:pagination-next
+           #:pagination-prev
+           #:pagination-pages
+           #:pagination-total))
 
 (in-package :mupaginator)
 

@@ -64,6 +64,76 @@ Args:
 
 
 
+### pagination-current
+
+```lisp
+(sb-kernel:instance)
+```
+
+
+### (setf pagination-current)
+
+```lisp
+(sb-kernel::value sb-kernel:instance)
+```
+
+
+### pagination-next
+
+```lisp
+(sb-kernel:instance)
+```
+
+
+### (setf pagination-next)
+
+```lisp
+(sb-kernel::value sb-kernel:instance)
+```
+
+
+### pagination-pages
+
+```lisp
+(sb-kernel:instance)
+```
+
+
+### (setf pagination-pages)
+
+```lisp
+(sb-kernel::value sb-kernel:instance)
+```
+
+
+### pagination-prev
+
+```lisp
+(sb-kernel:instance)
+```
+
+
+### (setf pagination-prev)
+
+```lisp
+(sb-kernel::value sb-kernel:instance)
+```
+
+
+### pagination-total
+
+```lisp
+(sb-kernel:instance)
+```
+
+
+### (setf pagination-total)
+
+```lisp
+(sb-kernel::value sb-kernel:instance)
+```
+
+
 ### print-pagination
 
 ```lisp
