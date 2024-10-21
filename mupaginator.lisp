@@ -32,6 +32,13 @@
 
 (defun paginate (current total &key (use-ellipsis t) (padding 2)
                                  (include-first-and-last t))
+  "Create a PAGINATION structure that can be then printed to HTML.
+Args:
+- CURRENT is the current page number, between 1 and TOTAL.
+- TOTAL is the total number of pages.
+- USE-ELLIPSIS: an :ELLIPSIS keyword is included when appropiate when enabled.
+- PADDING: the list of buttons has length (PADDING * 2) + 1.
+- INCLUDE-FIRST-AND-LAST: buttons for first and last page are included."  
   (let ((prev (if (= current 1) nil (1- current)))
         (next (if (= current total) nil (1+ current)))
         (pages '()))
@@ -91,6 +98,7 @@
 ;; (paginate 5 10 :padding 3 :use-ellipsis nil)
 
 (defun print-pagination (pagination &optional (stream *standard-output*))
+  "Debug function for printing a text representation of PAGINATION."
   (dolist (button (pagination-pages pagination))
     (if (eq button :ellipsis)
         (write-string "..." stream)
@@ -106,6 +114,13 @@
                                 (stream *standard-output*)
                                 (first-and-last-buttons t)
                                 (prev-and-next-buttons t))
+  "Print PAGINATION to a vanilla HTML STREAM.
+Args:
+- HREF: a FUNCTION-DESIGNATOR that is called with a page number argument and should return the URL string for that page for the buttons.
+- ON-CLICK: a FUNCTION-DESIGNATOR that is called with a page number argument and should return a Javascript string to use for the onclick event on the buttons.
+- STREAM: the stream where to write the HTML to.
+- FIRST-AND-LAST-BUTTONS: render first and last page buttons.
+- PREV-AND-NEXT-BUTTONS: render previous and next page buttons."
   (who:with-html-output (html stream)
     (:div :class "pagination"
           (when first-and-last-buttons
@@ -180,6 +195,7 @@
                                      (stream *standard-output*)
                                      (first-and-last-buttons t)
                                      (prev-and-next-buttons t))
+  "Like PRINT-PAGINATION-HTML, but for Bootstrap framework."
   (who:with-html-output (html stream)
     (:ul :class "pagination"
          (when first-and-last-buttons
@@ -229,6 +245,7 @@
                                  (stream *standard-output*)
                                  (first-and-last-buttons t)
                                  (prev-and-next-buttons t))
+  "Like PRINT-PAGINATION-HTML, but for W3CSS framework."
   (who:with-html-output (html stream)
     (:div :class "w3-bar"
           (when first-and-last-buttons
@@ -266,7 +283,10 @@
           )))
 
 (defun page-start-end (page page-size total)
-  "(apply #'subseq my-seq (multiple-value-list page page-size (length my-seq)))"
+  "Utility function for calculating start and end for PAGE, PAGE-SIZE and TOTAL.
+
+Example usage:
+    (apply #'subseq my-seq (multiple-value-list page page-size (length my-seq)))"
   (values (* (1- page) page-size)
           (min (+ (* (1- page) page-size) page-size) total)))
 
