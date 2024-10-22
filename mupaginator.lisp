@@ -8,7 +8,7 @@
 ;;; Commentary:
 ;;
 ;; Helper package for implementing pagination of collections.
-;; 
+;;
 ;; Usage:
 ;;
 ;; Create a PAGINATION object using MAKE-PAGINATION function, passing the current page and a source for the pagination, either a SEQUENCE or a FUNCTION-DESIGNATOR that takes a page number and returns two values: the items of that page, and the total number of items.
@@ -79,6 +79,7 @@
     (trivial-types:function-designator
      (multiple-value-bind (items total)
          (funcall (pagination-source pagination) (pagination-current pagination))
+       (assert (integerp total) nil "Second value returned by pagination-source of ~s is expected to be the total number of items, but ~s was returned." pagination total)
        (values items (truncate (/ total (pagination-page-size pagination))))))
     (sequence
      (values
