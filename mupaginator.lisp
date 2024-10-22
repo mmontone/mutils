@@ -82,7 +82,7 @@
        (values items (truncate (/ total (pagination-page-size pagination))))))
     (sequence
      (values
-      (let ((start (* (pagination-current pagination)
+      (let ((start (* (1- (pagination-current pagination))
                       (pagination-page-size pagination))))
         (subseq (pagination-source pagination)
                 start
