@@ -6,65 +6,40 @@ A helper package for pagination of collections.
 
 - **https**: //www.zacfukuda.com/blog/pagination-algorithm
 - **Version**: 0.1
-- **Requires**: cl-who, alexandria
+- **Requires**: cl-who, alexandria, trivial-types
 
 
  Helper package for implementing pagination of collections.
-
+ 
  Usage:
 
- Create a PAGINATION object using PAGINATE function, passing the current page and the total number of pages.
+ Create a PAGINATION object using MAKE-PAGINATION function, passing the current page and a source for the pagination, either a SEQUENCE or a FUNCTION-DESIGNATOR that takes a page number and returns two values: the items of that page, and the total number of items.
  Then print that object to an HTML stream, using of the PRINT-PAGINATION functions, and passing HREF or ON-CLICK handlers for resolving urls/actions for the page buttons.
 
  ```lisp
- (defroute pagination-test "/"
+ (defroute vanilla-pagination-test "/vanilla"
      ((page :parameter-type 'integer :init-form 1))
-   (let* ((total (floor (/ (length *countries*) *page-size*)))
-          (pagination (mupaginator:paginate page total))
-          (items (mapcar #'cadr
-                         (apply #'subseq *countries* (multiple-value-list (mupaginator:page-start-end page *page-size* (length *countries*)))))))
+   (let ((pagination (mupaginator:make-pagination :current page :source (list-all-packages))))
      (with-html
        (:ul
-        (dolist (item items)
-          (who:htm (:li (who:str item)))))
+        (dolist (item (mupaginator:pagination-current-items pagination))
+          (who:htm (:li (who:str (package-name item))))))
        (mupaginator:print-pagination-bootstrap
         pagination
         :href (lambda (page-nr)
-                (easy-routes:genurl 'pagination-test :page page-nr))
+                (easy-routes:genurl 'vanilla-pagination-test :page page-nr))
         :stream html))))
  ```
 
 
 
 ## Functions
-### page-start-end
+### make-pagination
 
 ```lisp
-(page page-size total)
+(&key ((:current #:current) 1) ((:page-size #:page-size) 10)
+ ((:source #:source) nil))
 ```
-
-Utility function for calculating start and end for PAGE, PAGE-SIZE and TOTAL.
-Useful for getting the items of a page, given those arguments and a sequence.
-
-
-
-Example usage:
-    (apply #'subseq my-seq (multiple-value-list page page-size (length my-seq)))
-### paginate
-
-```lisp
-(current total &key (use-ellipsis t) (padding 2) (include-first-and-last t))
-```
-
-Create a PAGINATION structure that can be then printed to HTML.
-Args:
-- CURRENT is the current page number, between 1 and TOTAL.
-- TOTAL is the total number of pages.
-- USE-ELLIPSIS: an :ELLIPSIS keyword is included when appropiate when enabled.
-- PADDING: the list of buttons has length (PADDING * 2) + 1.
-- INCLUDE-FIRST-AND-LAST: buttons for first and last page are included.
-
-
 
 
 ### pagination-current
@@ -81,66 +56,42 @@ Args:
 ```
 
 
+### pagination-current-items
+
+```lisp
+(pagination)
+```
+
+Returns PAGINATION current page items and total pages.
+
+
+
+
 ### pagination-next
 
 ```lisp
-(sb-kernel:instance)
-```
-
-
-### (setf pagination-next)
-
-```lisp
-(sb-kernel::value sb-kernel:instance)
-```
-
-
-### pagination-pages
-
-```lisp
-(sb-kernel:instance)
-```
-
-
-### (setf pagination-pages)
-
-```lisp
-(sb-kernel::value sb-kernel:instance)
+(pagination)
 ```
 
 
 ### pagination-prev
 
 ```lisp
-(sb-kernel:instance)
-```
-
-
-### (setf pagination-prev)
-
-```lisp
-(sb-kernel::value sb-kernel:instance)
+(pagination)
 ```
 
 
 ### pagination-total
 
 ```lisp
-(sb-kernel:instance)
-```
-
-
-### (setf pagination-total)
-
-```lisp
-(sb-kernel::value sb-kernel:instance)
+(pagination)
 ```
 
 
 ### print-pagination
 
 ```lisp
-(pagination &optional (stream *standard-output*))
+(pagination &optional (stream *standard-output*) &rest options)
 ```
 
 Debug function for printing a text representation of PAGINATION.
@@ -152,19 +103,21 @@ Debug function for printing a text representation of PAGINATION.
 
 ```lisp
 (pagination &key href on-click (stream *standard-output*)
- (first-and-last-buttons t) (prev-and-next-buttons t))
+ (first-and-last-buttons t) (prev-and-next-buttons t) (use-ellipsis t)
+ (padding 2))
 ```
 
 Like PRINT-PAGINATION-HTML, but for Bootstrap framework.
 
 
 
-
+See: [https://getbootstrap.com/docs/4.1/components/pagination/](https://getbootstrap.com/docs/4.1/components/pagination/)
 ### print-pagination-html
 
 ```lisp
 (pagination &key href on-click (stream *standard-output*)
- (first-and-last-buttons t) (prev-and-next-buttons t))
+ (first-and-last-buttons t) (prev-and-next-buttons t) (use-ellipsis t)
+ (padding 2))
 ```
 
 Print PAGINATION to a vanilla HTML STREAM.
@@ -181,13 +134,14 @@ Print PAGINATION to a vanilla HTML STREAM.
 
 ```lisp
 (pagination &key href on-click (stream *standard-output*)
- (first-and-last-buttons t) (prev-and-next-buttons t))
+ (first-and-last-buttons t) (prev-and-next-buttons t) (use-ellipsis t)
+ (padding 2))
 ```
 
 Like PRINT-PAGINATION-HTML, but for W3CSS framework.
 
 
 
-
+See: [https://www.w3schools.com/w3css/w3css_pagination.asp](https://www.w3schools.com/w3css/w3css_pagination.asp)
 ## Classes
 ### pagination

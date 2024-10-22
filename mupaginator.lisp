@@ -3,34 +3,29 @@
 ;; https://www.zacfukuda.com/blog/pagination-algorithm
 ;;
 ;; Version: 0.1
-;; Requires: cl-who, alexandria
+;; Requires: cl-who, alexandria, trivial-types
 ;;
 ;;; Commentary:
 ;;
 ;; Helper package for implementing pagination of collections.
-;;
+;; 
 ;; Usage:
 ;;
-;; Create a PAGINATION object using PAGINATE function, passing the current page and the total number of pages.
+;; Create a PAGINATION object using MAKE-PAGINATION function, passing the current page and a source for the pagination, either a SEQUENCE or a FUNCTION-DESIGNATOR that takes a page number and returns two values: the items of that page, and the total number of items.
 ;; Then print that object to an HTML stream, using of the PRINT-PAGINATION functions, and passing HREF or ON-CLICK handlers for resolving urls/actions for the page buttons.
 ;;
 ;; ```lisp
-;; (defroute pagination-test "/"
+;; (defroute vanilla-pagination-test "/vanilla"
 ;;     ((page :parameter-type 'integer :init-form 1))
-;;   (let* ((total (floor (/ (length *countries*) *page-size*)))
-;;          (pagination (mupaginator:make-pagination :current page
-;;                                                   :total total
-;;                                                   :page-size 10))
-;;          (items (mapcar #'cadr
-;;                         (apply #'subseq *countries* (multiple-value-list (mupaginator:pagination-start-end pagination (length *countries*)))))))
+;;   (let ((pagination (mupaginator:make-pagination :current page :source (list-all-packages))))
 ;;     (with-html
 ;;       (:ul
-;;        (dolist (item items)
-;;          (who:htm (:li (who:str item)))))
+;;        (dolist (item (mupaginator:pagination-current-items pagination))
+;;          (who:htm (:li (who:str (package-name item))))))
 ;;       (mupaginator:print-pagination-bootstrap
 ;;        pagination
 ;;        :href (lambda (page-nr)
-;;                (easy-routes:genurl 'pagination-test :page page-nr))
+;;                (easy-routes:genurl 'vanilla-pagination-test :page page-nr))
 ;;        :stream html))))
 ;; ```
 ;;
@@ -38,35 +33,66 @@
 
 (require :cl-who)
 (require :alexandria)
+(require :trivial-types)
 
 (defpackage :mupaginator
   (:use :cl)
-  (:export #:pagination
-           #:make-pagination
-           #:print-pagination
-           #:print-pagination-html
-           #:print-pagination-bootstrap
-           #:print-pagination-w3css
-           #:page-start-end
-           #:pagination-current
-           #:pagination-next
-           #:pagination-prev
-           #:pagination-total))
+  (:export
+   ;; construction
+   #:pagination
+   #:make-pagination
+   ;; accessing
+   #:pagination-current-items
+   #:pagination-current
+   #:pagination-next
+   #:pagination-prev
+   #:pagination-total
+   ;; printing
+   #:print-pagination
+   #:print-pagination-html
+   #:print-pagination-bootstrap
+   #:print-pagination-w3css))
 
 (in-package :mupaginator)
 
 (defstruct pagination
   (current 1 :type integer)
-  (total nil :type integer)
-  (page-size 10 :type integer))
+  (page-size 10 :type integer)
+  ;; SOURCE is either a function designator or a sequence.
+  ;; When source is a function designator, then it is called with a page number
+  ;; and is expected to return two values: the items of that page, and the total number of items
+  (source nil :type (or trivial-types:function-designator sequence)))
 
 (defun pagination-prev (pagination)
   (with-slots (current) pagination
     (if (= current 1) nil (1- current))))
 
 (defun pagination-next (pagination)
-  (with-slots (current total) pagination
+  (with-accessors ((current pagination-current)
+                   (total pagination-total))
+      pagination
     (if (= current total) nil (1+ current))))
+
+(defun pagination-current-items (pagination)
+  "Returns PAGINATION current page items and total pages."
+  (etypecase (pagination-source pagination)
+    (trivial-types:function-designator
+     (multiple-value-bind (items total)
+         (funcall (pagination-source pagination) (pagination-current pagination))
+       (values items (truncate (/ total (pagination-page-size pagination))))))
+    (sequence
+     (values
+      (let ((start (* (pagination-current pagination)
+                      (pagination-page-size pagination))))
+        (subseq (pagination-source pagination)
+                start
+                (min (+ start (pagination-page-size pagination))
+                     (length (pagination-source pagination)))))
+      (truncate (/ (length (pagination-source pagination))
+                   (pagination-page-size pagination)))))))
+
+(defun pagination-total (pagination)
+  (cadr (multiple-value-list (pagination-current-items pagination))))
 
 (defun pagination-buttons (pagination &key (padding 2) (use-ellipsis t)
                                         (include-first-and-last t))
@@ -194,7 +220,8 @@ Args:
 #+example
 (with-output-to-string (s)
   (print-pagination-html
-   (make-pagination :current 2 :total 10)
+   (make-pagination :current 2 :source (lambda (page)
+                                         (values nil 50)))
    :href (lambda (page)
            (format nil "/page/~a" page))
    :stream s))
@@ -303,42 +330,13 @@ See: https://www.w3schools.com/w3css/w3css_pagination.asp"
                  (who:str (who:escape-string ">>")))))
           )))
 
-(defun pagination-start-end (pagination &optional length)
-  "Utility function for calculating start and end for PAGINATION.
-Useful for getting the items of a page for a sequence.
-
-Example usage:
-    (let ((pagination (make-pagination :current 2 :total 20 :page-size 10)))
-            (apply #'subseq my-seq (multiple-value-list (pagination-start-end pagination))))
-
-See: PAGINATION-SUBSEQ"
-  (with-slots (page-size current) pagination
-    (values (* (1- current) page-size)
-            (if length
-                (min (+ (* (1- current) page-size) page-size) length)
-                (+ (* (1- current) page-size) page-size)))))
-
-;; (pagination-start-end (make-pagination :current 2 :total 20 :page-size 10) 100)
-;; (pagination-start-end (make-pagination :current 3 :total 20 :page-size 10) 100)
-
-(defun pagination-subseq (pagination sequence)
-  "Get current page from SEQUENCE, according to PAGINATION."
-  (apply #'subseq sequence (multiple-value-list (pagination-start-end pagination (length sequence)))))
-
-#+example
-(let* ((p (make-pagination-for-sequence (list-all-packages))))
-  (pagination-subseq p (list-all-packages)))
-
-(defun make-pagination-for-sequence (sequence &key (current 1) (page-size 10))
-  (make-pagination :current current
-                   :page-size page-size
-                   :total (truncate (/ (length sequence) page-size))))
-
 (defun pagination-sample (total &rest args)
   (dotimes (x total)
     (let* ((page (1+ x))
            (pagination (make-pagination :current page
-                                        :total total)))
+                                        :source (lambda (page)
+                                                  (declare (ignore page))
+                                                  (values nil total)))))
       (apply #'print-pagination pagination *standard-output* args)
       (terpri))))
 
