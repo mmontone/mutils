@@ -127,7 +127,8 @@ Args:
         (when use-ellipsis
           (when include-first-and-last
             (alexandria:appendf buttons '(1)))
-          (alexandria:appendf buttons (list :ellipsis))))
+          (when (> r1 2)
+            (alexandria:appendf buttons (list :ellipsis)))))
 
       ;; buttons slice
       (loop for i from r1 to r2
@@ -135,7 +136,8 @@ Args:
 
       (when (< r2 total)
         (when use-ellipsis
-          (alexandria:appendf buttons (list :ellipsis))
+          (when (< r2 (1- total))
+            (alexandria:appendf buttons (list :ellipsis)))
 
           ;; last page
           (when include-first-and-last
