@@ -4,13 +4,12 @@ A helper package for pagination of collections.
 
 [[source code]](../mupaginator.lisp)
 
-- **https**: //www.zacfukuda.com/blog/pagination-algorithm
 - **Version**: 0.1
 - **Requires**: cl-who, alexandria, trivial-types
 
 
  Helper package for implementing pagination of collections.
- 
+
  Usage:
 
  Create a PAGINATION object using MAKE-PAGINATION function, passing the current page and a source for the pagination, either a SEQUENCE or a FUNCTION-DESIGNATOR that takes a page number and returns two values: the items of that page, and the total number of items.

@@ -1,6 +1,5 @@
 ;;; mupaginator --- A helper package for pagination of collections.
 ;;
-;; https://www.zacfukuda.com/blog/pagination-algorithm
 ;;
 ;; Version: 0.1
 ;; Requires: cl-who, alexandria, trivial-types
