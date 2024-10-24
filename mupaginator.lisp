@@ -338,7 +338,7 @@ See: https://www.w3schools.com/w3css/w3css_pagination.asp"
            (pagination (make-pagination :current page
                                         :source (lambda (page)
                                                   (declare (ignore page))
-                                                  (values nil total)))))
+                                                  (values nil (* total 10))))))
       (apply #'print-pagination pagination *standard-output* args)
       (terpri))))
 
