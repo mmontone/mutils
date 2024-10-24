@@ -113,12 +113,12 @@ Args:
     (let* ((buttons '())
            (range (cond
                     ((< (- current padding) 1)
-                     (cons 1 (+ padding padding 1)))
+                     (cons 1 (min (+ padding padding 1) total)))
                     ((> (+ current padding) total)
-                     (cons (- total padding padding) total))
+                     (cons (max (- total padding padding) 1) total))
                     (t
-                     (cons (- current padding)
-                           (+ current padding)))))
+                     (cons (max (- current padding) 1)
+                           (min (+ current padding) total)))))
            (r1 (car range))
            (r2 (cdr range)))
 
