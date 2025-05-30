@@ -15,9 +15,9 @@
 ;;
 ;; Destructuring is supported in positional arguments in lambda-lists.
 ;; Example:
-;; (funcall (mu-lambda-list:lambda ((x . y))
-;;                         (list x y))
-;;                  (cons 1 2))
+;; (funcall (lambda ((x . y))
+;;              (list x y))
+;;         (cons 1 2))
 ;; 
 ;; TODO: potential idea: Add support for &ignore and &ignorable in lambda-lists
 ;;
