@@ -31,6 +31,7 @@
            `((declare (ignore ,@ignore-args))))
        ,@body)))
 
+;; TODO: we only support destructuring in positional arguments
 (cl:defun process-lambda-list (lambda-list body)
   (let ((ignore-args (remove-if (cl:lambda (arg)
                                   (or (consp arg)
@@ -38,14 +39,20 @@
                                               #\_)))
                                 lambda-list))
         (new-body body)
-        (new-args nil))
+        (new-args nil)
+        (in-required-args t))
     (dolist (arg lambda-list)
-      (if (consp arg) ;; destructure
-          (let ((new-arg (gensym)))
-            (setf new-body `((destructuring-bind ,arg ,new-arg
-                               ,@new-body)))
-            (push new-arg new-args))
-          (push arg new-args)))
+      (cond
+        ((and (atom arg)
+              (member arg '(&optional &key &aux &allow-other-keys)))
+         (setf in-required-args nil)
+         (push arg new-args))
+        ((and in-required-args (consp arg)) ;; destructure
+         (let ((new-arg (gensym)))
+           (setf new-body `((destructuring-bind ,arg ,new-arg
+                              ,@new-body)))
+           (push new-arg new-args)))
+        (t (push arg new-args))))
     (when ignore-args
       (setf new-body
             (list* `(declare (ignore ,@ignore-args))
