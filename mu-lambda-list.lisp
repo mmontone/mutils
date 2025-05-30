@@ -44,7 +44,7 @@
         (in-required-args t))
     (dolist (arg lambda-list)
       (cond
-        ((and (atom arg)
+        ((and (symbolp arg)
               (member arg '(&optional &key &aux &allow-other-keys)))
          (setf in-required-args nil)
          (push arg new-args))
