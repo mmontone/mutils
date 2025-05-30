@@ -1,6 +1,6 @@
 # mu-lambda-list
 
-Lambda with destructuring and syntax for ignorable arguments.
+Lambda lists with destructuring and ignorable arguments.
 
 [[source code]](../mu-lambda-list.lisp)
 
@@ -8,7 +8,7 @@ Lambda with destructuring and syntax for ignorable arguments.
 - **Version**: 0.1
 
 
- Lambda with destructuring and syntax for ignorable arguments.
+ Lambda lists with destructuring and ignorable arguments.
 
  Usage:
 

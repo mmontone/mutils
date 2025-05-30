@@ -1,10 +1,16 @@
-;;; mu-lambda-list --- Lambda with destructuring and syntax for ignorable arguments.
+;;; mu-lambda-list --- Lambda lists with destructuring and ignorable arguments.
+
+;; Copyright (C) 2025 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.  
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
 ;; Author: Mariano Montone <marianomontone@gmail.com>
 ;; Version: 0.1
-;;
+
 ;;; Commentary:
 ;;
-;; Lambda with destructuring and syntax for ignorable arguments.
+;; Lambda lists with destructuring and ignorable arguments.
 ;;
 ;; Usage:
 ;;
