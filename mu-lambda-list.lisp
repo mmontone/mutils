@@ -29,14 +29,26 @@
            #:destructuring-bind
            #:defun
            #:multiple-value-bind
-           #:with-accessors)
+           #:with-accessors
+           #:defpackage)
   (:export #:lambda
            #:destructuring-bind
            #:defun
            #:multiple-value-bind
-           #:with-accessors))
+           #:with-accessors
+           #:defpackage))
 
 (in-package :mu-lambda-list)
+
+(defmacro defpackage (&rest options)
+  `(cl:defpackage ,@options
+     (:shadowing-import-from
+      #:mu-lambda-list
+      #:defun
+      #:lambda
+      #:destructuring-bind
+      #:multiple-value-bind
+      #:with-accessors)))
 
 (defmacro with-accessors (bindings instance &body body)
   `(cl:with-accessors ,(loop for binding in bindings

@@ -28,6 +28,14 @@ Lambda with destructuring and syntax for ignorable arguments.
 
 
 ## Macros
+### defpackage
+
+```lisp
+(&rest options)
+```
+
+
+
 ### defun
 
 ```lisp
