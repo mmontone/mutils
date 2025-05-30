@@ -9,15 +9,15 @@
 ;;
 ;; Usage:
 ;;
-;; In your defpackage add a (:shadowing-import-from #:mulambda #:lambda #:destructuring-bind)
+;; In your defpackage add a (:shadowing-import-from #:mulambda #:defun #:lambda #:destructuring-bind)
 
 ;; TODO: potential idea. Add support for &ignore and &ignorable in lambda-lists
 ;;
 
 (defpackage :mu-lambda-list
   (:use #:cl)
-  (:shadow #:lambda #:destructuring-bind)
-  (:export #:lambda #:destructuring-bind))
+  (:shadow #:lambda #:destructuring-bind #:defun)
+  (:export #:lambda #:destructuring-bind #:defun))
 
 (in-package :mu-lambda-list)
 
@@ -31,25 +31,36 @@
            `((declare (ignore ,@ignore-args))))
        ,@body)))
 
-(defmacro lambda (args &body body)
+(cl:defun process-lambda-list (lambda-list body)
   (let ((ignore-args (remove-if (cl:lambda (arg)
                                   (or (consp arg)
                                       (char/= (aref (symbol-name arg) 0)
                                               #\_)))
-                                args))
+                                lambda-list))
         (new-body body)
         (new-args nil))
-    (dolist (arg args)
+    (dolist (arg lambda-list)
       (if (consp arg) ;; destructure
           (let ((new-arg (gensym)))
             (setf new-body `((destructuring-bind ,arg ,new-arg
                                ,@new-body)))
             (push new-arg new-args))
           (push arg new-args)))
-    `(cl:lambda ,new-args
-       ,@(when ignore-args
-           `((declare (ignore ,@ignore-args))))
-       ,@new-body)))
+    (when ignore-args
+      (setf new-body
+            (list* `(declare (ignore ,@ignore-args))
+                   new-body)))
+    (values (reverse new-args) new-body)))
+
+(defmacro lambda (lambda-list &body body)
+  (multiple-value-bind (new-args new-body)
+      (process-lambda-list lambda-list body)
+    `(cl:lambda ,new-args ,@new-body)))
+
+(defmacro defun (name lambda-list &body body)
+  (multiple-value-bind (new-args new-body)
+      (process-lambda-list lambda-list body)
+    `(cl:defun ,name ,new-args ,@new-body)))
 
 #+test
 (macroexpand-1
