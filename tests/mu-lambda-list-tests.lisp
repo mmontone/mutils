@@ -1,8 +1,5 @@
-(defpackage :mu-lambda-list-tests
-  (:use :cl)
-  (:shadowing-import-from
-   #:mu-lambda-list
-   #:defun #:lambda #:destructuring-bind))
+(mu-lambda-list:defpackage :mu-lambda-list-tests
+  (:use :cl))
 
 (in-package :mu-lambda-list-tests)
 
@@ -28,3 +25,13 @@
   (list z f))
 
 (baz '(:z z :f f))
+
+(defun destructure-with-cons ((x . y))
+  (cons y x))
+
+(destructure-with-cons (cons 1 2))
+
+(defun destructure-with-cons-2 ((_ . x))
+  x)
+
+(destructure-with-cons-2 (cons 1 2))
