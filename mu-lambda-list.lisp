@@ -1,6 +1,5 @@
 ;;; mu-lambda-list --- Lambda with destructuring and syntax for ignorable arguments.
-;;
-;;
+;; Author: Mariano Montone <marianomontone@gmail.com>
 ;; Version: 0.1
 ;;
 ;;; Commentary:

@@ -1,6 +1,6 @@
 ;;; mupaginator --- A helper package for pagination of collections.
 ;;
-;;
+;; Author: Mariano Montone <marianomontone@gmail.com>
 ;; Version: 0.1
 ;; Requires: cl-who, alexandria, trivial-types
 ;;
