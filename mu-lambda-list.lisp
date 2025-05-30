@@ -10,8 +10,17 @@
 ;; Usage:
 ;;
 ;; In your defpackage add a (:shadowing-import-from #:mu-lambda-list #:defun #:lambda #:destructuring-bind)
-
-;; TODO: potential idea. Add support for &ignore and &ignorable in lambda-lists
+;;
+;; Arguments in lambda-lists that start with _ character are declared ignored.
+;; Example: (lambda (_x) ...)
+;;
+;; Destructuring is supported in positional arguments in lambda-lists.
+;; Example:
+;; (funcall (mu-lambda-list:lambda ((x . y))
+;;                         (list x y))
+;;                  (cons 1 2))
+;; 
+;; TODO: potential idea: Add support for &ignore and &ignorable in lambda-lists
 ;;
 ;;; Code:
 
