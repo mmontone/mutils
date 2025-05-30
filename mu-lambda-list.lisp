@@ -22,10 +22,11 @@
 (in-package :mu-lambda-list)
 
 (defmacro destructuring-bind (lambda-list expression &body body)
-  (let ((ignore-args (remove-if (cl:lambda (arg)
-                                  (char/= (aref (symbol-name arg) 0)
-                                          #\_))
-                                lambda-list)))
+  (let ((ignore-args (remove-if-not (cl:lambda (arg)
+                                      (and (symbolp arg)
+                                           (char= (aref (symbol-name arg) 0)
+                                                  #\_)))
+                                    lambda-list)))
     `(cl:destructuring-bind ,lambda-list ,expression
        ,@(when ignore-args
            `((declare (ignore ,@ignore-args))))
