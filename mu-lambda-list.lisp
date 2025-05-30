@@ -16,10 +16,26 @@
 
 (defpackage :mu-lambda-list
   (:use #:cl)
-  (:shadow #:lambda #:destructuring-bind #:defun #:multiple-value-bind)
-  (:export #:lambda #:destructuring-bind #:defun #:multiple-value-bind))
+  (:shadow #:lambda
+           #:destructuring-bind
+           #:defun
+           #:multiple-value-bind
+           #:with-accessors)
+  (:export #:lambda
+           #:destructuring-bind
+           #:defun
+           #:multiple-value-bind
+           #:with-accessors))
 
 (in-package :mu-lambda-list)
+
+(defmacro with-accessors (bindings instance &body body)
+  `(cl:with-accessors ,(loop for binding in bindings
+                             collect (if (symbolp binding)
+                                         (list binding binding)
+                                         binding))
+       ,instance
+     ,@body))
 
 (defmacro destructuring-bind (lambda-list expression &body body)
   (let ((ignore-args
@@ -70,12 +86,12 @@
     (values (reverse new-args) new-body)))
 
 (defmacro lambda (lambda-list &body body)
-  (multiple-value-bind (new-args new-body)
+  (cl:multiple-value-bind (new-args new-body)
       (process-lambda-list lambda-list body)
     `(cl:lambda ,new-args ,@new-body)))
 
 (defmacro defun (name lambda-list &body body)
-  (multiple-value-bind (new-args new-body)
+  (cl:multiple-value-bind (new-args new-body)
       (process-lambda-list lambda-list body)
     `(cl:defun ,name ,new-args ,@new-body)))
 
