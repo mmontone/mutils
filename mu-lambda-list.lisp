@@ -13,6 +13,7 @@
 
 ;; TODO: potential idea. Add support for &ignore and &ignorable in lambda-lists
 ;;
+;;; Code:
 
 (defpackage :mu-lambda-list
   (:use #:cl)
