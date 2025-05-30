@@ -4,6 +4,7 @@ A helper package for pagination of collections.
 
 [[source code]](../mupaginator.lisp)
 
+- **Author**: Mariano Montone <marianomontone@gmail.com>
 - **Version**: 0.1
 - **Requires**: cl-who, alexandria, trivial-types
 

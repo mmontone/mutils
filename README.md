@@ -171,6 +171,7 @@ its long description/comment with instructions of usage, etc.
 * [if-star](docs/if-star.md) - The if* macro used in Allegro.
 * [image-dimensions-reader](docs/image-dimensions-reader.md) - Get image dimensions (PNG/JPG) without loading the file.
 * [lisp-critic-warnings](docs/lisp-critic-warnings.md) - Signal compiler warnings with lisp-critic critiques.
+* [mu-lambda-list](docs/mu-lambda-list.md) - Lambda with destructuring and syntax for ignorable arguments.
 * [mupaginator](docs/mupaginator.md) - A helper package for pagination of collections.
 * [muprotocols](docs/muprotocols.md) - An implementation of protocols that plays nicely with Common Lisp type system.
 * [mutils-docs](docs/mutils-docs.md) - Documentation generator for mutils.

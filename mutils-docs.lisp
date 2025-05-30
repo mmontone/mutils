@@ -67,8 +67,9 @@
   (generate-readme)
   (dolist (module-details (mutils:list-modules :details))
     (format t "Generating docs for module: ~a~%" (getf module-details :name))
-    (generate-module-docs module-details
-                          (asdf:system-relative-pathname :mutils
-                                                         (format nil "docs/~a.md" (getf module-details :name))))))
+    (with-simple-restart (continue "CONTINUE")
+      (generate-module-docs module-details
+                            (asdf:system-relative-pathname :mutils
+                                                         (format nil "docs/~a.md" (getf module-details :name)))))))
 
 (provide :mutils-docs)
