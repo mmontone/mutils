@@ -20,4 +20,9 @@
 (defun bar ((x &key y))
   (list x y))
 
-(bar (list 'x :y 'y))
+(bar '(x :y y))
+
+(defun baz ((&key z f))
+  (list z f))
+
+(baz '(:z z :f f))
