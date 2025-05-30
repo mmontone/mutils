@@ -1,6 +1,8 @@
 (defpackage :mu-lambda-list-tests
   (:use :cl)
-  (:shadowing-import-from #:mu-lambda-list #:defun #:lambda #:destructuring-bind))
+  (:shadowing-import-from
+   #:mu-lambda-list
+   #:defun #:lambda #:destructuring-bind))
 
 (in-package :mu-lambda-list-tests)
 
