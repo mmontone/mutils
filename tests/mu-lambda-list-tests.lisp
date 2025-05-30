@@ -35,3 +35,18 @@
   x)
 
 (destructure-with-cons-2 (cons 1 2))
+
+(defun ignorable-arguments (x _y &optional z)
+  (list x z))
+
+(ignorable-arguments 1 2 3)
+
+(defun ignorable-arguments-2 (x y &optional _z)
+  (list x y))
+
+(ignorable-arguments-2 1 2 3)
+
+(defun ignorable-arguments-3 (x _y &rest _args)
+  (list x))
+
+(ignorable-arguments-3 1 2 3 4)
