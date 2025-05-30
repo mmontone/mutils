@@ -9,7 +9,7 @@
 ;;
 ;; Usage:
 ;;
-;; In your defpackage add a (:shadowing-import-from #:mulambda #:defun #:lambda #:destructuring-bind)
+;; In your defpackage add a (:shadowing-import-from #:mu-lambda-list #:defun #:lambda #:destructuring-bind)
 
 ;; TODO: potential idea. Add support for &ignore and &ignorable in lambda-lists
 ;;
