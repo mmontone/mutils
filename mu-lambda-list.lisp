@@ -22,11 +22,17 @@
 (in-package :mu-lambda-list)
 
 (defmacro destructuring-bind (lambda-list expression &body body)
-  (let ((ignore-args (remove-if-not (cl:lambda (arg)
-                                      (and (symbolp arg)
-                                           (char= (aref (symbol-name arg) 0)
-                                                  #\_)))
-                                    lambda-list)))
+  (let ((ignore-args
+          (remove-if-not (cl:lambda (arg)
+                           (and (symbolp arg)
+                                (char= (aref (symbol-name arg) 0)
+                                       #\_)))
+                         (cond
+                           ((listp (cdr lambda-list))
+                            lambda-list)
+                           ((consp lambda-list)
+                            (list (car lambda-list) (cdr lambda-list)))
+                           (t (error "Don't know how to process destructuring lambda-list: ~s" lambda-list))))))
     `(cl:destructuring-bind ,lambda-list ,expression
        ,@(when ignore-args
            `((declare (ignore ,@ignore-args))))
