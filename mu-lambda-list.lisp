@@ -16,8 +16,8 @@
 
 (defpackage :mu-lambda-list
   (:use #:cl)
-  (:shadow #:lambda #:destructuring-bind #:defun)
-  (:export #:lambda #:destructuring-bind #:defun))
+  (:shadow #:lambda #:destructuring-bind #:defun #:multiple-value-bind)
+  (:export #:lambda #:destructuring-bind #:defun #:multiple-value-bind))
 
 (in-package :mu-lambda-list)
 
@@ -37,6 +37,9 @@
        ,@(when ignore-args
            `((declare (ignore ,@ignore-args))))
        ,@body)))
+
+(defmacro multiple-value-bind (lambda-list expression &body body)
+  `(cl:multiple-value-call (lambda ,lambda-list ,@body) ,expression))
 
 ;; TODO: we only support destructuring in positional arguments
 (cl:defun process-lambda-list (lambda-list body)
