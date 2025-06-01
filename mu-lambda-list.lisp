@@ -38,13 +38,11 @@
            #:destructuring-bind
            #:defun
            #:multiple-value-bind
-           #:with-accessors
            #:defpackage)
   (:export #:lambda
            #:destructuring-bind
            #:defun
            #:multiple-value-bind
-           #:with-accessors
            #:defpackage))
 
 (in-package :mu-lambda-list)
@@ -58,14 +56,6 @@
       #:destructuring-bind
       #:multiple-value-bind
       #:with-accessors)))
-
-(defmacro with-accessors (bindings instance &body body)
-  `(cl:with-accessors ,(loop for binding in bindings
-                             collect (if (symbolp binding)
-                                         (list binding binding)
-                                         binding))
-       ,instance
-     ,@body))
 
 (defmacro destructuring-bind (lambda-list expression &body body)
   (let ((ignore-args

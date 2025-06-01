@@ -22,7 +22,8 @@
    #:with-output-to-destination
    #:with-auto-gensym
    #:with-retry-restart
-   #:condition-message))
+   #:condition-message
+   #:with-accessors*))
 
 (in-package :mutils-utils)
 
@@ -179,5 +180,13 @@ Macroexpansion of `(auto-gensym-test 44)`:
   "Get the descriptive message of CONDITION."
   (with-output-to-string (s)
     (write condition :escape nil :stream s)))
+
+(defmacro with-accessors* (bindings instance &body body)
+  `(cl:with-accessors ,(loop for binding in bindings
+                             collect (if (symbolp binding)
+                                         (list binding binding)
+                                         binding))
+       ,instance
+     ,@body))
 
 (provide :mutils-utils)

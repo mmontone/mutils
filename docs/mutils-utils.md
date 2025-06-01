@@ -77,6 +77,14 @@ A string matcher:
        ("bar" :bar)
        ("some" :some))
 
+### with-accessors\*
+
+```lisp
+(bindings instance &body body)
+```
+
+
+
 ### with-auto-gensym
 
 ```lisp
