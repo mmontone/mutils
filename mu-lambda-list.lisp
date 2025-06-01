@@ -54,8 +54,7 @@
       #:defun
       #:lambda
       #:destructuring-bind
-      #:multiple-value-bind
-      #:with-accessors)))
+      #:multiple-value-bind)))
 
 (defmacro destructuring-bind (lambda-list expression &body body)
   (let ((ignore-args
