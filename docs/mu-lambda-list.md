@@ -71,11 +71,3 @@ Lambda lists with destructuring and ignorable arguments.
 
 
 
-### with-accessors
-
-```lisp
-(bindings instance &body body)
-```
-
-
-
