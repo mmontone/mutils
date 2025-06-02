@@ -73,6 +73,26 @@
     `(cl:let* ,new-bindings
        ,new-body)))
 
+(defmacro let* (bindings &body body)
+  ;; If every binding is a normal CL:LET binding, then just expand to CL:LET*
+  (when (every (lambda (binding)
+                 (and (= (length binding) 2)
+                      (symbolp (car binding))))
+               bindings)
+    (return-from let*
+      `(cl:let* ,bindings ,@body)))
+
+  (cl:let ((new-bindings (list))
+           (new-body body))
+    (dolist (binding bindings)
+      (multiple-value-bind (new-binding binding-body)
+          (process-binding binding new-body)
+        (when new-binding
+          (push binding new-bindings))
+        (setf new-body binding-body)))
+    `(cl:let* ,new-bindings
+       ,new-body)))
+
 #+test
 (macroexpand-1 '(mulet ((x 34) (y 44)) (cons x y)))
 

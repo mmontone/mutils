@@ -26,6 +26,14 @@ Let with destructruing and multiple value bind.
 
 
 ## Macros
+### let\*
+
+```lisp
+(bindings &body body)
+```
+
+
+
 ### mulet
 
 ```lisp
