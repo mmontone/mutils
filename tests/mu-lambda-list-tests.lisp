@@ -50,3 +50,6 @@
   (list x))
 
 (ignorable-arguments-3 1 2 3 4)
+
+(dolist ((x . _) '((a . 1) (b . 2)))
+  (print x))

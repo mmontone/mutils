@@ -12,20 +12,22 @@ Lambda lists with destructuring and ignorable arguments.
 
  Usage:
 
- In your defpackage add a (:shadowing-import-from #:mu-lambda-list #:defun #:lambda #:destructuring-bind #:multiple-value-bind). Or use MU-LAMBDA-LIST:DEFPACKAGE to define your package.
+ In your defpackage add a #:shadowing-import-from #:mu-lambda-list and the list of exported symbols you want to import.
+ Like: (:shadowing-import-from #:mu-lambda-list #:defun #:lambda #:destructuring-bind #:multiple-value-bind).
+ Or use MU-LAMBDA-LIST:DEFPACKAGE to define your package.
 
  Arguments in lambda-lists that start with _ character are declared ignored.
  Example:
- 
+
     (lambda (_x) ...)
 
  Destructuring is supported in positional arguments in lambda-lists.
  Example:
- 
+
      (funcall (lambda ((x . y))
                   (list x y))
              (cons 1 2))
- 
+
  TODO: potential idea: Add support for &ignore and &ignorable in lambda-lists
 
 
@@ -51,6 +53,14 @@ Lambda lists with destructuring and ignorable arguments.
 
 ```lisp
 (lambda-list expression &body body)
+```
+
+
+
+### dolist
+
+```lisp
+((var list &optional result) &body body)
 ```
 
 

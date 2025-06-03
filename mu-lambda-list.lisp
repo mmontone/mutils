@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2025 Mariano Montone. All rights reserved.
 
-;; This work is licensed under the terms of the MIT license.  
+;; This work is licensed under the terms of the MIT license.
 ;; For a copy, see <https://opensource.org/licenses/MIT>.
 
 ;; Author: Mariano Montone <marianomontone@gmail.com>
@@ -14,20 +14,22 @@
 ;;
 ;; Usage:
 ;;
-;; In your defpackage add a (:shadowing-import-from #:mu-lambda-list #:defun #:lambda #:destructuring-bind #:multiple-value-bind). Or use MU-LAMBDA-LIST:DEFPACKAGE to define your package.
+;; In your defpackage add a #:shadowing-import-from #:mu-lambda-list and the list of exported symbols you want to import.
+;; Like: (:shadowing-import-from #:mu-lambda-list #:defun #:lambda #:destructuring-bind #:multiple-value-bind).
+;; Or use MU-LAMBDA-LIST:DEFPACKAGE to define your package.
 ;;
 ;; Arguments in lambda-lists that start with _ character are declared ignored.
 ;; Example:
-;; 
+;;
 ;;    (lambda (_x) ...)
 ;;
 ;; Destructuring is supported in positional arguments in lambda-lists.
 ;; Example:
-;; 
+;;
 ;;     (funcall (lambda ((x . y))
 ;;                  (list x y))
 ;;             (cons 1 2))
-;; 
+;;
 ;; TODO: potential idea: Add support for &ignore and &ignorable in lambda-lists
 ;;
 ;;; Code:
@@ -38,12 +40,14 @@
            #:destructuring-bind
            #:defun
            #:multiple-value-bind
-           #:defpackage)
+           #:defpackage
+           #:dolist)
   (:export #:lambda
            #:destructuring-bind
            #:defun
            #:multiple-value-bind
-           #:defpackage))
+           #:defpackage
+           #:dolist))
 
 (in-package :mu-lambda-list)
 
@@ -54,7 +58,8 @@
       #:defun
       #:lambda
       #:destructuring-bind
-      #:multiple-value-bind)))
+      #:multiple-value-bind
+      #:dolist)))
 
 (defmacro destructuring-bind (lambda-list expression &body body)
   (let ((ignore-args
@@ -76,6 +81,25 @@
 (defmacro multiple-value-bind (lambda-list expression &body body)
   `(cl:multiple-value-call (lambda ,lambda-list ,@body) ,expression))
 
+(cl:defun process-binding (binding body)
+  (cond
+    ;; normal binding
+    ((and (symbolp (car binding))
+          (char/= (aref (symbol-name (car binding)) 0)
+                  #\_))
+     (values binding body))
+    ;; ignore binding
+    ((and (symbolp (car binding))
+          (char= (aref (symbol-name (car binding)) 0)
+                 #\_))
+     (values binding (list* `(declare (ignore ,(car binding)))
+                            body)))
+    ;; destructuring
+    ((listp (car binding))
+     (values nil `(destructuring-bind ,(first binding) ,(second binding)
+                    ,@body)))
+    (t (error "Invalid binding: ~s" binding))))
+
 ;; TODO: we only support destructuring in positional arguments
 (cl:defun process-lambda-list (lambda-list body)
   (let ((ignore-args (remove-if (cl:lambda (arg)
@@ -86,7 +110,7 @@
         (new-body body)
         (new-args nil)
         (in-required-args t))
-    (dolist (arg lambda-list)
+    (cl:dolist (arg lambda-list)
       (cond
         ((and (symbolp arg)
               (member arg '(&optional &key &aux &allow-other-keys)))
@@ -113,6 +137,17 @@
   (cl:multiple-value-bind (new-args new-body)
       (process-lambda-list lambda-list body)
     `(cl:defun ,name ,new-args ,@new-body)))
+
+(defmacro dolist ((var list &optional result) &body body)
+  (cond
+    ((symbolp var)
+     `(cl:dolist (,var ,list ,result)
+        ,@body))
+    ((listp var)
+     (let ((new-var (gensym)))
+       `(cl:dolist (,new-var ,list ,result)
+          (destructuring-bind ,var ,new-var
+            ,@body))))))
 
 #+test
 (macroexpand-1
@@ -145,3 +180,7 @@
  (lambda ((_ y))
    (list y))
  (list 1 2))
+
+#+test
+(dolist ((x . _) '((a . 1) (b . 2)))
+  (print x))
