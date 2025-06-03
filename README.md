@@ -172,6 +172,7 @@ its long description/comment with instructions of usage, etc.
 * [image-dimensions-reader](docs/image-dimensions-reader.md) - Get image dimensions (PNG/JPG) without loading the file.
 * [lisp-critic-warnings](docs/lisp-critic-warnings.md) - Signal compiler warnings with lisp-critic critiques.
 * [mu-lambda-list](docs/mu-lambda-list.md) - Lambda lists with destructuring and ignorable arguments.
+* [mucl](docs/mucl.md) - Upgraded versions of CL definitions with destructuring and ignorable arguments at binding position.
 * [mulet](docs/mulet.md) - Let* with destructruing and multiple value bind.
 * [mupaginator](docs/mupaginator.md) - A helper package for pagination of collections.
 * [muprotocols](docs/muprotocols.md) - An implementation of protocols that plays nicely with Common Lisp type system.
