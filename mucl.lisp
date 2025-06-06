@@ -40,14 +40,16 @@
            #:multiple-value-bind
            #:defpackage
            #:dolist
-           #:let*)
+           #:let*
+           #:with-accessors)
   (:export #:lambda
            #:destructuring-bind
            #:defun
            #:multiple-value-bind
            #:defpackage
            #:dolist
-           #:let*))
+           #:let*
+           #:with-accessors))
 
 (in-package :mucl)
 
@@ -60,9 +62,11 @@
       #:destructuring-bind
       #:multiple-value-bind
       #:dolist
-      #:let*)))
+      #:let*
+      #:with-accessors)))
 
 (defmacro destructuring-bind (lambda-list expression &body body)
+  "Upgraded version of CL:DESTRUCTURING-BIND that supports ignorable arguments."
   (let ((ignore-args
           (remove-if-not (cl:lambda (arg)
                            (and (symbolp arg)
@@ -80,6 +84,7 @@
        ,@body)))
 
 (defmacro multiple-value-bind (lambda-list expression &body body)
+  "Upgraded version of CL:MULTIPLE-VALUE-BIND that supports ignorable arguments."
   `(cl:multiple-value-call (lambda ,lambda-list ,@body) ,expression))
 
 (cl:defun process-binding (binding body)
@@ -130,16 +135,23 @@
     (values (reverse new-args) new-body)))
 
 (defmacro lambda (lambda-list &body body)
+  "Upgraded version of CL:LAMBDA that supports ignorable arguments and destructuring in its lambda-list."
   (cl:multiple-value-bind (new-args new-body)
       (process-lambda-list lambda-list body)
     `(cl:lambda ,new-args ,@new-body)))
 
 (defmacro defun (name lambda-list &body body)
+  "Upgraded version of CL:DEFUN that supports ignorable arguments and destructuring in its lambda-list."
   (cl:multiple-value-bind (new-args new-body)
       (process-lambda-list lambda-list body)
     `(cl:defun ,name ,new-args ,@new-body)))
 
 (defmacro dolist ((var list &optional result) &body body)
+  "Upgraded version of CL:DOLIST that supports destructuring at variable binding position.
+
+Example:
+
+    (dolist ((x . y) my-list-of-conses) ...)"
   (cond
     ((symbolp var)
      `(cl:dolist (,var ,list ,result)
@@ -169,7 +181,21 @@
                     ,@body)))))
 
 (defmacro let* (bindings &body body)
-  ;; If every binding is a normal CL:LET binding, then just expand to CL:LET*
+  "Upgraded version of CL:LET* that supports destructuring and multiple-value binds.
+
+Usage:
+
+If more than one variable is used at binding position, then they are bind via MULTIPLE-VALUE-BIND.
+
+Example:
+
+    (let* ((res found-p (gethash :foo my-table))) ...)
+
+If a list is used at binding position, then DESTRUCTURING-BIND is applied.
+Example:
+
+    (let* (((x &key z) (list 'x :z 'z))) (list x z))
+"
   (when (every (cl:lambda (binding)
                  (and (= (length binding) 2)
                       (symbolp (car binding))))
@@ -187,6 +213,23 @@
         (setf new-body binding-body)))
     `(cl:let* ,new-bindings
        ,new-body)))
+
+(defmacro with-accessors (bindings instance &body body)
+  "Upgraded version of CL:WITH-ACCESSORS that supports accessor symbol in bindings.
+
+For example:
+
+   (with-accessors (my-accessor) my-object ...)
+
+expands to:
+
+   (cl:with-accessors ((my-accessor my-accessor)) my-object ...)"
+  `(cl:with-accessors ,(loop for binding in bindings
+                             collect (if (symbolp binding)
+                                         (list binding binding)
+                                         binding))
+       ,instance
+     ,@body))
 
 #+test
 (macroexpand-1

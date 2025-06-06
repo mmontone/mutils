@@ -45,6 +45,10 @@ Upgraded versions of CL definitions with destructuring and ignorable arguments a
 (name lambda-list &body body)
 ```
 
+Upgraded version of CL:DEFUN that supports ignorable arguments and destructuring in its lambda-list.
+
+
+
 
 
 ### destructuring-bind
@@ -52,6 +56,10 @@ Upgraded versions of CL definitions with destructuring and ignorable arguments a
 ```lisp
 (lambda-list expression &body body)
 ```
+
+Upgraded version of CL:DESTRUCTURING-BIND that supports ignorable arguments.
+
+
 
 
 
@@ -61,13 +69,23 @@ Upgraded versions of CL definitions with destructuring and ignorable arguments a
 ((var list &optional result) &body body)
 ```
 
+Upgraded version of CL:DOLIST that supports destructuring at variable binding position.
 
+
+
+Example:
+
+    (dolist ((x . y) my-list-of-conses) ...)
 
 ### lambda
 
 ```lisp
 (lambda-list &body body)
 ```
+
+Upgraded version of CL:LAMBDA that supports ignorable arguments and destructuring in its lambda-list.
+
+
 
 
 
@@ -77,7 +95,22 @@ Upgraded versions of CL definitions with destructuring and ignorable arguments a
 (bindings &body body)
 ```
 
+Upgraded version of CL:LET* that supports destructuring and multiple-value binds.
 
+
+
+Usage:
+
+If more than one variable is used at binding position, then they are bind via MULTIPLE-VALUE-BIND.
+
+Example:
+
+    (let* ((res found-p (gethash :foo my-table))) ...)
+
+If a list is used at binding position, then DESTRUCTURING-BIND is applied.
+Example:
+
+    (let* (((x &key z) (list 'x :z 'z))) (list x z))
 
 ### multiple-value-bind
 
@@ -85,5 +118,27 @@ Upgraded versions of CL definitions with destructuring and ignorable arguments a
 (lambda-list expression &body body)
 ```
 
+Upgraded version of CL:MULTIPLE-VALUE-BIND that supports ignorable arguments.
 
+
+
+
+
+### with-accessors
+
+```lisp
+(bindings instance &body body)
+```
+
+Upgraded version of CL:WITH-ACCESSORS that supports accessor symbol in bindings.
+
+
+
+For example:
+
+   (with-accessors (my-accessor) my-object ...)
+
+expands to:
+
+   (cl:with-accessors ((my-accessor my-accessor)) my-object ...)
 
