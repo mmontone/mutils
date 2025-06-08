@@ -136,9 +136,9 @@ Upgraded version of CL:WITH-ACCESSORS that supports accessor symbol in bindings.
 
 For example:
 
-   (with-accessors (my-accessor) my-object ...)
+    (with-accessors (my-accessor) my-object ...)
 
 expands to:
 
-   (cl:with-accessors ((my-accessor my-accessor)) my-object ...)
+    (cl:with-accessors ((my-accessor my-accessor)) my-object ...)
 

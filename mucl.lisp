@@ -219,11 +219,11 @@ Example:
 
 For example:
 
-   (with-accessors (my-accessor) my-object ...)
+    (with-accessors (my-accessor) my-object ...)
 
 expands to:
 
-   (cl:with-accessors ((my-accessor my-accessor)) my-object ...)"
+    (cl:with-accessors ((my-accessor my-accessor)) my-object ...)"
   `(cl:with-accessors ,(loop for binding in bindings
                              collect (if (symbolp binding)
                                          (list binding binding)
