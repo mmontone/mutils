@@ -64,7 +64,7 @@
 
   (cl:let ((new-bindings (list))
            (new-body body))
-    (dolist (binding bindings)
+    (dolist (binding (reverse bindings))
       (multiple-value-bind (new-binding binding-body)
           (process-binding binding new-body)
         (when new-binding

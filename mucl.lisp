@@ -224,7 +224,7 @@ Example:
 
   (cl:let ((new-bindings (list))
            (new-body body))
-    (cl:dolist (binding bindings)
+    (cl:dolist (binding (reverse bindings))
       (cl:multiple-value-bind (new-binding binding-body)
           (process-let-binding binding new-body)
         (when new-binding
