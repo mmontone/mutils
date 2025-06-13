@@ -188,16 +188,16 @@ Example:
     ;; normal let binding
     ((and (= (length binding) 2)
           (symbolp (car binding)))
-     (values binding body))
+     `((let (,binding) ,@body)))
     ;; multiple-value binding
     ((> (length binding) 2)
-     (values nil `((multiple-value-bind ,(butlast binding) ,(car (last binding))
-                     ,@body))))
+     `((multiple-value-bind ,(butlast binding) ,(car (last binding))
+         ,@body)))
     ;; destructuring
     ((and (= (length binding) 2)
           (listp (car binding)))
-     (values nil `((destructuring-bind ,(first binding) ,(second binding)
-                     ,@body))))))
+     `((destructuring-bind ,(first binding) ,(second binding)
+         ,@body)))))
 
 (defmacro let* (bindings &body body)
   "Upgraded version of CL:LET* that supports destructuring and multiple-value binds.
@@ -222,16 +222,12 @@ Example:
     (return-from let*
       `(cl:let* ,bindings ,@body)))
 
-  (cl:let ((new-bindings (list))
-           (new-body body))
+  (cl:let ((new-body body))
     (cl:dolist (binding (reverse bindings))
-      (cl:multiple-value-bind (new-binding binding-body)
-          (process-let-binding binding new-body)
-        (when new-binding
-          (push binding new-bindings))
+      (let ((binding-body
+              (process-let-binding binding new-body)))
         (setf new-body binding-body)))
-    `(cl:let* ,new-bindings
-       ,@new-body)))
+    (car new-body)))
 
 (defmacro with-accessors (bindings instance &body body)
   "Upgraded version of CL:WITH-ACCESSORS that supports accessor symbol in bindings.
