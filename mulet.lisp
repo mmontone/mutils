@@ -45,13 +45,13 @@
      (values binding body))
     ;; multiple-value binding
     ((> (length binding) 2)
-     (values nil `(multiple-value-bind ,(butlast binding) ,(car (last binding))
-                    ,@body)))
+     (values nil `((multiple-value-bind ,(butlast binding) ,(car (last binding))
+                    ,@body))))
     ;; destructuring
     ((and (= (length binding) 2)
           (listp (car binding)))
-     (values nil `(destructuring-bind ,(first binding) ,(second binding)
-                    ,@body)))))
+     (values nil `((destructuring-bind ,(first binding) ,(second binding)
+                    ,@body))))))
 
 (defmacro mulet (bindings &body body)
   ;; If every binding is a normal CL:LET binding, then just expand to CL:LET*
@@ -71,7 +71,7 @@
           (push binding new-bindings))
         (setf new-body binding-body)))
     `(cl:let* ,new-bindings
-       ,new-body)))
+       ,@new-body)))
 
 (defmacro let* (bindings &body body)
   ;; If every binding is a normal CL:LET binding, then just expand to CL:LET*
@@ -91,7 +91,7 @@
           (push binding new-bindings))
         (setf new-body binding-body)))
     `(cl:let* ,new-bindings
-       ,new-body)))
+       ,@new-body)))
 
 #+test
 (macroexpand-1 '(mulet ((x 34) (y 44)) (cons x y)))
