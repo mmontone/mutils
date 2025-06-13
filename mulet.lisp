@@ -35,63 +35,82 @@
 
 (in-package :mulet)
 
-;; TODO: allow multiple-value binding + destructruing at the same time
-(defun process-binding (binding body)
+(cl:defun process-let-binding (binding body)
   "Process MULET BINDING, and return a LET binding plus a new BODY."
   (cond
     ;; normal let binding
     ((and (= (length binding) 2)
           (symbolp (car binding)))
-     (values binding body))
+     `((let (,binding) ,@body)))
     ;; multiple-value binding
     ((> (length binding) 2)
-     (values nil `((multiple-value-bind ,(butlast binding) ,(car (last binding))
-                    ,@body))))
+     `((multiple-value-bind ,(butlast binding) ,(car (last binding))
+         ,@body)))
     ;; destructuring
     ((and (= (length binding) 2)
           (listp (car binding)))
-     (values nil `((destructuring-bind ,(first binding) ,(second binding)
-                    ,@body))))))
-
-(defmacro mulet (bindings &body body)
-  ;; If every binding is a normal CL:LET binding, then just expand to CL:LET*
-  (when (every (lambda (binding)
-                 (and (= (length binding) 2)
-                      (symbolp (car binding))))
-               bindings)
-    (return-from mulet
-      `(cl:let* ,bindings ,@body)))
-
-  (cl:let ((new-bindings (list))
-           (new-body body))
-    (dolist (binding (reverse bindings))
-      (multiple-value-bind (new-binding binding-body)
-          (process-binding binding new-body)
-        (when new-binding
-          (push binding new-bindings))
-        (setf new-body binding-body)))
-    `(cl:let* ,new-bindings
-       ,@new-body)))
+     `((destructuring-bind ,(first binding) ,(second binding)
+         ,@body)))))
 
 (defmacro let* (bindings &body body)
-  ;; If every binding is a normal CL:LET binding, then just expand to CL:LET*
-  (when (every (lambda (binding)
+  "Upgraded version of CL:LET* that supports destructuring and multiple-value binds.
+
+Usage:
+
+If more than one variable is used at binding position, then they are bind via MULTIPLE-VALUE-BIND.
+
+Example:
+
+    (let* ((res found-p (gethash :foo my-table))) ...)
+
+If a list is used at binding position, then DESTRUCTURING-BIND is applied.
+Example:
+
+    (let* (((x &key z) (list 'x :z 'z))) (list x z))
+"
+  (when (every (cl:lambda (binding)
                  (and (= (length binding) 2)
                       (symbolp (car binding))))
                bindings)
     (return-from let*
       `(cl:let* ,bindings ,@body)))
 
-  (cl:let ((new-bindings (list))
-           (new-body body))
-    (dolist (binding bindings)
-      (multiple-value-bind (new-binding binding-body)
-          (process-binding binding new-body)
-        (when new-binding
-          (push binding new-bindings))
+  (cl:let ((new-body body))
+    (cl:dolist (binding (reverse bindings))
+      (let ((binding-body
+              (process-let-binding binding new-body)))
         (setf new-body binding-body)))
-    `(cl:let* ,new-bindings
-       ,@new-body)))
+    (car new-body)))
+
+(defmacro mulet (bindings &body body)
+  "Upgraded version of CL:LET* that supports destructuring and multiple-value binds.
+
+Usage:
+
+If more than one variable is used at binding position, then they are bind via MULTIPLE-VALUE-BIND.
+
+Example:
+
+    (let* ((res found-p (gethash :foo my-table))) ...)
+
+If a list is used at binding position, then DESTRUCTURING-BIND is applied.
+Example:
+
+    (let* (((x &key z) (list 'x :z 'z))) (list x z))
+"
+  (when (every (cl:lambda (binding)
+                 (and (= (length binding) 2)
+                      (symbolp (car binding))))
+               bindings)
+    (return-from mulet
+      `(cl:let* ,bindings ,@body)))
+
+  (cl:let ((new-body body))
+    (cl:dolist (binding (reverse bindings))
+      (let ((binding-body
+              (process-let-binding binding new-body)))
+        (setf new-body binding-body)))
+    (car new-body)))
 
 #+test
 (macroexpand-1 '(mulet ((x 34) (y 44)) (cons x y)))
