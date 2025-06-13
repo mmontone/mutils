@@ -65,6 +65,19 @@
       #:let*
       #:with-accessors)))
 
+(defvar *destructurers*
+  '((:accessors . destructuring-bind-accessors)
+    (:slots . destructuring-bind-slots)
+    (:values . destructuring-bind-values)))
+
+(defun destructuring-bind-accessors (binding expression body)
+  `(with-accessors ,(cdr binding) ,expression
+     ,@body))
+
+(defun destructuring-bind-slots (binding expression body)
+  `(with-slots ,(cdr binding) ,expression
+     ,@body))
+
 (defmacro destructuring-bind (lambda-list expression &body body)
   "Upgraded version of CL:DESTRUCTURING-BIND that supports ignorable arguments."
   (let ((ignore-args
@@ -78,10 +91,16 @@
                            ((consp lambda-list)
                             (list (car lambda-list) (cdr lambda-list)))
                            (t (error "Don't know how to process destructuring lambda-list: ~s" lambda-list))))))
-    `(cl:destructuring-bind ,lambda-list ,expression
-       ,@(when ignore-args
-           `((declare (ignore ,@ignore-args))))
-       ,@body)))
+    (if (keywordp (car lambda-list))
+        ;; special destructurer
+        (let ((destructurer (cdr (assoc (car lambda-list) *destructurers*))))
+          (when (not destructurer)
+            (error "Unknown destructurer: ~s" (car lambda-list)))
+          (funcall destructurer lambda-list expression body))
+        `(cl:destructuring-bind ,lambda-list ,expression
+           ,@(when ignore-args
+               `((declare (ignore ,@ignore-args))))
+           ,@body))))
 
 (defmacro multiple-value-bind (lambda-list expression &body body)
   "Upgraded version of CL:MULTIPLE-VALUE-BIND that supports ignorable arguments."
@@ -172,13 +191,13 @@ Example:
      (values binding body))
     ;; multiple-value binding
     ((> (length binding) 2)
-     (values nil `(multiple-value-bind ,(butlast binding) ,(car (last binding))
-                    ,@body)))
+     (values nil `((multiple-value-bind ,(butlast binding) ,(car (last binding))
+                     ,@body))))
     ;; destructuring
     ((and (= (length binding) 2)
           (listp (car binding)))
-     (values nil `(destructuring-bind ,(first binding) ,(second binding)
-                    ,@body)))))
+     (values nil `((destructuring-bind ,(first binding) ,(second binding)
+                     ,@body))))))
 
 (defmacro let* (bindings &body body)
   "Upgraded version of CL:LET* that supports destructuring and multiple-value binds.
@@ -212,7 +231,7 @@ Example:
           (push binding new-bindings))
         (setf new-body binding-body)))
     `(cl:let* ,new-bindings
-       ,new-body)))
+       ,@new-body)))
 
 (defmacro with-accessors (bindings instance &body body)
   "Upgraded version of CL:WITH-ACCESSORS that supports accessor symbol in bindings.
