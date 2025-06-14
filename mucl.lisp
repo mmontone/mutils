@@ -70,11 +70,11 @@
     (:slots . destructuring-bind-slots)
     (:values . destructuring-bind-values)))
 
-(defun destructuring-bind-accessors (binding expression body)
+(cl:defun destructuring-bind-accessors (binding expression body)
   `(with-accessors ,(cdr binding) ,expression
      ,@body))
 
-(defun destructuring-bind-slots (binding expression body)
+(cl:defun destructuring-bind-slots (binding expression body)
   `(with-slots ,(cdr binding) ,expression
      ,@body))
 
