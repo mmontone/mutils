@@ -32,7 +32,22 @@ Let* with destructruing and multiple value bind.
 (bindings &body body)
 ```
 
+Upgraded version of CL:LET* that supports destructuring and multiple-value binds.
 
+
+
+Usage:
+
+If more than one variable is used at binding position, then they are bind via MULTIPLE-VALUE-BIND.
+
+Example:
+
+    (let* ((res found-p (gethash :foo my-table))) ...)
+
+If a list is used at binding position, then DESTRUCTURING-BIND is applied.
+Example:
+
+    (let* (((x &key z) (list 'x :z 'z))) (list x z))
 
 ### mulet
 
@@ -40,5 +55,20 @@ Let* with destructruing and multiple value bind.
 (bindings &body body)
 ```
 
+Upgraded version of CL:LET* that supports destructuring and multiple-value binds.
 
+
+
+Usage:
+
+If more than one variable is used at binding position, then they are bind via MULTIPLE-VALUE-BIND.
+
+Example:
+
+    (let* ((res found-p (gethash :foo my-table))) ...)
+
+If a list is used at binding position, then DESTRUCTURING-BIND is applied.
+Example:
+
+    (let* (((x &key z) (list 'x :z 'z))) (list x z))
 
