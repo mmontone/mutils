@@ -180,6 +180,7 @@ its long description/comment with instructions of usage, etc.
 * [mutils-utils](docs/mutils-utils.md) - General purpose utilities.
 * [parametric-types](docs/parametric-types.md) - Some parametric types for CL (an experiment).
 * [plump-xpath](docs/plump-xpath.md) - xpath extension for plump.
+* [princ-ut-interval](docs/princ-ut-interval.md) - Print UNIVERSAL-TIME intervals.
 * [quicksearch](docs/quicksearch.md) - Search Engine Interface for Common Lisp.
 * [type-annotations](docs/type-annotations.md) - Support for inline type annotations.
 * [who-templates](docs/who-templates.md) - Templating system with CL-WHO. Supports inheritance.
