@@ -79,7 +79,12 @@
        ,@body)))
 
 (defmacro multiple-value-bind (lambda-list expression &body body)
-  `(cl:multiple-value-call (lambda ,lambda-list ,@body) ,expression))
+  "Upgraded version of CL:MULTIPLE-VALUE-BIND that supports ignorable arguments."
+  (let ((ignore (gensym "IGNORE")))
+    `(cl:multiple-value-call (lambda (&optional ,@lambda-list &rest ,ignore)
+                               (declare (ignore ,ignore))
+                               ,@body)
+       ,expression)))
 
 (cl:defun process-binding (binding body)
   (cond
