@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2023 Mariano Montone. All rights reserved.
 
-;; This work is licensed under the terms of the MIT license.  
+;; This work is licensed under the terms of the MIT license.
 ;; For a copy, see <https://opensource.org/licenses/MIT>.
 
 ;; Author: Mariano Montone <marianomontone@gmail.com>
@@ -21,11 +21,14 @@
 (defpackage :mutils-docs
   (:use :cl)
   (:export
-   #:generate-docs))
+   #:generate-docs
+   #:generate-module-docs))
 
 (in-package :mutils-docs)
 
-(defun generate-module-docs (module-details pathname)
+(defun generate-module-docs (module-details pathname &optional package-name)
+  "Write MODULE-DETAILS docs to PATHNAME.
+MODULE-DETAILS is the result of MUTILS:PARSE-LISP-MODULE-FILE "
   (with-open-file (f pathname :direction :output
                               :if-exists :supersede
                               :if-does-not-exist :create
@@ -38,9 +41,10 @@
     (terpri f)
     (write-string (getf module-details :commentary) f)
     (terpri f) (terpri f)
-    (require (getf module-details :name))
+    (unless (and package-name (find-package package-name))
+      (require (getf module-details :name)))
     (simple-doc:generate-markdown-doc
-     f (intern (string-upcase (getf module-details :name)) :keyword)
+     f (or package-name (intern (string-upcase (getf module-details :name)) :keyword))
      :output-undocumented t
      :include nil)))
 
@@ -70,6 +74,6 @@
     (with-simple-restart (continue "CONTINUE")
       (generate-module-docs module-details
                             (asdf:system-relative-pathname :mutils
-                                                         (format nil "docs/~a.md" (getf module-details :name)))))))
+                                                           (format nil "docs/~a.md" (getf module-details :name)))))))
 
 (provide :mutils-docs)
