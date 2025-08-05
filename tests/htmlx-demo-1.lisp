@@ -7,6 +7,9 @@
 
 (in-package :htmlx-demo-1)
 
+(defun callback (func)
+  (html-actions:handler-function-url func))
+
 (hunchentoot:define-easy-handler (demo :uri "/")
     ()
   (let ((counter 0))
@@ -18,7 +21,7 @@
         (labels ((counter ()
                    (:div :class "counter" :id "counter"
                          (:h1 (princ-to-string counter))
-                         (:button :hx-post (html-actions:handler-function-url
+                         (:button :hx-post (callback
                                             (lambda ()
                                               (incf counter)
                                               (spinneret:with-html-string
@@ -26,7 +29,7 @@
                                   :hx-swap "outerHTML"
                                   :hx-target "#counter"
                                   "Increment")
-                         (:button :hx-post (html-actions:handler-function-url
+                         (:button :hx-post (callback
                                             (lambda ()
                                               (decf counter)
                                               (spinneret:with-html-string
