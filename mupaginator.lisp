@@ -75,11 +75,6 @@
 (defun pagination-current-items (pagination)
   "Returns PAGINATION current page items and total pages."
   (etypecase (pagination-source pagination)
-    (trivial-types:function-designator
-     (multiple-value-bind (items total)
-         (funcall (pagination-source pagination) (pagination-current pagination))
-       (assert (integerp total) nil "Second value returned by pagination-source of ~s is expected to be the total number of items, but ~s was returned." pagination total)
-       (values items (truncate (/ total (pagination-page-size pagination))))))
     (sequence
      (values
       (let ((start (* (1- (pagination-current pagination))
@@ -89,7 +84,12 @@
                 (min (+ start (pagination-page-size pagination))
                      (length (pagination-source pagination)))))
       (truncate (/ (length (pagination-source pagination))
-                   (pagination-page-size pagination)))))))
+                   (pagination-page-size pagination)))))
+    (trivial-types:function-designator
+     (multiple-value-bind (items total)
+         (funcall (pagination-source pagination) (pagination-current pagination))
+       (assert (integerp total) nil "Second value returned by pagination-source of ~s is expected to be the total number of items, but ~s was returned." pagination total)
+       (values items (truncate (/ total (pagination-page-size pagination))))))))
 
 (defun pagination-total (pagination)
   (cadr (multiple-value-list (pagination-current-items pagination))))
@@ -142,6 +142,9 @@ Args:
           ;; last page
           (when include-first-and-last
             (alexandria:appendf buttons (list total)))))
+
+      (when (null buttons)
+        (setf buttons '(1)))
 
       (assert (member current buttons))
       buttons)))
