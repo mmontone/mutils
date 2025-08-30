@@ -35,7 +35,7 @@
 (maybe-progn 'foo nil)
 
 
-(defparameter *star-class-options* '(:required :export :dot-syntax :method :print :initialize))
+(defparameter *star-class-options* '(:export :dot-syntax :method :print :initialize))
 
 (defmacro defclass* (name direct-superclasses direct-slots &rest options)
   (let ((methods (list))
@@ -71,9 +71,11 @@
 
     (flet ((process-class-option (option)
              (case (car option)
-               (:method (destructuring-bind (name args &body body)
+               (:method (destructuring-bind (method-name args &body body)
                             (cdr option)
-                          (push `(defmethod ,name ,args ,@body) methods)))
+                          (push `(defmethod ,method-name ((self ,name) ,@args)
+                                   ,@body)
+                                methods)))
                (:export
                 (labels ((process-class-export (export)
                            (ecase export
@@ -94,17 +96,22 @@
                               (process-class-export :class-name)))))
                   (mapc #'process-class-export (cdr option)))))))
       (mapc #'process-class-option options)
-      
-      (maybe-progn
-       `(defclass ,name ,direct-superclasses
-          ,defclass-slots
-          ,@(remove-if-not (lambda (class-option)
-                             (member (car class-option) '(:documentation :metaclass)))
-             options))
-       (when exports
-         `(export ',exports))
-       methods)      
-      )))
+
+      (if (or exports methods)
+          `(progn
+             (defclass ,name ,direct-superclasses
+               ,defclass-slots
+               ,@(remove-if-not (lambda (class-option)
+                                  (member (car class-option) '(:documentation :metaclass)))
+                  options))
+             ,@(when exports
+                 `((export ',exports)))
+             ,@methods)
+          `(defclass ,name ,direct-superclasses
+             ,defclass-slots
+             ,@(remove-if-not (lambda (class-option)
+                                (member (car class-option) '(:documentation :metaclass)))
+                options))))))
 
 (defmacro defgeneric* (name args &rest options))
 
