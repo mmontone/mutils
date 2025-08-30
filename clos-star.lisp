@@ -32,6 +32,11 @@
       (destructuring-bind (name args &body body) spec
         (values name nil args body))))
 
+(defun concat-symbols (sym1 sym2)
+  (intern (format nil "~a~a" sym1 sym2)))
+
+;;(concat-symbols 'foo '-bar)
+
 (defmacro defclass* (name direct-superclasses direct-slots &rest options)
   (let ((methods (list))
         (exports (list))
@@ -109,15 +114,30 @@
                                                          ,@body)))
                           methods)))
                  (:generate
-                  (flet ((process-generate (spec)
-                           (case spec
-                             (:initforms
-                              (setf defclass-slots
-                                    (mapcar (lambda (slot)
-                                              (if (not (member :initform slot))
-                                                  (append slot '(:initform nil))
-                                                  slot))
-                                            defclass-slots))))))
+                  (labels ((process-generate (spec)
+                             (if (keywordp spec)
+                                 (process-generate (list spec))
+                                 (ecase (car spec)
+                                   (:initforms
+                                    (setf defclass-slots
+                                          (mapcar (lambda (slot)
+                                                    (if (not (member :initform slot))
+                                                        (append slot '(:initform nil))
+                                                        slot))
+                                                  defclass-slots)))
+                                   (:accessors
+                                    (destructuring-bind (&key prefix suffix) (rest spec)
+                                      (setf defclass-slots
+                                            (mapcar (lambda (slot)
+                                                      (if (not (member :accessor slot))
+                                                          (let ((accessor-name (car slot)))
+                                                            (when prefix
+                                                              (setf accessor-name (concat-symbols prefix accessor-name)))
+                                                            (when suffix
+                                                              (setf accessor-name (concat-symbols accessor-name suffix)))
+                                                            (append slot (list :accessor accessor-name)))
+                                                          slot))
+                                                    defclass-slots))))))))
                     (mapc #'process-generate (cdr option)))))))
       (mapc #'process-class-option options)
 
@@ -157,7 +177,7 @@
 
   (:dot-syntax t)
 
-  (:generate :initforms)
+  (:generate :initforms (:accessors :prefix my-class-))
 
   (:method print-object (stream)
     (print-unreadable-object (self stream :type t :identity t)
