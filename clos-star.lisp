@@ -153,3 +153,5 @@
 
   (:initialize :after (&rest initargs)
                (call-next-method)))
+
+(provide :clos-star)
