@@ -22,11 +22,13 @@
            :initarg nil))
    (:generate (:accessors :prefix computer-) :initargs)))
 
+;; https://github.com/AccelerationNet/cl-inflector/blob/master/langs.lisp%5D%5Bcl-inflector
 (macroexpand-1
  '(defclass* language ()
    (name plurals singulars uncountables irregulars)
    (:generate :initargs :initforms :accessors)))
 
+;; http://common-lisp.net/project/defclass-star/configuration.lisp.html
 (macroexpand-1
  '(defclass* configuration ()
    ((package-name      :type symbol)
@@ -48,3 +50,14 @@
     (temp-directory    :initform (make-pathname :directory "/tmp"))
     (working-directory :initform *default-pathname-defaults*))
    (:generate (:accessors :suffix -of) :initargs)))
+
+;; https://github.com/jd/cl-hue/blob/master/cl-hue.lisp
+
+(macroexpand-1
+ '(defclass* light ()
+   (bridge number type name modelid uniqueid swversion pointsymbol
+    (on :accessor light-on-p)
+    brightness
+    hue saturation xy ct alert effect colormode
+    (reachable :accessor light-reachable-p))
+   (:generate :initargs (:accessors :prefix light-))))
