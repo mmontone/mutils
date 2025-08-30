@@ -26,3 +26,25 @@
  '(defclass* language ()
    (name plurals singulars uncountables irregulars)
    (:generate :initargs :initforms :accessors)))
+
+(macroexpand-1
+ '(defclass* configuration ()
+   ((package-name      :type symbol)
+    (package-nicknames :initform '())
+    (included-files    :initform '())
+    (gccxml-path       :initform "gccxml")
+    (gccxml-flags      :initform "")
+    (hidden-symbols    :initform '())
+    (output-filename   :initform nil)
+    (options           :initform (standard-configuration-options))
+    (symbol-export-filter :initform 'standard-symbol-export-filter
+                          :type (or (function (symbol)) symbol))
+    (function-name-transformer :initform 'standard-name-transformer
+                               :type (or (function (string)) symbol))
+    (variable-name-transformer :initform 'standard-name-transformer
+                               :type (or (function (string)) symbol))
+    (type-name-transformer :initform 'standard-name-transformer
+                           :type (or (function (string)) symbol))
+    (temp-directory    :initform (make-pathname :directory "/tmp"))
+    (working-directory :initform *default-pathname-defaults*))
+   (:generate (:accessors :suffix -of) :initargs)))
