@@ -5,7 +5,8 @@
   (:use :cl)
   (:export #:defclass*
            #:define-condition*
-           #:defgeneric*))
+           #:defgeneric*
+           #:self))
 
 (in-package :clos-star)
 
@@ -114,7 +115,7 @@
              (defclass ,name ,direct-superclasses
                ,defclass-slots
                ,@(remove-if-not (lambda (class-option)
-                                  (member (car class-option) '(:documentation :metaclass)))
+                                  (member (car class-option) '(:documentation :metaclass :default-initargs)))
                   options))
              ,@(when exports
                  `((export ',exports)))
@@ -122,7 +123,7 @@
           `(defclass ,name ,direct-superclasses
              ,defclass-slots
              ,@(remove-if-not (lambda (class-option)
-                                (member (car class-option) '(:documentation :metaclass)))
+                                (member (car class-option) '(:documentation :metaclass :default-initargs)))
                 options))))))
 
 (defmacro defgeneric* (name args &rest options))
