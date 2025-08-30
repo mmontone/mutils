@@ -125,6 +125,13 @@
                                                         (append slot '(:initform nil))
                                                         slot))
                                                   defclass-slots)))
+                                   (:initargs
+                                    (setf defclass-slots
+                                          (mapcar (lambda (slot)
+                                                    (if (not (member :initarg slot))
+                                                        (append slot (list :initarg (intern (symbol-name (car slot)) :keyword)))
+                                                        slot))
+                                                  defclass-slots)))
                                    (:accessors
                                     (destructuring-bind (&key prefix suffix) (rest spec)
                                       (setf defclass-slots
@@ -177,7 +184,8 @@
 
   (:dot-syntax t)
 
-  (:generate :initforms (:accessors :prefix my-class-))
+  (:generate :initforms (:accessors :prefix my-class-)
+             :initargs)
 
   (:method print-object (stream)
     (print-unreadable-object (self stream :type t :identity t)
