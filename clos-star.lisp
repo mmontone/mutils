@@ -18,21 +18,11 @@
           (push (second res) new-plist))))
     (nreverse new-plist)))
 
+#+test
 (map-plist (lambda (key val)
              (when (not (eq key :foo))
                (values key val)))
            '(:bar 22 :foo 33 :baz 22))
-
-(defun maybe-progn (&rest forms)
-  (let ((progn-forms (remove nil forms)))
-    (cond
-      ((> (length progn-forms) 1)
-       `(progn ,@progn-forms))
-      ((= 1 (length progn-forms))
-       (car progn-forms)))))
-
-(maybe-progn 'foo 'bar)
-(maybe-progn 'foo nil)
 
 (defun parse-method-spec (spec)
   (if (keywordp (second spec))
@@ -40,8 +30,6 @@
         (values name qualifier args body))
       (destructuring-bind (name args &body body) spec
         (values name nil args body))))
-
-(defparameter *star-class-options* '(:export :dot-syntax :method :print :initialize))
 
 (defmacro defclass* (name direct-superclasses direct-slots &rest options)
   (let ((methods (list))
