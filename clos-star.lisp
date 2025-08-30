@@ -107,7 +107,18 @@
                     (push (build-method `(print-object (,stream)
                                                        (print-unreadable-object (self ,stream :type ,type :identity ,identity)
                                                          ,@body)))
-                          methods))))))
+                          methods)))
+                 (:generate
+                  (flet ((process-generate (spec)
+                           (case spec
+                             (:initforms
+                              (setf defclass-slots
+                                    (mapcar (lambda (slot)
+                                              (if (not (member :initform slot))
+                                                  (append slot '(:initform nil))
+                                                  slot))
+                                            defclass-slots))))))
+                    (mapc #'process-generate (cdr option)))))))
       (mapc #'process-class-option options)
 
       (if (or exports methods)
@@ -136,7 +147,8 @@
          :accessor my-class-name
          :export (:accessor :slot)
          :required t)
-   (lastname :required "Enter the last name"))
+   (lastname :required "Enter the last name")
+   (lalal))
 
   (:documentation "This is a great class.")
 
@@ -144,6 +156,8 @@
   (:export :all :class-name :accessors :slots)
 
   (:dot-syntax t)
+
+  (:generate :initforms)
 
   (:method print-object (stream)
     (print-unreadable-object (self stream :type t :identity t)
