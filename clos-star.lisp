@@ -34,13 +34,20 @@
 (maybe-progn 'foo 'bar)
 (maybe-progn 'foo nil)
 
+(defun parse-method-spec (spec)
+  (if (keywordp (second spec))
+      (destructuring-bind (name qualifier args &body body) spec
+        (values name qualifier args body))
+      (destructuring-bind (name args &body body) spec
+        (values name nil args body))))
 
 (defparameter *star-class-options* '(:export :dot-syntax :method :print :initialize))
 
 (defmacro defclass* (name direct-superclasses direct-slots &rest options)
   (let ((methods (list))
         (exports (list))
-        defclass-slots)
+        defclass-slots
+        (use-dot-syntax (cadr (find :dot-syntax options :key #'car))))
     (flet ((process-slot-def (slot-def)
              (if (symbolp slot-def)
                  slot-def
@@ -69,32 +76,49 @@
                                                slot-options)))))))
       (setf defclass-slots (mapcar #'process-slot-def direct-slots)))
 
-    (flet ((process-class-option (option)
-             (case (car option)
-               (:method (destructuring-bind (method-name args &body body)
-                            (cdr option)
-                          (push `(defmethod ,method-name ((self ,name) ,@args)
-                                   ,@body)
-                                methods)))
-               (:export
-                (labels ((process-class-export (export)
-                           (ecase export
-                             (:class-name
-                              (pushnew name exports))
-                             (:slots
-                              (dolist (slot direct-slots)
-                                (unless (member :export slot)
-                                  (pushnew (car slot) exports))))
-                             (:accessors
-                              (dolist (slot direct-slots)
-                                (unless (member :export slot)
-                                  (when (member :accessor slot)
-                                    (pushnew (getf (cdr slot) :accessor) exports)))))
-                             ((:all t)
-                              (process-class-export :slots)
-                              (process-class-export :accessors)
-                              (process-class-export :class-name)))))
-                  (mapc #'process-class-export (cdr option)))))))
+    (labels ((build-method (spec)
+               (multiple-value-bind (method-name qualifier args body)
+                   (parse-method-spec spec)
+                 `(defmethod ,method-name
+                      ,@(when qualifier (list qualifier))
+                    ((self ,name) ,@args)
+                    ,@(if use-dot-syntax
+                          `((access:with-dot ()
+                              ,@body))
+                          body))))
+             (process-class-option (option)
+               (case (car option)
+                 (:method
+                     (push (build-method (cdr option)) methods))
+                 (:export
+                  (labels ((process-class-export (export)
+                             (ecase export
+                               (:class-name
+                                (pushnew name exports))
+                               (:slots
+                                (dolist (slot direct-slots)
+                                  (unless (member :export slot)
+                                    (pushnew (car slot) exports))))
+                               (:accessors
+                                (dolist (slot direct-slots)
+                                  (unless (member :export slot)
+                                    (when (member :accessor slot)
+                                      (pushnew (getf (cdr slot) :accessor) exports)))))
+                               ((:all t)
+                                (process-class-export :slots)
+                                (process-class-export :accessors)
+                                (process-class-export :class-name)))))
+                    (mapc #'process-class-export (cdr option))))
+                 (:initialize
+                  (push (build-method (cons 'initialize-instance (cdr option)))
+                        methods))
+                 (:print
+                  (destructuring-bind ((stream &key type identity) &body body)
+                      (cdr option)
+                    (push (build-method `(print-object (,stream)
+                                                       (print-unreadable-object (self ,stream :type ,type :identity ,identity)
+                                                         ,@body)))
+                          methods))))))
       (mapc #'process-class-option options)
 
       (if (or exports methods)
@@ -126,7 +150,8 @@
 
   (:documentation "This is a great class.")
 
-  (:export :all :class-name :accessors :slots) ;; exports unless :export nil is explicitly specified
+  ;; determines exports unless :export is explicitly specified in the slots
+  (:export :all :class-name :accessors :slots)
 
   (:dot-syntax t)
 
