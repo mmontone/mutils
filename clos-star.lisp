@@ -136,7 +136,7 @@
                                     (destructuring-bind (&key prefix suffix) (rest spec)
                                       (setf defclass-slots
                                             (mapcar (lambda (slot)
-                                                      (if (not (member :accessor slot))
+                                                      (if (not (intersection slot '(:accessor :reader :writer)))
                                                           (let ((accessor-name (car slot)))
                                                             (when prefix
                                                               (setf accessor-name (concat-symbols prefix accessor-name)))
@@ -171,7 +171,7 @@
 #+test
 (defclass* my-class ()
   ((name :initarg :name
-         :accessor my-class-name
+         :reader my-class-name
          :export (:accessor :slot)
          :required t)
    (lastname :required "Enter the last name")
