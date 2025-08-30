@@ -44,7 +44,7 @@
         (use-dot-syntax (cadr (find :dot-syntax options :key #'car))))
     (flet ((process-slot-def (slot-def)
              (if (symbolp slot-def)
-                 slot-def
+                 (list slot-def)
                  (destructuring-bind (slot-name &rest slot-options) slot-def
                    (flet ((export-slot (what)
                             (ecase what
