@@ -129,6 +129,7 @@
 
 (defmacro define-condition* (name direct-superclasses direct-slots &rest options))
 
+#+test
 (defclass* my-class ()
   ((name :initarg :name
          :accessor my-class-name
