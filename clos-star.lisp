@@ -1,4 +1,4 @@
-;;; clos-star --- Extended syntax for CLOS.
+;;; clos-star --- Syntax extensions for CLOS.
 
 ;; Copyright (C) 2025 Mariano Montone. All rights reserved.
 
@@ -10,7 +10,7 @@
 
 ;;; Commentary:
 ;;
-;; Extended syntax for CLOS.
+;; Syntax extensions for CLOS.
 ;;
 ;; Usage: TODO
 

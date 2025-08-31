@@ -1,6 +1,6 @@
 # clos-star
 
-Extended syntax for CLOS.
+Syntax extensions for CLOS.
 
 [[source code]](../clos-star.lisp)
 
@@ -8,7 +8,7 @@ Extended syntax for CLOS.
 - **Version**: 0.1
 
 
- Extended syntax for CLOS.
+ Syntax extensions for CLOS.
 
  Usage: TODO
 
