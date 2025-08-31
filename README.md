@@ -158,6 +158,7 @@ its long description/comment with instructions of usage, etc.
 * [asdf-bundler](docs/asdf-bundler.md) - A module for copying all ASDF system dependencies to a directory.
 * [asdf-local](docs/asdf-local.md) - A module for treating local systems compilation differently from third party systems.
 * [clhs-linker](docs/clhs-linker.md) - Replace Lisp terms in a file by hyperlinks to Common Lisp HyperSpec.
+* [clos-star](docs/clos-star.md) - Extended syntax for CLOS.
 * [compiler-hooks](docs/compiler-hooks.md) - Provides hooks for Common Lisp compilation api.
 * [compiler-info](docs/compiler-info.md) - Provides compiler info (specially from declarations) in a portable way.
 * [debug-print](docs/debug-print.md) - A reader macro package for debug printing.
@@ -165,6 +166,7 @@ its long description/comment with instructions of usage, etc.
 * [directory-module-loader](docs/directory-module-loader.md) - Loader of Lisp module files from directories.
 * [estimated-time-progress](docs/estimated-time-progress.md) - Progress display with estimated time.
 * [extended-trace](docs/extended-trace.md) - A TRACE replacement with some extra report options.
+* [html-actions](docs/html-actions.md) - Dynamically register functions as HTTP handlers.
 * [html2who](docs/html2who.md) - Parse HTML and create cl-who source code.
 * [hunchentoot-errors](docs/hunchentoot-errors.md) - Augments Hunchentoot error pages and logs with request and session information.
 * [hunchentoot-trace-acceptor](docs/hunchentoot-trace-acceptor.md) - A Hunchentoot acceptor for tracing HTTP requests.

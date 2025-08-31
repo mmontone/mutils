@@ -79,5 +79,9 @@ Lambda lists with destructuring and ignorable arguments.
 (lambda-list expression &body body)
 ```
 
+Upgraded version of CL:MULTIPLE-VALUE-BIND that supports ignorable arguments.
+
+
+
 
 

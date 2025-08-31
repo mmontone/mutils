@@ -25,3 +25,15 @@ Generate library docs.
 
 
 
+### generate-module-docs
+
+```lisp
+(module-details pathname &optional package-name)
+```
+
+Write MODULE-DETAILS docs to PATHNAME.
+MODULE-DETAILS is the result of [MUTILS:PARSE-LISP-MODULE-FILE](MUTILS:PARSE-LISP-MODULE-FILE)
+
+
+
+

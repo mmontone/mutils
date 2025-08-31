@@ -31,6 +31,14 @@ Upgraded versions of CL definitions with destructuring and ignorable arguments a
 
 
 ## Macros
+### defclass
+
+```lisp
+(name direct-superclasses direct-slots &rest options)
+```
+
+
+
 ### defpackage
 
 ```lisp
