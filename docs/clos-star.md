@@ -43,6 +43,7 @@ Extra options in class:
 (name args &rest options)
 ```
 
+Like DEFGENERIC but supports :export option.
 
 
 ### define-condition\*
@@ -51,5 +52,4 @@ Extra options in class:
 (name direct-superclasses direct-slots &rest options)
 ```
 
-
-
+Like DEFINE-CONDITION but supports :export option.

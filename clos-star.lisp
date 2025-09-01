@@ -183,9 +183,33 @@
                                 (member (car class-option) '(:documentation :metaclass :default-initargs)))
                 options))))))
 
-(defmacro defgeneric* (name args &rest options))
+(defmacro defgeneric* (name args &rest options)
+  "Like DEFGENERIC but supports :export option."
+  (let ((defgeneric-options (remove :export options :key #'car))
+        (export-option (find :export options :key #'car)))
+    (if (not export-option)
+        `(defgeneric ,name ,args ,@options)
+        `(progn
+           (defgeneric ,name ,args ,@defgeneric-options)
+           (when ,(cadr export-option)
+             (export ',name))))))
 
-(defmacro define-condition* (name direct-superclasses direct-slots &rest options))
+#+test
+(defgeneric* my-generic-function (x y z)
+  (:documentation "Foo")
+  (:method my-method (x y z) (print (list x y z)))
+  (:export t))
+
+(defmacro define-condition* (name direct-superclasses direct-slots &rest options)
+  "Like DEFINE-CONDITION but supports :export option."
+  (let ((define-condition-options (remove :export options :key #'car))
+        (export-option (find :export options :key #'car)))
+    (if (not export-option)
+        `(define-condition ,name ,direct-superclasses ,direct-slots ,@options)
+        `(progn
+           (define-condition ,name ,direct-superclasses ,direct-slots ,@define-condition-options)
+           (when ,(cadr export-option)
+             (export ',name))))))
 
 #+test
 (defclass* my-class ()
