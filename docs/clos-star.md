@@ -46,6 +46,9 @@ Extra options in class:
 Like DEFGENERIC but supports :export option.
 
 
+
+
+
 ### define-condition\*
 
 ```lisp
@@ -53,3 +56,8 @@ Like DEFGENERIC but supports :export option.
 ```
 
 Like DEFINE-CONDITION but supports :export option.
+
+
+
+
+

@@ -44,7 +44,9 @@
            #:dolist
            #:let*
            #:with-accessors
-           #:defclass)
+           #:defclass
+           #:define-condition
+           #:defgeneric)
   (:export #:lambda
            #:destructuring-bind
            #:defun
@@ -54,6 +56,8 @@
            #:let*
            #:with-accessors
            #:defclass
+           #:define-condition
+           #:defgeneric
            #:self))
 
 (in-package :mucl)
@@ -69,7 +73,9 @@
       #:dolist
       #:let*
       #:with-accessors
-      #:defclass)))
+      #:defclass
+      #:define-condition
+      #:defgeneric)))
 
 (defvar *destructurers*
   '((:accessors . destructuring-bind-accessors)
@@ -265,18 +271,10 @@ expands to:
           (push (second res) new-plist))))
     (nreverse new-plist)))
 
-#+test
-(map-plist (lambda (key val)
-             (when (not (eq key :foo))
-               (values key val)))
-           '(:bar 22 :foo 33 :baz 22))
+(defun concat-symbols (sym1 sym2)
+  (intern (format nil "~a~a" sym1 sym2)))
 
-(defun parse-method-spec (spec)
-  (if (keywordp (second spec))
-      (destructuring-bind (name qualifier args &body body) spec
-        (values name qualifier args body))
-      (destructuring-bind (name args &body body) spec
-        (values name nil args body))))
+;;(concat-symbols 'foo '-bar)
 
 (defmacro defclass (name direct-superclasses direct-slots &rest options)
   (let ((methods (list))
@@ -285,12 +283,12 @@ expands to:
         (use-dot-syntax (cadr (find :dot-syntax options :key #'car))))
     (flet ((process-slot-def (slot-def)
              (if (symbolp slot-def)
-                 slot-def
+                 (list slot-def)
                  (destructuring-bind (slot-name &rest slot-options) slot-def
                    (flet ((export-slot (what)
                             (ecase what
-                              (:accessor (pushnew (getf slot-options :accessor) exports))
                               (:slot (pushnew slot-name exports))
+                              (:accessor (pushnew (getf slot-options :accessor) exports))
                               (:reader (pushnew (getf slot-options :reader) exports))
                               (:writer (pushnew (getf slot-options :writer) exports)))))
                      `(,slot-name ,@(map-plist (lambda (key val)
@@ -353,7 +351,40 @@ expands to:
                     (push (build-method `(print-object (,stream)
                                                        (print-unreadable-object (self ,stream :type ,type :identity ,identity)
                                                          ,@body)))
-                          methods))))))
+                          methods)))
+                 (:generate
+                  (labels ((process-generate (spec)
+                             (if (keywordp spec)
+                                 (process-generate (list spec))
+                                 (ecase (car spec)
+                                   (:initforms
+                                    (setf defclass-slots
+                                          (mapcar (lambda (slot)
+                                                    (if (not (member :initform slot))
+                                                        (append slot '(:initform nil))
+                                                        slot))
+                                                  defclass-slots)))
+                                   (:initargs
+                                    (setf defclass-slots
+                                          (mapcar (lambda (slot)
+                                                    (if (not (member :initarg slot))
+                                                        (append slot (list :initarg (intern (symbol-name (car slot)) :keyword)))
+                                                        slot))
+                                                  defclass-slots)))
+                                   (:accessors
+                                    (destructuring-bind (&key prefix suffix) (rest spec)
+                                      (setf defclass-slots
+                                            (mapcar (lambda (slot)
+                                                      (if (not (intersection slot '(:accessor :reader :writer)))
+                                                          (let ((accessor-name (car slot)))
+                                                            (when prefix
+                                                              (setf accessor-name (concat-symbols prefix accessor-name)))
+                                                            (when suffix
+                                                              (setf accessor-name (concat-symbols accessor-name suffix)))
+                                                            (append slot (list :accessor accessor-name)))
+                                                          slot))
+                                                    defclass-slots))))))))
+                    (mapc #'process-generate (cdr option)))))))
       (mapc #'process-class-option options)
 
       (if (or exports methods)
@@ -371,6 +402,45 @@ expands to:
              ,@(remove-if-not (lambda (class-option)
                                 (member (car class-option) '(:documentation :metaclass :default-initargs)))
                 options))))))
+
+(defmacro defgeneric (name args &rest options)
+  "Like DEFGENERIC but supports :export option."
+  (let ((defgeneric-options (remove :export options :key #'car))
+        (export-option (find :export options :key #'car)))
+    (if (not export-option)
+        `(cl:defgeneric ,name ,args ,@options)
+        `(progn
+           (cl:defgeneric ,name ,args ,@defgeneric-options)
+           (when ,(cadr export-option)
+             (export ',name))))))
+
+(defmacro define-condition (name direct-superclasses direct-slots &rest options)
+  "Like DEFINE-CONDITION but supports :export option."
+  (let ((define-condition-options (remove :export options :key #'car))
+        (export-option (find :export options :key #'car)))
+    (if (not export-option)
+        `(cl:define-condition ,name ,direct-superclasses ,direct-slots ,@options)
+        `(progn
+           (cl:define-condition ,name ,direct-superclasses ,direct-slots ,@define-condition-options)
+           (when ,(cadr export-option)
+             (export ',name))))))
+
+;; docs
+
+(setf (documentation 'defclass 'function)
+      "A version of DEFCLASS with some syntax extensions.
+
+Extra options in slots:
+
+- :required boolean | string - If the slots is not initialized via its :initarg, an error is signaled. If a string is given, it is used as error message.
+- :export :slot | :accessor | :reader | :writer - Specifies what parts of the slot to export. Can be a single value (i.e. :slot), or a list of values (i.e. (:slot :accessor))
+
+Extra options in class:
+- :export :class-name | :slots | :accessors | :all . Can be specified as single value, or a list of values (i.e. (:export :class-name :accessors))
+- :initialize [qualifier] (&rest initargs &body body). Generates INITIALIZE-INSTANCE method for the class. Object instance is bound to `self' variable.
+- :print (stream &key identity type). Generates PRINT-OBJECT method for the class.
+- :method name [qualifier] (&rest args). Defines a method that uses `self' as first argument and specializes it on the class.
+- :generate &rest generate-option. With generate-option ::= :initforms | :initargs | :accessors . Generates initforms, initargs or accessors in slots that do not specify one already.")
 
 #+test
 (macroexpand-1
