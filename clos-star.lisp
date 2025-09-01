@@ -11,7 +11,8 @@
 ;;; Commentary:
 ;;
 ;; Syntax extensions for CLOS.
-;; 
+;;
+;; See [clos-star.lisp](../tests/clos-star.lisp) for examples.
 
 ;;; Code:
 
