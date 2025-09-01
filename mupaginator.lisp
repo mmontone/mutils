@@ -157,7 +157,8 @@ Args:
         (if (= button (pagination-current pagination))
             (format stream "[~a]" button)
             (format stream "~a" button)))
-    (write-char #\space stream)))
+    (write-char #\space stream))
+  nil)
 
 (defun print-pagination-html (pagination
                               &key
@@ -220,7 +221,8 @@ Args:
                  :onclick (when on-click (funcall on-click (pagination-total pagination)))
                  :alt "Last"
                  (who:str (who:escape-string ">>")))))
-          )))
+          ))
+  nil)
 
 #+example
 (with-output-to-string (s)
@@ -284,7 +286,8 @@ See: https://getbootstrap.com/docs/4.1/components/pagination/"
                      :href (when href (funcall href (pagination-total pagination)))
                      :onclick (when on-click (funcall on-click (pagination-total pagination)))
                      (who:str (who:escape-string ">>"))))))
-         )))
+         ))
+  nil)
 
 (defun print-pagination-w3css (pagination
                                &key
@@ -333,7 +336,8 @@ See: https://www.w3schools.com/w3css/w3css_pagination.asp"
                  :href (when href (funcall href (pagination-total pagination)))
                  :onclick (when on-click (funcall on-click (pagination-total pagination)))
                  (who:str (who:escape-string ">>")))))
-          )))
+          ))
+  nil)
 
 (defun pagination-sample (total &rest args)
   (dotimes (x total)
