@@ -11,8 +11,7 @@
 ;;; Commentary:
 ;;
 ;; Syntax extensions for CLOS.
-;;
-;; Usage: TODO
+;; 
 
 ;;; Code:
 
@@ -24,7 +23,8 @@
   (:export #:defclass*
            #:define-condition*
            #:defgeneric*
-           #:self))
+           #:self)
+  (:documentation "Syntax extensions for CLOS."))
 
 (in-package :clos-star)
 
@@ -66,8 +66,8 @@
                  (destructuring-bind (slot-name &rest slot-options) slot-def
                    (flet ((export-slot (what)
                             (ecase what
-                              (:accessor (pushnew (getf slot-options :accessor) exports))
                               (:slot (pushnew slot-name exports))
+                              (:accessor (pushnew (getf slot-options :accessor) exports))
                               (:reader (pushnew (getf slot-options :reader) exports))
                               (:writer (pushnew (getf slot-options :writer) exports)))))
                      `(,slot-name ,@(map-plist (lambda (key val)
@@ -214,5 +214,22 @@
 
   (:initialize :after (&rest initargs)
                (call-next-method)))
+
+;; docs
+
+(setf (documentation 'defclass* 'function)
+      "A version of DEFCLASS with some syntax extensions.
+
+Extra options in slots:
+
+- :required boolean | string - If the slots is not initialized via its :initarg, an error is signaled. If a string is given, it is used as error message.
+- :export :slot | :accessor | :reader | :writer - Specifies what parts of the slot to export. Can be a single value (i.e. :slot), or a list of values (i.e. (:slot :accessor))
+
+Extra options in class:
+- :export :class-name | :slots | :accessors | :all . Can be specified as single value, or a list of values (i.e. (:export :class-name :accessors))
+- :initialize [qualifier] (&rest initargs &body body). Generates INITIALIZE-INSTANCE method for the class. Object instance is bound to `self' variable.
+- :print (stream &key identity type). Generates PRINT-OBJECT method for the class.
+- :method name [qualifier] (&rest args). Defines a method that uses `self' as first argument and specializes it on the class.
+- :generate &rest generate-option. With generate-option ::= :initforms | :initargs | :accessors . Generates initforms, initargs or accessors in slots that do not specify one already.")
 
 (provide :clos-star)
