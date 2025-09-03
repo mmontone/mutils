@@ -63,17 +63,17 @@
       (string-downcase (symbol-name function-designator))
       (gen-id)))
 
-(defun register-handler-function (function-designator &optional (place *register-place*))
+(defun register-handler-function (function-designator &key (place *register-place*) id)
   "FUNCTION-DESIGNATOR can be either a FUNCTION object or a SYMBOL.
 Returns the id of the registered FUNCTION-DESIGNATOR."
   (check-type function-designator (or symbol function))
   (check-type place register-place)
-  (let ((fid (function-designator-id function-designator)))
+  (let ((fid (or id (function-designator-id function-designator))))
     (ecase place
       (:session/global
        (if (hunchentoot:session hunchentoot:*request*)
-           (register-function function-designator :session)
-           (register-function function-designator :global)))
+           (register-handler-function function-designator :place :session :id id)
+           (register-handler-function function-designator :place :global :id id)))
       (:session
        (hunchentoot:start-session)
        (when (not (hunchentoot:session-value 'handler-functions))
@@ -102,8 +102,10 @@ Returns the id of the registered FUNCTION-DESIGNATOR."
         (hunchentoot:abort-request-handler
          "Handler not found"))))
 
-(defun handler-function-url (function-designator &optional (place *register-place*))
-  (let ((fid (register-handler-function function-designator place)))
+(defun handler-function-url (function-designator &key (place *register-place*) id)
+  (let ((fid (register-handler-function function-designator
+                                        :place place
+                                        :id id)))
     (format nil "/actions?id=~a" fid)))
 
 (hunchentoot:define-easy-handler (actions-handler :uri "/actions")
