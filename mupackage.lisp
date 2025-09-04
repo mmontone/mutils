@@ -3,7 +3,8 @@
   (:export #:define-package-mixin
            #:define-package
            #:define-read-context
-           #:with-read-contexts))
+           #:with-read-contexts
+           #:with-mixin))
 
 (in-package :mupackage)
 
@@ -12,6 +13,10 @@
 (defmacro define-package-mixin (name &rest options)
   `(setf (gethash ',name *package-mixins*)
          ',options))
+
+(defun find-package-mixin (name)
+  (or (gethash name *package-mixins*)
+      (error "Package mixin not found: ~s" name)))
 
 (defun process-option (option)
   (case (car option)
@@ -51,3 +56,15 @@
 
 (defmacro with-read-contexts (context-designators &body body)
   (car (replace-symbols (find-read-context (car context-designators)) body)))
+
+(defmacro with-mixin (name &body body)
+  (let* ((mixin (find-package-mixin name))
+         (symbols (loop for option in mixin
+                        when (eql (car option) :import-from)
+                          appending (let ((package-name (cadr option))
+                                          (symbols (cddr option)))
+                                      (mapcar (lambda (symbol)
+                                                (cons (intern (symbol-name symbol))
+                                                      (intern (symbol-name symbol) package-name)))
+                                              symbols)))))
+    (car (replace-symbols symbols body))))

@@ -9,7 +9,9 @@
 
 (define-package-mixin :my-project-sql
     (:import-from #:sxql
-                  #:where #:from))
+                  #:select
+                  #:where
+                  #:from))
 
 (define-package package-test-1
       (:use :cl)
@@ -33,5 +35,9 @@
   (where . sxql:where))
 
 (with-read-contexts (sxql)
+  (select :* (from "lala")
+    (where (:= 'x 22))))
+
+(with-mixin :my-project-sql
   (select :* (from "lala")
     (where (:= 'x 22))))
