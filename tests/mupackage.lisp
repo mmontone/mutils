@@ -21,16 +21,16 @@
    :my-project-sql))
 
 (define-read-context parenscript
-    (:macro ps parenscript:ps)
-  (:macro chain parenscript:chain))
+    (ps . parenscript:ps)
+  (chain . parenscript:chain))
 
 (with-read-contexts (parenscript)
   (ps (chain foo bar)))
 
 (define-read-context sxql
-    (:macro select sxql:select)
-  (:macro from sxql:from)
-  (:macro where sxql:where))
+    (select . sxql:select)
+  (from . sxql:from)
+  (where . sxql:where))
 
 (with-read-contexts (sxql)
   (select :* (from "lala")

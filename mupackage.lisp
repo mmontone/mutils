@@ -40,30 +40,15 @@
   (or (gethash name *read-context*)
       (error "Read context not found: ~s" name)))
 
+(defun replace-symbols (symbols form)
+  (if (atom form)
+      (let ((replacement (assoc form symbols)))
+        (if replacement
+            (cdr replacement)
+            form))
+      (mapcar (lambda (x) (replace-symbols symbols x))
+              form)))
+
 (defmacro with-read-contexts (context-designators &body body)
-  (let* ((contexts (mapcar #'find-read-context context-designators))
-         (definitions (apply #'append contexts))
-         (variables (remove-if-not (lambda (def-type)
-                                     (eql def-type :variable))
-                                   definitions
-                                   :key #'car))
-         (macros (remove-if-not (lambda (def-type)
-                                  (eql def-type :macro))
-                                definitions
-                                :key #'car))
-         (functions (remove-if-not (lambda (def-type)
-                                     (eql def-type :function))
-                                   definitions
-                                   :key #'car)))
-    `(symbol-macrolet
-         ,(loop for var in variables
-                collect (cdr var))
-       (flet
-           ,(loop for def in functions
-                  collect `(,(cadr def) (&rest args)
-                            (apply #',(caddr def) args)))
-         (macrolet
-             ,(loop for def in macros
-                    collect `(,(cadr def) (&rest args)
-                              `(,',(caddr def) ,@args)))
-           ,@body)))))
+  `(progn
+     ,@(replace-symbols (find-read-context (car context-designators)) body)))
