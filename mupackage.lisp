@@ -1,7 +1,9 @@
 (defpackage :mupackage
   (:use :cl)
   (:export #:define-package-mixin
-           #:define-package))
+           #:define-package
+           #:define-read-context
+           #:with-read-contexts))
 
 (in-package :mupackage)
 
@@ -18,6 +20,9 @@
               (when (not found-p)
                 (error "Package mixin not found: ~s" (cadr option)))
               mixin-options))
+    (:mixins (apply #'append (mapcar (lambda (mixin)
+                                       (process-option (list :mixin mixin)))
+                                     (cdr option))))
     (t (list option))))
 
 (defmacro define-package (name &rest options)
