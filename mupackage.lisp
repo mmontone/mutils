@@ -50,5 +50,4 @@
               form)))
 
 (defmacro with-read-contexts (context-designators &body body)
-  `(progn
-     ,@(replace-symbols (find-read-context (car context-designators)) body)))
+  (car (replace-symbols (find-read-context (car context-designators)) body)))
