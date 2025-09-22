@@ -276,6 +276,13 @@ expands to:
 
 ;;(concat-symbols 'foo '-bar)
 
+(defun parse-method-spec (spec)
+  (if (keywordp (second spec))
+      (destructuring-bind (name qualifier args &body body) spec
+        (values name qualifier args body))
+      (destructuring-bind (name args &body body) spec
+        (values name nil args body))))
+
 (defmacro defclass (name direct-superclasses direct-slots &rest options)
   (let ((methods (list))
         (exports (list))
