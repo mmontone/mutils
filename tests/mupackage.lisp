@@ -42,5 +42,5 @@
   (select :* (from "lala")
     (where (:= 'x 22))))
 
-(with-mixin :my-project-parencript
+(with-mixin :my-project-parenscript
   (ps (chain foo bar)))
