@@ -1,4 +1,4 @@
-(defpackage :sgml
+(defpackage :sgml-composer
   (:use :cl)
   (:export #:make-element
            #:sgml
@@ -8,7 +8,7 @@
            #:element-attributes
            #:element-children))
 
-(in-package :sgml)
+(in-package :sgml-composer)
 
 (defclass element ()
   ((tag :initarg :tag
