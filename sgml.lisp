@@ -84,3 +84,10 @@
              (:p () "bah")
              "hello"))
  nil)
+
+(write-sgml
+ (sgml (:div (:class "foo")
+             (loop for message in '("hello" "cruel" "world")
+                   collect
+                   (:p (:type message) message))))
+ nil)
