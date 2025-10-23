@@ -29,7 +29,7 @@
     (make-instance 'element
                    :tag tag
                    :attributes attributes
-                   :children children)))
+                   :children (remove nil children))))
 
 (defun transform-sgml-forms (form)
   "Forms that start with a keyword are transformed to MAKE-ELEMENT."
@@ -50,7 +50,7 @@
 (defmacro sgml (&body body)
   `(progn ,@(transform-sgml-forms body)))
 
-(defun write-sgml (element destination)
+(defun write-sgml (element &optional destination)
   (mutils-utils:with-output-to-destination (out destination)
     (if (typep element 'element)
         (let ((tag-name (string-downcase (symbol-name (element-tag element)))))
@@ -77,17 +77,22 @@
 
 (sgml (:div (:class "foo") "hello"))
 
-(write-sgml (sgml (:div (:class "foo") "hello")) nil)
+(write-sgml (sgml (:div (:class "foo") "hello")))
 
 (write-sgml
  (sgml (:div (:class "foo")
              (:p () "bah")
-             "hello"))
- nil)
+             "hello")))
 
 (write-sgml
  (sgml (:div (:class "foo")
              (loop for message in '("hello" "cruel" "world")
                    collect
-                   (:p (:type message) message))))
- nil)
+                   (:p (:type message) message)))))
+
+(write-sgml
+ (sgml (:div ()
+             (when t
+               (:span () "Yes"))
+             (when nil
+               (:span () "No")))))
