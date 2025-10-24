@@ -75,6 +75,44 @@
             (format out "</~a>" tag-name)))
         (princ element out))))
 
+(defun write-sgml-indented (element &optional destination (indent-offset 2))
+  (let ((indent-level 0))
+    (mutils-utils:with-output-to-destination (out destination)
+      (labels ((indent ()
+                 (dotimes (x indent-level)
+                   (write-char #\space out)))
+               (write-sgml-indent (element)
+                 (indent)
+                 (if (typep element 'element)
+                     (let ((tag-name (string-downcase (symbol-name (element-tag element)))))
+                       (progn
+                         (write-string "<" out)
+                         (write-string tag-name out)
+                         (when (element-attributes element)
+                           (let ((key-p t))
+                             (dolist (attribute (element-attributes element))
+                               (if key-p
+                                   (progn
+                                     (write-char #\space out)
+                                     (write-string (string-downcase (symbol-name attribute)) out)
+                                     (write-string "=\"" out))
+                                   (progn
+                                     (princ attribute out)
+                                     (write-char #\" out)))
+                               (setf key-p (not key-p)))))
+                         (write-string ">" out)
+                         (terpri out)
+                         (incf indent-level indent-offset)
+                         (dolist (child (element-children element))
+                           (write-sgml-indent child))
+                         (terpri out)
+                         (decf indent-level indent-offset)
+                         (indent)
+                         (format out "</~a>" tag-name)
+                         ))
+                     (princ element out))))
+        (write-sgml-indent element)))))
+
 (sgml (:div (:class "foo") "hello"))
 
 (write-sgml (sgml (:div (:class "foo") "hello")))
@@ -96,3 +134,10 @@
                (:span () "Yes"))
              (when nil
                (:span () "No")))))
+
+(write-sgml-indented
+ (sgml (:div (:class "foo")
+             (loop for message in '("hello" "cruel" "world")
+                   collect
+                   (:p (:type message) message))))
+ *standard-output*)
