@@ -109,6 +109,7 @@
                          (decf indent-level indent-offset)
                          (indent)
                          (format out "</~a>" tag-name)
+                         (terpri out)
                          ))
                      (princ element out))))
         (write-sgml-indent element)))))

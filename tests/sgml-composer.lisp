@@ -1,3 +1,5 @@
+(in-package :sgml-composer)
+
 (sgml (:div (:class "foo") "hello"))
 
 (write-sgml (sgml (:div (:class "foo") "hello")))
