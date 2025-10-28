@@ -6,7 +6,9 @@
            #:element
            #:element-tag
            #:element-attributes
-           #:element-children))
+           #:element-children
+           #:write-sgml
+           #:write-sgml-indented))
 
 (in-package :sgml-composer)
 
