@@ -176,6 +176,7 @@ its long description/comment with instructions of usage, etc.
 * [mu-lambda-list](docs/mu-lambda-list.md) - Lambda lists with destructuring and ignorable arguments.
 * [mucl](docs/mucl.md) - Upgraded versions of CL definitions with destructuring and ignorable arguments at binding position.
 * [mulet](docs/mulet.md) - Let* with destructruing and multiple value bind.
+* [mupackage](docs/mupackage.md) - Packages extensions.
 * [mupaginator](docs/mupaginator.md) - A helper package for pagination of collections.
 * [muprotocols](docs/muprotocols.md) - An implementation of protocols that plays nicely with Common Lisp type system.
 * [mutils-docs](docs/mutils-docs.md) - Documentation generator for mutils.
@@ -184,5 +185,6 @@ its long description/comment with instructions of usage, etc.
 * [plump-xpath](docs/plump-xpath.md) - xpath extension for plump.
 * [princ-ut-interval](docs/princ-ut-interval.md) - Print UNIVERSAL-TIME intervals.
 * [quicksearch](docs/quicksearch.md) - Search Engine Interface for Common Lisp.
+* [sgml-composer](docs/sgml-composer.md) - A DSL for composing SGML.
 * [type-annotations](docs/type-annotations.md) - Support for inline type annotations.
 * [who-templates](docs/who-templates.md) - Templating system with CL-WHO. Supports inheritance.

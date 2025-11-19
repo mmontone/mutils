@@ -145,7 +145,3 @@ Like PRINT-PAGINATION-HTML, but for W3CSS framework.
 See: [https://www.w3schools.com/w3css/w3css_pagination.asp](https://www.w3schools.com/w3css/w3css_pagination.asp)
 ## Classes
 ### pagination
-SOURCE is either a function designator or a sequence.
-When source is a function designator, then it is called with a page number
-and is expected to return two values: the items of that page, and the total number of items
-

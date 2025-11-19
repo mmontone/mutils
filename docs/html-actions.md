@@ -38,14 +38,14 @@ Dynamically register functions as HTTP handlers.
 ### handler-function-url
 
 ```lisp
-(function-designator &optional (place *register-place*))
+(function-designator &key (place *register-place*) id)
 ```
 
 
 ### register-handler-function
 
 ```lisp
-(function-designator &optional (place *register-place*))
+(function-designator &key (place *register-place*) id)
 ```
 
 FUNCTION-DESIGNATOR can be either a FUNCTION object or a SYMBOL.

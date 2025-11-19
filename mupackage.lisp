@@ -1,3 +1,21 @@
+;;; mupackage --- Packages extensions.
+
+;; Copyright (C) 2023 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
+;; Author: Mariano Montone <marianomontone@gmail.com>
+;; Version: 0.1
+;; Requires: mutils-utils
+
+;;; Commentary:
+
+;; Package extensions. WIP.
+
+;;; Code:
+
+
 (defpackage :mupackage
   (:use :cl)
   (:export #:define-package-mixin
@@ -68,3 +86,5 @@
                                                       (intern (symbol-name symbol) package-name)))
                                               symbols)))))
     (car (replace-symbols symbols body))))
+
+(provide :mupackage)

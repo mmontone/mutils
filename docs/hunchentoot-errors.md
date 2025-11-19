@@ -52,18 +52,6 @@ Augments Hunchentoot error pages and logs with request and session information.
 
 
 
-## Functions
-### http-error
-
-```lisp
-(http-error &optional result)
-```
-
-Abort current handler and signal HTTP error HTTP-ERROR.
-
-
-
-HTTP-ERROR should be an HTTP status code (integer).
 ## Classes
 ### errors-acceptor
 Subclasses of this acceptor augment Hunchentoot error pages and logs with request and session information.
