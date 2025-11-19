@@ -1,3 +1,41 @@
+;;; sgml-composer --- A DSL for composing SGML.
+
+;; Copyright (C) 2023 Mariano Montone. All rights reserved.
+
+;; This work is licensed under the terms of the MIT license.
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+
+;; Author: Mariano Montone <marianomontone@gmail.com>
+;; Version: 0.1
+;; Requires: mutils-utils
+
+;;; Commentary:
+
+;; A DSL for composing SGML.
+
+;; Usage:
+
+;; Use SGML macro to create pieces of SGML:
+;; ```lisp
+;; (sgml (:a (:href "codeberg.org") "Hello world"))
+;; ```
+;; Then write them to a string, either indented or not:
+;; ```
+;; (defparameter +link+ (sgml (:a (:href "codeberg.org") "Hello world")))
+;; (write-sgml +link+) ;; => "<a href=\"codeberg.org\">Hello world</a>"
+;; ```
+;;
+;; Pieces of sgml can be composed:
+;;
+;; ```lisp
+;; (defparameter +items+ (loop for i from 1 to 5 collect (sgml (:li () i))))
+;; (write-sgml (sgml (:ul () +items+))) ;; => "<ul><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li></ul>"
+;; ```
+
+;;; Code:
+
+(require :mutils-utils)
+
 (defpackage :sgml-composer
   (:use :cl)
   (:export #:make-element
@@ -115,3 +153,5 @@
                          ))
                      (princ element out))))
         (write-sgml-indent element)))))
+
+(provide :sgml-composer)
