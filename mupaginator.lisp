@@ -46,6 +46,7 @@
    #:pagination-next
    #:pagination-prev
    #:pagination-total
+   #:pagination-page-size
    ;; printing
    #:print-pagination
    #:print-pagination-html
