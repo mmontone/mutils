@@ -25,6 +25,17 @@ Get the descriptive message of CONDITION.
 
 
 
+### vbreak
+
+```lisp
+(value)
+```
+
+Break on VALUE. Returns VALUE as result.
+
+
+
+
 ## Macros
 ### condp
 
@@ -138,4 +149,8 @@ Setup a RETRY restart for evaluating BODY.
 
 
 
+
+## Variables
+### \*vbreak\*
+Toggle value break
 

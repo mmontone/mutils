@@ -43,14 +43,20 @@ A DSL for composing SGML.
 ### write-sgml
 
 ```lisp
-(element &optional destination)
+(element &key destination indentation-offset)
 ```
+
+Write SGML ELEMENT to DESTINATION using INDENTATION-OFFSET.
+If INDENTATION-OFFSET is given, then the output is indented using that offset.
+Otherwise, SGML is written without any indentation.
+
+
 
 
 ### write-sgml-indented
 
 ```lisp
-(element &optional destination (indent-offset 2))
+(element out indentation-offset)
 ```
 
 

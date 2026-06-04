@@ -23,7 +23,9 @@
    #:with-auto-gensym
    #:with-retry-restart
    #:condition-message
-   #:with-accessors*))
+   #:with-accessors*
+   #:vbreak
+   #:*vbreak*))
 
 (in-package :mutils-utils)
 
@@ -188,5 +190,14 @@ Macroexpansion of `(auto-gensym-test 44)`:
                                          binding))
        ,instance
      ,@body))
+
+(defvar *vbreak* t
+  "Toggle value break")
+
+(defun vbreak (value)
+  "Break on VALUE. Returns VALUE as result."
+  (when *vbreak*
+    (break "~s" value))
+  value)
 
 (provide :mutils-utils)

@@ -45,8 +45,7 @@
            #:element-tag
            #:element-attributes
            #:element-children
-           #:write-sgml
-           #:write-sgml-indented))
+           #:write-sgml))
 
 (in-package :sgml-composer)
 
@@ -90,68 +89,75 @@
 (defmacro sgml (&body body)
   `(progn ,@(transform-sgml-forms body)))
 
-(defun write-sgml (element &optional destination)
-  (mutils-utils:with-output-to-destination (out destination)
-    (if (typep element 'element)
-        (let ((tag-name (string-downcase (symbol-name (element-tag element)))))
-          (progn
-            (write-string "<" out)
-            (write-string tag-name out)
-            (when (element-attributes element)
-              (let ((key-p t))
-                (dolist (attribute (element-attributes element))
-                  (if key-p
-                      (progn
-                        (write-char #\space out)
-                        (write-string (string-downcase (symbol-name attribute)) out)
-                        (write-string "=\"" out))
-                      (progn
-                        (princ attribute out)
-                        (write-char #\" out)))
-                  (setf key-p (not key-p)))))
-            (write-string ">" out)
-            (dolist (child (element-children element))
-              (write-sgml child out))
-            (format out "</~a>" tag-name)))
-        (princ element out))))
+(defun write-sgml-unindented (element out)
+  (if (typep element 'element)
+      (let ((tag-name (string-downcase (symbol-name (element-tag element)))))
+        (progn
+          (write-string "<" out)
+          (write-string tag-name out)
+          (when (element-attributes element)
+            (let ((key-p t))
+              (dolist (attribute (element-attributes element))
+                (if key-p
+                    (progn
+                      (write-char #\space out)
+                      (write-string (string-downcase (symbol-name attribute)) out)
+                      (write-string "=\"" out))
+                    (progn
+                      (princ attribute out)
+                      (write-char #\" out)))
+                (setf key-p (not key-p)))))
+          (write-string ">" out)
+          (dolist (child (element-children element))
+            (write-sgml child out))
+          (format out "</~a>" tag-name)))
+      (princ element out)))
 
-(defun write-sgml-indented (element &optional destination (indent-offset 2))
+(defun write-sgml-indented (element out indentation-offset)
   (let ((indent-level 0))
-    (mutils-utils:with-output-to-destination (out destination)
-      (labels ((indent ()
-                 (dotimes (x indent-level)
-                   (write-char #\space out)))
-               (write-sgml-indent (element)
-                 (indent)
-                 (if (typep element 'element)
-                     (let ((tag-name (string-downcase (symbol-name (element-tag element)))))
-                       (progn
-                         (write-string "<" out)
-                         (write-string tag-name out)
-                         (when (element-attributes element)
-                           (let ((key-p t))
-                             (dolist (attribute (element-attributes element))
-                               (if key-p
-                                   (progn
-                                     (write-char #\space out)
-                                     (write-string (string-downcase (symbol-name attribute)) out)
-                                     (write-string "=\"" out))
-                                   (progn
-                                     (princ attribute out)
-                                     (write-char #\" out)))
-                               (setf key-p (not key-p)))))
-                         (write-string ">" out)
-                         (terpri out)
-                         (incf indent-level indent-offset)
-                         (dolist (child (element-children element))
-                           (write-sgml-indent child))
-                         (terpri out)
-                         (decf indent-level indent-offset)
-                         (indent)
-                         (format out "</~a>" tag-name)
-                         (terpri out)
-                         ))
-                     (princ element out))))
-        (write-sgml-indent element)))))
+    (labels ((indent ()
+               (dotimes (x indent-level)
+                 (write-char #\space out)))
+             (write-sgml-indent (element)
+               (indent)
+               (if (typep element 'element)
+                   (let ((tag-name (string-downcase (symbol-name (element-tag element)))))
+                     (progn
+                       (write-string "<" out)
+                       (write-string tag-name out)
+                       (when (element-attributes element)
+                         (let ((key-p t))
+                           (dolist (attribute (element-attributes element))
+                             (if key-p
+                                 (progn
+                                   (write-char #\space out)
+                                   (write-string (string-downcase (symbol-name attribute)) out)
+                                   (write-string "=\"" out))
+                                 (progn
+                                   (princ attribute out)
+                                   (write-char #\" out)))
+                             (setf key-p (not key-p)))))
+                       (write-string ">" out)
+                       (terpri out)
+                       (incf indent-level indentation-offset)
+                       (dolist (child (element-children element))
+                         (write-sgml-indent child))
+                       (terpri out)
+                       (decf indent-level indentation-offset)
+                       (indent)
+                       (format out "</~a>" tag-name)
+                       (terpri out)
+                       ))
+                   (princ element out))))
+      (write-sgml-indent element))))
+
+(defun write-sgml (element &key destination indentation-offset)
+  "Write SGML ELEMENT to DESTINATION using INDENTATION-OFFSET.
+If INDENTATION-OFFSET is given, then the output is indented using that offset.
+Otherwise, SGML is written without any indentation."
+  (mutils-utils:with-output-to-destination (out destination)
+    (if indentation-offset
+        (write-sgml-indented element out indentation-offset)
+        (write-sgml-unindented element out))))
 
 (provide :sgml-composer)
