@@ -109,7 +109,7 @@
                 (setf key-p (not key-p)))))
           (write-string ">" out)
           (dolist (child (element-children element))
-            (write-sgml child out))
+            (write-sgml-unindented child out))
           (format out "</~a>" tag-name)))
       (princ element out)))
 
