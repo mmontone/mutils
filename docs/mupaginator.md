@@ -74,6 +74,20 @@ Returns PAGINATION current page items and total pages.
 ```
 
 
+### pagination-page-size
+
+```lisp
+(sb-kernel:instance)
+```
+
+
+### (setf pagination-page-size)
+
+```lisp
+(sb-kernel::value sb-kernel:instance)
+```
+
+
 ### pagination-prev
 
 ```lisp

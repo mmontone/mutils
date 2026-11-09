@@ -157,6 +157,7 @@ its long description/comment with instructions of usage, etc.
 
 * [asdf-bundler](docs/asdf-bundler.md) - A module for copying all ASDF system dependencies to a directory.
 * [asdf-local](docs/asdf-local.md) - A module for treating local systems compilation differently from third party systems.
+* [cl-store-ext](docs/cl-store-ext.md) - Extensible cl-store backend.
 * [clhs-linker](docs/clhs-linker.md) - Replace Lisp terms in a file by hyperlinks to Common Lisp HyperSpec.
 * [clos-star](docs/clos-star.md) - Syntax extensions for CLOS.
 * [compiler-hooks](docs/compiler-hooks.md) - Provides hooks for Common Lisp compilation api.
