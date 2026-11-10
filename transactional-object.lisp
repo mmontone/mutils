@@ -135,7 +135,7 @@ Returns the value, and a boolean indicating if the value was found."
     (rollback-transaction transaction)))
 
 (defun begin (&optional (transaction-class 'transaction))
-  (push (make-instance transaction-class) *transactions*))
+  (car (push (make-instance transaction-class) *transactions*)))
 
 (defun call-with-transaction (func &optional (transaction-class 'transaction))
   (let ((*transactions* (cons (make-instance transaction-class)
@@ -146,67 +146,3 @@ Returns the value, and a boolean indicating if the value was found."
   (if transaction-class
       `(call-with-transaction (lambda () ,@body) ',transaction-class)
       `(call-with-transaction (lambda () ,@body))))
-
-;; test
-
-(defclass my-obj ()
-  ((x :initarg :x)
-   (y :initarg :y))
-  (:metaclass transactional-class))
-
-(let ((obj (make-instance 'my-obj :x 1 :y 2)))
-  (with-output-to-string (*standard-output*)
-    (with-transaction ()
-      (setf (slot-value *o1* 'x) 3)
-      (write (slot-value *o1* 'x)))
-    (write (slot-value *o1* 'x))))
-
-(with-transaction ()
-  (setf (slot-value *o1* 'x) 3)
-  (print (slot-value *o1* 'x))
-  (commit))
-
-(slot-value *o1* 'x)
-
-(with-transaction ()
-  (setf (slot-value *o1* 'x) 3)
-  (print (slot-value *o1* 'x))
-  (rollback)
-  (print (slot-value *o1* 'x)))
-
-;; nested transactions
-
-(let ((obj (make-instance 'my-obj :x 1 :y 2)))
-  (with-output-to-string (*standard-output*)
-    (with-transaction ()
-      (setf (slot-value obj 'x) 4)
-      (with-transaction ()
-        (setf (slot-value obj 'x) 3)
-        (write (slot-value obj 'x))
-        (rollback))
-      (write (slot-value obj 'x))
-      (commit))
-    (write (slot-value obj 'x))))
-
-;; bind current transaction in callbacks
-
-(let ((obj (make-instance 'my-obj :x 1 :y 2))
-      callback
-      transactions)
-  (begin)
-  ;; bind transactions lexically to restore in callbacks
-  (let ((transactions *transactions*))
-    (setf callback
-          (lambda ()
-            ;; restore transactions
-            (let ((*transactions* transactions))
-              (incf (slot-value obj 'x))
-              (print (slot-value obj 'x))))))
-  (funcall callback)
-  ;; simulate other transaction ocurr in the meantime
-  (setf *transactions* nil)
-
-  ;; call callbacks with transaction restored
-  (funcall callback)
-  (funcall callback)
-  (slot-value obj 'x))
