@@ -37,6 +37,8 @@
 ;;     (dflet ((foo (x) (1+ x)))
 ;;        (bar)) ;; => 2
 ;;     (bar) ;; => 1
+;;
+;;; Code:
 
 (defpackage :dynamic-functions
   (:use :cl)
@@ -78,3 +80,5 @@
          ;; restore the dynamic context from the lexical variable
          (let ((*dynfun-context* ,dynfun-context))
            ,@body)))))
+
+(provide :dynamic-functions)

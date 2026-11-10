@@ -1,3 +1,18 @@
+;;; transactional-object --- Memory transactions for CLOS objects.
+;;
+;; Copyright (C) 2026 Mariano Montone. All rights reserved.
+;;
+;; This work is licensed under the terms of the MIT license.
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+;;
+;; Author: Mariano Montone
+;; Version: 0.1
+;; Requires: closer-mop
+;;; Commentary:
+;; TODO
+;; 
+;;; Code:
+
 (require :closer-mop)
 
 (defpackage :transactional-object
@@ -146,3 +161,5 @@ Returns the value, and a boolean indicating if the value was found."
   (if transaction-class
       `(call-with-transaction (lambda () ,@body) ',transaction-class)
       `(call-with-transaction (lambda () ,@body))))
+
+(provide :transactional-object)

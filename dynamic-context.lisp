@@ -1,3 +1,20 @@
+;;; dynamic-context --- Dynamic bindings without the need of defining new dynamic variables.
+;;
+;; Copyright (C) 2026 Mariano Montone. All rights reserved.
+;;
+;; This work is licensed under the terms of the MIT license.
+;; For a copy, see <https://opensource.org/licenses/MIT>.
+;;
+;; Author: Mariano Montone
+;; Version: 0.1
+;;
+;;; Commentary:
+;;
+;; Dynamic bindings without the need of defining new dynamic variables.
+;; Dynamic bindings are bound to the context without declaration.
+;;
+;;; Code:
+
 (defpackage :dynamic-context
   (:use :cl)
   (:export #:*context*
@@ -8,9 +25,6 @@
            #:with-context-bindings))
 
 (in-package :dynamic-context)
-
-;; dynamic bindings without the need of creating new dynamic variables
-;; dynamic bindings are bound to the context without declaration
 
 (defvar *context* nil)
 
@@ -49,3 +63,5 @@
 ;;     (bar-context)))
 
 ;; (foo-context)
+
+(provide :dynamic-context)

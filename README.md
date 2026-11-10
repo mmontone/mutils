@@ -165,6 +165,8 @@ its long description/comment with instructions of usage, etc.
 * [debug-print](docs/debug-print.md) - A reader macro package for debug printing.
 * [def-properties](docs/def-properties.md) - Portable extractor of information from Common Lisp definitions.
 * [directory-module-loader](docs/directory-module-loader.md) - Loader of Lisp module files from directories.
+* [dynamic-context](docs/dynamic-context.md) - Dynamic bindings without the need of defining new dynamic variables.
+* [dynamic-functions](docs/dynamic-functions.md) - Implementation of functions dynamically bound.
 * [estimated-time-progress](docs/estimated-time-progress.md) - Progress display with estimated time.
 * [extended-trace](docs/extended-trace.md) - A TRACE replacement with some extra report options.
 * [html-actions](docs/html-actions.md) - Dynamically register functions as HTTP handlers.
@@ -187,5 +189,6 @@ its long description/comment with instructions of usage, etc.
 * [princ-ut-interval](docs/princ-ut-interval.md) - Print UNIVERSAL-TIME intervals.
 * [quicksearch](docs/quicksearch.md) - Search Engine Interface for Common Lisp.
 * [sgml-composer](docs/sgml-composer.md) - A DSL for composing SGML.
+* [transactional-object](docs/transactional-object.md) - Memory transactions for CLOS objects.
 * [type-annotations](docs/type-annotations.md) - Support for inline type annotations.
 * [who-templates](docs/who-templates.md) - Templating system with CL-WHO. Supports inheritance.

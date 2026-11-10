@@ -53,13 +53,6 @@ Otherwise, SGML is written without any indentation.
 
 
 
-### write-sgml-indented
-
-```lisp
-(element out indentation-offset)
-```
-
-
 ## Macros
 ### sgml
 
