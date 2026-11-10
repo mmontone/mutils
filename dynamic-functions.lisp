@@ -36,6 +36,7 @@
 ;;     (bar) ;; => 1
 ;;     (dflet ((foo (x) (1+ x)))
 ;;        (bar)) ;; => 2
+;;     (bar) ;; => 1
 
 (defpackage :dynamic-functions
   (:use :cl)
