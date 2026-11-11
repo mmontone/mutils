@@ -8,9 +8,14 @@
 ;; Author: Mariano Montone
 ;; Version: 0.1
 ;; Requires: closer-mop
+;;
 ;;; Commentary:
-;; TODO
-;; 
+;;
+;; A simple implementation of memory transactions for CLOS objects.
+;; Slot access is intercepted and values are stored and retrieved
+;; from the current dynamically bound transaction.
+;; There's no support for versioning and concurrency. For that see the project: https://github.com/mmontone/transactional-object
+;;
 ;;; Code:
 
 (require :closer-mop)
@@ -30,10 +35,13 @@
            #:commit-transaction
            #:begin
            #:rollback
-           #:rollback-transaction))
+           #:rollback-transaction
+           #:*autocommit*))
 
 (in-package :transactional-object)
 
+(defvar *autocommit* nil)
+(setf (documentation '*autocommit* 'variable) "When enabled, the transaction is commited when the scope of a transaction ends.")
 (defvar *transactions* nil)
 (setf (documentation '*transactions* 'variable) "A list of current transactions")
 
@@ -155,7 +163,11 @@ Returns the value, and a boolean indicating if the value was found."
 (defun call-with-transaction (func &optional (transaction-class 'transaction))
   (let ((*transactions* (cons (make-instance transaction-class)
                               *transactions*)))
-    (funcall func)))
+    (unwind-protect
+         (progn
+           (funcall func)
+           (when *autocommit* (commit)))
+      (when *autocommit* (rollback)))))
 
 (defmacro with-transaction ((&optional transaction-class) &body body)
   (if transaction-class
