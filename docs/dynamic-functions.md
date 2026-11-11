@@ -38,7 +38,27 @@ Implementation of functions dynamically bound.
 
 
 
+## Functions
+### convert-to-dynfun
+
+```lisp
+(fname)
+```
+
+Convert the already defined function named FNAME to a dynamic function.
+
+
+
+
 ## Macros
+### defdynfun
+
+```lisp
+(fname args &body body)
+```
+
+
+
 ### dflambda
 
 ```lisp

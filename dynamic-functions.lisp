@@ -42,11 +42,12 @@
 
 (defpackage :dynamic-functions
   (:use :cl)
-  (:export #:define-dynfun
+  (:export #:defdynfun
            #:with-dynfun-context
            #:*dynfun-context*
            #:dflet
-           #:dflambda)
+           #:dflambda
+           #:convert-to-dynfun)
   (:documentation "Dynamic functions"))
 
 (in-package :dynamic-functions)
@@ -80,5 +81,15 @@
          ;; restore the dynamic context from the lexical variable
          (let ((*dynfun-context* ,dynfun-context))
            ,@body)))))
+
+(defun convert-to-dynfun (fname)
+  "Convert the already defined function named FNAME to a dynamic function."
+  (let ((original-fun (symbol-function fname)))
+    (flet ((dynfun (&rest args)
+             (let ((fun (cdr (assoc fname *dynfun-context*))))
+               (if fun
+                   (apply fun args)
+                   (apply original-fun args)))))
+      (setf (symbol-function fname) #'dynfun))))
 
 (provide :dynamic-functions)
