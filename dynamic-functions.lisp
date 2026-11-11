@@ -55,6 +55,7 @@
 (defvar *dynfun-context* nil)
 
 (defmacro defdynfun (fname args &body body)
+  "Define a dynamic function."
   `(defun ,fname ,args
      (let ((fun (cdr (assoc ',fname *dynfun-context*))))
        (flet ((default-fun ()
@@ -64,6 +65,7 @@
              (default-fun))))))
 
 (defmacro dflet (fbindings &body body)
+  "Bind dynamic functions and evaluate BODY in the scope."
   `(let ((*dynfun-context* (list*
                             ,@(mapcar (lambda (fbinding)
                                         (destructuring-bind (fname args &body body) fbinding
@@ -74,6 +76,7 @@
      ,@body))
 
 (defmacro dflambda (args &body body)
+  "Lambda that binds the current dynamic function environment."
   (alexandria:with-unique-names (dynfun-context)
     ;; bind current dynamic context to a lexical variable so that we can restore it from inside the lambda
     `(let ((,dynfun-context *dynfun-context*))

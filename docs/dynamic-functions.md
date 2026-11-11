@@ -57,6 +57,10 @@ Convert the already defined function named FNAME to a dynamic function.
 (fname args &body body)
 ```
 
+Define a dynamic function.
+
+
+
 
 
 ### dflambda
@@ -65,6 +69,10 @@ Convert the already defined function named FNAME to a dynamic function.
 (args &body body)
 ```
 
+Lambda that binds the current dynamic function environment.
+
+
+
 
 
 ### dflet
@@ -72,6 +80,10 @@ Convert the already defined function named FNAME to a dynamic function.
 ```lisp
 (fbindings &body body)
 ```
+
+Bind dynamic functions and evaluate BODY in the scope.
+
+
 
 
 
