@@ -62,8 +62,10 @@
   t)
 
 (defun current-transaction ()
+  "Returns the current active transaction."
   (first *transactions*))
 
+;; transactions api
 (defun get-transaction-value (transaction object slot-name)
   (let ((slot-value-table (gethash object (transaction-values transaction))))
     (when slot-value-table
@@ -89,7 +91,8 @@ Returns the value, and a boolean indicating if the value was found."
 ;; transactional class
 
 (defclass transactional-class (standard-class)
-  ())
+  ()
+  (:documentation "Metaclass for classes which instances can be part of transactions."))
 
 (defmethod closer-mop:validate-superclass ((class transactional-class)
                                            (superclass standard-class))
@@ -136,6 +139,7 @@ Returns the value, and a boolean indicating if the value was found."
     (pop-transaction transaction)))
 
 (defun commit-transaction (transaction)
+  "Commit TRANSACTION."
   ;; ensure TRANSACTION is not in the list of transactions
   (assert (not (member transaction *transactions*)))
   (maphash (lambda (object slots-values)
@@ -145,23 +149,29 @@ Returns the value, and a boolean indicating if the value was found."
            (transaction-values transaction)))
 
 (defun rollback-transaction (transaction)
+  "Rollback TRANSACTION."
   (assert (not (member transaction *transactions*)))
   (setf (transaction-values transaction) (make-hash-table)))
 
 (defun commit ()
+  "Commit current transaction."
   (assert (not (null *transactions*)))
   (let ((transaction (pop *transactions*)))
     (commit-transaction transaction)))
 
 (defun rollback ()
+  "Rollback current transaction."
   (assert (not (null *transactions*)))
   (let ((transaction (pop *transactions*)))
     (rollback-transaction transaction)))
 
 (defun begin (&optional (transaction-class 'transaction))
+  "Create a new transaction and make it active.
+Returns the created transaction."
   (car (push (make-instance transaction-class) *transactions*)))
 
 (defun call-with-transaction (func &optional (transaction-class 'transaction))
+  "Create a new transaction and call FUNC with that transaction as current."
   (let ((*transactions* (cons (make-instance transaction-class)
                               *transactions*)))
     (unwind-protect
@@ -171,6 +181,7 @@ Returns the value, and a boolean indicating if the value was found."
       (when *autocommit* (rollback)))))
 
 (defmacro with-transaction ((&optional transaction-class) &body body)
+  "Create a transaction and evaluate BODY with that transaction as current."
   (if transaction-class
       `(call-with-transaction (lambda () ,@body) ',transaction-class)
       `(call-with-transaction (lambda () ,@body))))

@@ -24,12 +24,21 @@ Memory transactions for CLOS objects.
 (&optional (transaction-class 'transaction))
 ```
 
+Create a new transaction and make it active.
+Returns the created transaction.
+
+
+
 
 ### call-with-transaction
 
 ```lisp
 (func &optional (transaction-class 'transaction))
 ```
+
+Create a new transaction and call FUNC with that transaction as current.
+
+
 
 
 ### commit
@@ -38,12 +47,20 @@ Memory transactions for CLOS objects.
 ()
 ```
 
+Commit current transaction.
+
+
+
 
 ### commit-transaction
 
 ```lisp
 (transaction)
 ```
+
+Commit TRANSACTION.
+
+
 
 
 ### current-transaction
@@ -52,12 +69,20 @@ Memory transactions for CLOS objects.
 ()
 ```
 
+Returns the current active transaction.
+
+
+
 
 ### rollback
 
 ```lisp
 ()
 ```
+
+Rollback current transaction.
+
+
 
 
 ### rollback-transaction
@@ -66,6 +91,10 @@ Memory transactions for CLOS objects.
 (transaction)
 ```
 
+Rollback TRANSACTION.
+
+
+
 
 ## Macros
 ### with-transaction
@@ -73,6 +102,10 @@ Memory transactions for CLOS objects.
 ```lisp
 ((&optional transaction-class) &body body)
 ```
+
+Create a transaction and evaluate BODY with that transaction as current.
+
+
 
 
 
@@ -99,6 +132,8 @@ A list of current transactions
 ## Classes
 ### transaction
 ### transactional-class
+Metaclass for classes which instances can be part of transactions.
+
 ### transactional-object
 Changes of a transactional object are placed in the current transaction.
 
