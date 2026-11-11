@@ -15,6 +15,7 @@
 ;; Slot access is intercepted and values are stored and retrieved
 ;; from the current dynamically bound transaction.
 ;; There's no support for versioning and concurrency. For that see the project: https://github.com/mmontone/transactional-object
+;; This library can be useful for implementing the editing of object from a user interface with save and cancel buttons, without having to copy data between objects. Start a transaction when the editing start, commit the transaction on save, or rollback on cancel.
 ;;
 ;;; Code:
 

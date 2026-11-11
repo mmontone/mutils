@@ -21,6 +21,13 @@ Dynamic bindings without the need of defining new dynamic variables.
 ```
 
 
+### get-context\*
+
+```lisp
+(name &optional default)
+```
+
+
 ## Macros
 ### get-context
 

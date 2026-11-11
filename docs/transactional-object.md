@@ -8,8 +8,13 @@ Memory transactions for CLOS objects.
 - **Version**: 0.1
 - **Requires**: closer-mop
 
- TODO
- 
+
+ A simple implementation of memory transactions for CLOS objects.
+ Slot access is intercepted and values are stored and retrieved
+ from the current dynamically bound transaction.
+ There's no support for versioning and concurrency. For that see the project: https://github.com/mmontone/transactional-object
+ This library can be useful for implementing the editing of object from a user interface with save and cancel buttons, without having to copy data between objects. Start a transaction when the editing start, commit the transaction on save, or rollback on cancel.
+
 
 
 ## Functions
@@ -85,6 +90,9 @@ A hash table with modified objects as keys and slot values as values.
 A hash table with modified objects as keys and slot values as values.
 
 ## Variables
+### \*autocommit\*
+When enabled, the transaction is commited when the scope of a transaction ends.
+
 ### \*transactions\*
 A list of current transactions
 
