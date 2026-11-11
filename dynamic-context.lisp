@@ -22,6 +22,7 @@
            #:with-context
            #:let-context
            #:get-context
+           #:get-context*
            #:with-context-bindings))
 
 (in-package :dynamic-context)
@@ -48,6 +49,12 @@
      (if binding
          (cdr binding)
          ,default)))
+
+(defun get-context* (name &optional default)
+  (let ((binding (assoc name *context*)))
+    (if binding
+        (cdr binding)
+        default)))
 
 (defmacro with-context-bindings (bindings &body body)
   `(let ,(mapcar (lambda (binding)
