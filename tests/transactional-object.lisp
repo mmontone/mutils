@@ -74,3 +74,19 @@
       (funcall callback)
       (commit-transaction transaction)
       (is (= (slot-value obj 'x) 4)))))
+
+(def-test autocommit-test ()
+  (let ((obj (make-instance 'my-obj :x 1 :y 2))
+        (*autocommit* t))
+    (with-transaction ()
+      (setf (slot-value obj 'x) 4)
+      (block nil
+        (with-transaction ()
+          (setf (slot-value obj 'x) 3)
+          (is (= (slot-value obj 'x) 3))
+          (return) ;; rollback here
+          )
+        (is (= (slot-value obj 'x) 4))
+        ;; commit here
+        )
+      (is (= (slot-value obj 'x) 4)))))

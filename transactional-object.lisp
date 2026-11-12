@@ -116,9 +116,8 @@ Returns the value, and a boolean indicating if the value was found."
       ;; otherwise
       (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class transactional-class)
-                                                     (instance standard-object)
-                                                     slot-def)
+(defmethod (setf closer-mop:slot-value-using-class)
+    (new-value (class transactional-class) (instance standard-object) slot-def)
   "Set the slot value in the transaction."
   (if (transactional-slot-p instance (closer-mop:slot-definition-name slot-def))
       ;; a transactional slot is trying to be modified
