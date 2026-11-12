@@ -52,6 +52,7 @@
            :documentation "A hash table with modified objects as keys and slot values as values.")
    (status :initform :new
            :accessor transaction-status
+           :type (member :new :commited :failed :rolledback)
            :documentation "The transaction status. May be :new, :commited, :failed, etc")))
 
 (defclass transactional-object ()
@@ -146,12 +147,14 @@ Returns the value, and a boolean indicating if the value was found."
              (maphash (lambda (slot-name slot-value)
                         (setf (slot-value object slot-name) slot-value))
                       slots-values))
-           (transaction-values transaction)))
+           (transaction-values transaction))
+  (setf (transaction-status transaction) :commited))
 
 (defun rollback-transaction (transaction)
   "Rollback TRANSACTION."
   (assert (not (member transaction *transactions*)))
-  (setf (transaction-values transaction) (make-hash-table)))
+  (setf (transaction-values transaction) (make-hash-table))
+  (setf (transaction-status transaction) :rolledback))
 
 (defun commit ()
   "Commit current transaction."
@@ -172,13 +175,15 @@ Returns the created transaction."
 
 (defun call-with-transaction (func &optional (transaction-class 'transaction))
   "Create a new transaction and call FUNC with that transaction as current."
-  (let ((*transactions* (cons (make-instance transaction-class)
-                              *transactions*)))
+  (let* ((transaction (make-instance transaction-class))
+         (*transactions* (cons transaction *transactions*)))
     (unwind-protect
          (progn
            (funcall func)
            (when *autocommit* (commit)))
-      (when *autocommit* (rollback)))))
+      (when (and *autocommit*
+                 (eql (transaction-status transaction) :new)) ;; not commited or rolledbacked already
+        (rollback)))))
 
 (defmacro with-transaction ((&optional transaction-class) &body body)
   "Create a transaction and evaluate BODY with that transaction as current."
