@@ -45,9 +45,15 @@
            #:element-tag
            #:element-attributes
            #:element-children
-           #:write-sgml))
+           #:write-sgml
+           #:as-sgml))
 
 (in-package :sgml-composer)
+
+(defgeneric as-sgml (object)
+  (:documentation "Return the SGML representation of OBJECT.")
+  (:method (object)
+    object))
 
 (defclass element ()
   ((tag :initarg :tag
@@ -68,7 +74,8 @@
     (make-instance 'element
                    :tag tag
                    :attributes attributes
-                   :children (remove nil children))))
+                   :children
+                   (mapcar #'as-sgml (remove nil children)))))
 
 (defun transform-sgml-forms (form)
   "Forms that start with a keyword are transformed to MAKE-ELEMENT."

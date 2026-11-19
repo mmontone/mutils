@@ -22,9 +22,10 @@
              (when nil
                (:span () "No")))))
 
-(write-sgml-indented
+(write-sgml
  (sgml (:div (:class "foo")
              (loop for message in '("hello" "cruel" "world")
                    collect
                    (:p (:type message) message))))
- *standard-output*)
+ :destination *standard-output*
+ :indentation-offset 2)
