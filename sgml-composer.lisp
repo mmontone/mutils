@@ -75,9 +75,9 @@
   (if (atom form)
       form
       (if (keywordp (first form))
-          (destructuring-bind (tag args &body children) form
+          (destructuring-bind (tag attrs &body children) form
             `(make-element ,tag
-                           (list ,@args)
+                           (list ,@attrs)
                            ,(cond
                               ((= (length children) 0) "")
                               ((= (length children) 1)
@@ -91,26 +91,28 @@
 
 (defun write-sgml-unindented (element out)
   (if (typep element 'element)
-      (let ((tag-name (string-downcase (symbol-name (element-tag element)))))
-        (progn
-          (write-string "<" out)
-          (write-string tag-name out)
-          (when (element-attributes element)
-            (let ((key-p t))
-              (dolist (attribute (element-attributes element))
-                (if key-p
-                    (progn
-                      (write-char #\space out)
-                      (write-string (string-downcase (symbol-name attribute)) out)
-                      (write-string "=\"" out))
-                    (progn
-                      (princ attribute out)
-                      (write-char #\" out)))
-                (setf key-p (not key-p)))))
-          (write-string ">" out)
-          (dolist (child (element-children element))
-            (write-sgml-unindented child out))
-          (format out "</~a>" tag-name)))
+      (if (eql (element-tag element) :raw)
+          (write-string (first (element-children element)) out)
+          (let ((tag-name (string-downcase (symbol-name (element-tag element)))))
+            (progn
+              (write-string "<" out)
+              (write-string tag-name out)
+              (when (element-attributes element)
+                (let ((key-p t))
+                  (dolist (attribute (element-attributes element))
+                    (if key-p
+                        (progn
+                          (write-char #\space out)
+                          (write-string (string-downcase (symbol-name attribute)) out)
+                          (write-string "=\"" out))
+                        (progn
+                          (princ attribute out)
+                          (write-char #\" out)))
+                    (setf key-p (not key-p)))))
+              (write-string ">" out)
+              (dolist (child (element-children element))
+                (write-sgml-unindented child out))
+              (format out "</~a>" tag-name))))
       (princ element out)))
 
 (defun write-sgml-indented (element out indentation-offset)
@@ -121,33 +123,36 @@
              (write-sgml-indent (element)
                (indent)
                (if (typep element 'element)
-                   (let ((tag-name (string-downcase (symbol-name (element-tag element)))))
-                     (progn
-                       (write-string "<" out)
-                       (write-string tag-name out)
-                       (when (element-attributes element)
-                         (let ((key-p t))
-                           (dolist (attribute (element-attributes element))
-                             (if key-p
-                                 (progn
-                                   (write-char #\space out)
-                                   (write-string (string-downcase (symbol-name attribute)) out)
-                                   (write-string "=\"" out))
-                                 (progn
-                                   (princ attribute out)
-                                   (write-char #\" out)))
-                             (setf key-p (not key-p)))))
-                       (write-string ">" out)
-                       (terpri out)
-                       (incf indent-level indentation-offset)
-                       (dolist (child (element-children element))
-                         (write-sgml-indent child))
-                       (terpri out)
-                       (decf indent-level indentation-offset)
-                       (indent)
-                       (format out "</~a>" tag-name)
-                       (terpri out)
-                       ))
+                   (if (eql (element-tag element) :raw)
+                       (write-string (first (element-children element)) out)
+                       (let ((tag-name (string-downcase (symbol-name (element-tag element)))))
+                         (progn
+                           (write-string "<" out)
+                           (write-string tag-name out)
+                           (when (element-attributes element)
+                             (let ((key-p t))
+                               (dolist (attribute (element-attributes element))
+                                 (if key-p
+                                     (progn
+                                       (write-char #\space out)
+                                       (write-string (string-downcase (symbol-name attribute)) out)
+                                       (write-string "=\"" out))
+                                     (progn
+                                       (princ attribute out)
+                                       (write-char #\" out)))
+                                 (setf key-p (not key-p)))))
+                           (write-string ">" out)
+                           (terpri out)
+                           (incf indent-level indentation-offset)
+                           (dolist (child (element-children element))
+                             (write-sgml-indent child))
+                           (terpri out)
+                           (decf indent-level indentation-offset)
+                           (indent)
+                           (format out "</~a>" tag-name)
+                           (terpri out)
+                           )))
+                   ;; otherwise
                    (princ element out))))
       (write-sgml-indent element))))
 
