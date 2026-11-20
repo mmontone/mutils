@@ -96,7 +96,7 @@
 (defmacro sgml (&body body)
   `(progn ,@(transform-sgml-forms body)))
 
-(defun write-sgml-unindented (element out)
+(defun write-sgml-unindented (element out &key (quote-char #\"))
   (if (typep element 'element)
       (if (eql (element-tag element) :raw)
           (write-string (first (element-children element)) out)
@@ -111,10 +111,11 @@
                         (progn
                           (write-char #\space out)
                           (write-string (string-downcase (symbol-name attribute)) out)
-                          (write-string "=\"" out))
+                          (write-char #\= out)
+                          (write-char quote-char out))
                         (progn
                           (princ attribute out)
-                          (write-char #\" out)))
+                          (write-char quote-char out)))
                     (setf key-p (not key-p)))))
               (write-string ">" out)
               (dolist (child (element-children element))
@@ -122,7 +123,7 @@
               (format out "</~a>" tag-name))))
       (princ element out)))
 
-(defun write-sgml-indented (element out indentation-offset)
+(defun write-sgml-indented (element out indentation-offset &key (quote-char #\"))
   (let ((indent-level 0))
     (labels ((indent ()
                (dotimes (x indent-level)
@@ -143,10 +144,11 @@
                                      (progn
                                        (write-char #\space out)
                                        (write-string (string-downcase (symbol-name attribute)) out)
-                                       (write-string "=\"" out))
+                                       (write-char #\= out)
+                                       (write-char quote-char out))
                                      (progn
                                        (princ attribute out)
-                                       (write-char #\" out)))
+                                       (write-char quote-char out)))
                                  (setf key-p (not key-p)))))
                            (write-string ">" out)
                            (terpri out)
@@ -163,13 +165,14 @@
                    (princ element out))))
       (write-sgml-indent element))))
 
-(defun write-sgml (element &key destination indentation-offset)
+(defun write-sgml (element &key destination indentation-offset (quote-char #\"))
   "Write SGML ELEMENT to DESTINATION using INDENTATION-OFFSET.
 If INDENTATION-OFFSET is given, then the output is indented using that offset.
 Otherwise, SGML is written without any indentation."
   (mutils-utils:with-output-to-destination (out destination)
     (if indentation-offset
-        (write-sgml-indented element out indentation-offset)
-        (write-sgml-unindented element out))))
+        (write-sgml-indented element out indentation-offset
+                             :quote-char quote-char)
+        (write-sgml-unindented element out :quote-char quote-char))))
 
 (provide :sgml-composer)
