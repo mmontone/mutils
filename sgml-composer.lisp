@@ -119,7 +119,7 @@
                     (setf key-p (not key-p)))))
               (write-string ">" out)
               (dolist (child (element-children element))
-                (write-sgml-unindented child out))
+                (write-sgml-unindented child out :quote-char quote-char))
               (format out "</~a>" tag-name))))
       (princ element out)))
 
