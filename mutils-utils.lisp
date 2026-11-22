@@ -25,7 +25,8 @@
    #:condition-message
    #:with-accessors*
    #:vbreak
-   #:*vbreak*))
+   #:*vbreak*
+   #:map-plist))
 
 (in-package :mutils-utils)
 
@@ -199,5 +200,14 @@ Macroexpansion of `(auto-gensym-test 44)`:
   (when *vbreak*
     (break "~s" value))
   value)
+
+(defun map-plist (func plist)
+  "Map over PLIST using FUNC. FUNC should be a function that takes a key and a value, and returns a new value for the key.
+The function returns the property list with the new values."
+  (loop for key in plist by #'cddr
+        for value in (cdr plist) by #'cddr
+        appending (list key (funcall func key value))))
+
+;; (map-plist (lambda (k v) (1+ v)) (list :x 1 :y 2))
 
 (provide :mutils-utils)
